@@ -23,6 +23,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  */
 Route::resource('users','User\UserController');
 
+/*
+ * Product
+ */
+Route::resource('products','Product\ProductController');
+
 
 /*
  * Category

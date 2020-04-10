@@ -28,7 +28,7 @@ class CreateBranchesTable extends Migration
 
 
 
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->unique();
             $table->foreign('user_id')->onDelete('cascade')->onUpdate('cascade')
                 ->references('id')
                 ->on('users');

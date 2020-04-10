@@ -2,12 +2,40 @@
 
 namespace App;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Products extends Model
 {
+
+    use SoftDeletes;
     const UNAVAILABEL_PRODUCT = 'unavailable';
     const AVAILABEL_PRODUCT = 'available';
 
+    protected $fillable =[
+        'name',
+        'latinName',
+        'code',
+        'quantity',
+        'status',
+        'price',
+        'details',
+        'branch_id',
+        'parent_id',
+        'category_id',
+        'group_id',
+
+    ];
+
+    protected $casts = [
+        'quantity' => 'integer',
+        'status' => 'string',
+        'price' => 'float',
+        'details' => 'string',
+        'branch_id' => 'integer',
+        'parent_id'=> 'integer',
+        'category_id'=> 'integer',
+        'group_id'=> 'integer',
+    ];
 
     protected static function boot()
     {

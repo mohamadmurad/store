@@ -111,6 +111,9 @@ class DatabaseSeeder extends Seeder
         });
 
         factory(Branches::class, $branchesQuantity)->create()->each(function ($branch){
+            $usersInBranchTable = Branches::all()->pluck('user_id');
+            $user = User::all()->whereNotIn('id',$usersInBranchTable)->random(1);
+            $branch->user_id = $user;
             $attribute = Attributes::all()->random();
             $rand= rand(1,0);
             if($rand === 1 ){
