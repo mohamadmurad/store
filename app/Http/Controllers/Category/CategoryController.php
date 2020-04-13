@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Category;
 
 use App\Categories;
 use App\Http\Controllers\Controller;
-use App\Repositories\Category\Interfaces\CategoryRepositoryInterface;
+use App\Http\Requests\Category\StoreCategory;
+use App\Http\Requests\Category\UpdateCategory;
+use App\Http\Resources\Category\CategoryResource;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryController extends Controller
 {
@@ -18,48 +23,38 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return AnonymousResourceCollection|LengthAwarePaginator
      */
     public function index()
     {
-        $cateories = Categories::with('children.children')
-            ->whereNull('parent_id')
-            ->get();
-
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showAll($cateories);
+            $categories = Categories::with('children')
+                ->whereNull('parent_id')
+                ->get();
+            return $this->showCollection(CategoryResource::collection($categories));
         }
 
-       // return view('welcome');
+       return null;
 
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StoreCategory $request
+     * @return CategoryResource
      */
-    public function store(Request $request)
+    public function store(StoreCategory $request)
     {
-        $rules = [
-            'name'=>'required|min:2|max:100|unique:categories,name',
-            'parent_id'=>'required|exists:categories,id',
-        ];
-
-        $this->validate($request,$rules);
-
-        if ($request->parent_id === 'null') {
-            $request->parent_id = null;
-        }
-
-        $newCategory = Categories::create($request->only(['name','parent_id']));
-
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($newCategory);
+            $newCategory = Categories::create([
+                'name' => $request->name,
+                'parent_id' => $request->parent_id === null ? null : $request->parent_id,
+            ]);
+            return new CategoryResource($newCategory);
         }
 
+        return null;
 
     }
 
@@ -67,78 +62,61 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param Categories $category
-     * @return \Illuminate\Http\Response
+     * @return CategoryResource
      */
     public function show(Categories $category)
     {
-
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($category);
+            return new CategoryResource($category);
         }
 
-       // return view('welcome');
+        return null;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateCategory $request
      * @param Categories $category
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @return CategoryResource|JsonResponse|Response
      */
-    public function update(Request $request, Categories $category)
+    public function update(UpdateCategory $request, Categories $category)
     {
+        if (request()->expectsJson() && request()->acceptsJson()){
+            $category->fill([
+                'name' => $request->name,
+                'parent_id' => $request->parent_id === null ? null : $request->parent_id,
+            ]);
 
-        $rules = [];
-        if($request->has(['name'])){
-            $rules += [
-                'name'=>['min:2|max:100'
-                    , Rule::unique($category->getTable())->ignore(request()->segment(3))
-                ],
-
-            ];
-
-        }
-        if($request->has(['parent_id'])){
-            if($request->parent_id === 'null'){
-                $request->parent_id = null;
-
-            }else{
-                $rules += [
-                    'parent_id'=>'required|exists:categories,id',
-                ];
+            if($category->isClean()){
+                return $this->errorResponse([
+                    'error'=> 'you need to specify a different value to update',
+                    'code'=> 422],
+                    422);
             }
-        }
-        $this->validate($request,$rules);
 
-        $category->fill($request->only([
-            'name',
-            'parent_id',
-        ]));
-
-        if($category->isClean()){
-            return $this->errorResponse([
-                'error'=> 'you need to specify a different value to update',
-                'code'=> 422],
-                422);
+            $category->save();
+            return new CategoryResource($category);
         }
 
-        $category->save();
-        return $this->showOne($category);
+        return null;
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Categories $category
-     * @return \Illuminate\Http\Response
-     * @throws \Exception
+     * @return CategoryResource|Response
+     * @throws Exception
      */
     public function destroy(Categories $category)
     {
-        $category->delete();
-        return $this->showOne($category);
+        if (request()->expectsJson() && request()->acceptsJson()){
+            $category->delete();
+            return new CategoryResource($category);
+        }
+        return null;
     }
 
 

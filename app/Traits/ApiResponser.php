@@ -2,6 +2,7 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 trait ApiResponser{
 
+
     private function successResponse($data, $code){
         return response()->json($data,$code);
     }
@@ -17,7 +19,7 @@ trait ApiResponser{
     protected function errorResponse($message,$code){
         return response()->json(['error'=>$message,'code'=>$code],$code);
     }
-
+/*
     protected function showAll(Collection $collection,$code = 200){
         if($collection->isEmpty()){
             return $this->successResponse(['data'=>$collection],$code);
@@ -34,18 +36,20 @@ trait ApiResponser{
 
         return $this->successResponse($collection,$code);
     }
+*/
+    protected function showCollection(AnonymousResourceCollection $collection){
+        //$collection = $this->filterData($collection,$transformer);
+        //$collection = $this->sortData($collection,$transformer);
 
+        $collection = $this->paginate($collection);
+
+        //$collection = $this->cacheResponse($collection);
+
+        return $collection;
+
+    }
     protected function showOne(Model $model,$code = 200){
-       /* if($model->isEmpty()){
-            return $this->successResponse(['data'=>$model],$code);
-        }*/
-        /*$transformer = $model->transformer;
-
-        $model = $this->transformData($model,$transformer);*/
-
         return $this->successResponse($model,$code);
-
-
     }
 
     protected function showMessage($message,$code = 200){
@@ -76,7 +80,7 @@ trait ApiResponser{
         return $collection;
     }
 
-    protected function paginate(Collection $collection){
+    protected function paginate(AnonymousResourceCollection $collection){
         $rules = [
             'per_page' => 'integer|min:2|max:50',
 
@@ -104,15 +108,8 @@ trait ApiResponser{
         return $paginated;
     }
 
-    protected function transformData($data,$transformer){
-        $transformation = fractal($data,new $transformer);
-        return $transformation->toArray();
-    }
-
     protected function cacheResponse($data){
-
         $url = request()->url();
-
         return Cache::remember($url,30/60,function () use ($data){
            return $data;
         });

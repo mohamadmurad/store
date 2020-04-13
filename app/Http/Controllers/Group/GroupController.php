@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Group;
 
 use App\Groups;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Group\StoreGroup;
+use App\Http\Requests\Group\UpdateGroup;
+use App\Http\Resources\Group\GroupResource;
 use App\Traits\ApiResponser;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class GroupController extends Controller
 {
@@ -17,13 +22,14 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection|LengthAwarePaginator
      */
     public function index()
     {
-        $groups = Groups::all();
+
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showAll($groups);
+            $groups = Groups::all();
+            return  $this->showCollection(GroupResource::collection($groups));
         }
 
     }
@@ -31,57 +37,42 @@ class GroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StoreGroup $request
+     * @return GroupResource
      */
-    public function store(Request $request)
+    public function store(StoreGroup $request)
     {
-        $rules = [
-            'name'=>'required|min:2|max:100|unique:groups,name',
-        ];
 
-        $this->validate($request,$rules);
-
-        $newGroup = Groups::create($request->only(['name']));
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($newGroup);
+            $newGroup = Groups::create($request->only(['name']));
+            return new GroupResource($newGroup);
         }
-
+        return null;
     }
 
     /**
      * Display the specified resource.
      *
      * @param Groups $group
-     * @return \Illuminate\Http\Response
+     * @return GroupResource|null
      */
     public function show(Groups $group)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($group);
+            return new GroupResource($group);
         }
+        return null;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateGroup $request
      * @param Groups $group
-     * @return void
-     * @throws \Illuminate\Validation\ValidationException
+     * @return JsonResponse|void
      */
-    public function update(Request $request, Groups $group)
+    public function update(UpdateGroup $request, Groups $group)
     {
-        $rules = [
-            'name'=>['min:2|max:100'
-                , Rule::unique($group->getTable())->ignore(request()->segment(3))
-            ],
-
-        ];
-
-        $this->validate($request,$rules);
-
         $group->fill($request->only([
             'name',
         ]));
@@ -92,21 +83,29 @@ class GroupController extends Controller
                 'code'=> 422],
                 422);
         }
-
-        $group->save();
-        return $this->showOne($group);
+        if (request()->expectsJson() && request()->acceptsJson()) {
+            $group->save();
+            return $this->showOne($group);
+        }
+        return null;
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Groups $group
-     * @return \Illuminate\Http\Response
-     * @throws \Exception
+     * @return GroupResource
+     * @throws Exception
      */
     public function destroy(Groups $group)
     {
-        $group->delete();
-        return $this->showOne($group);
+        if (request()->expectsJson() && request()->acceptsJson()) {
+            $group->delete();
+            return new GroupResource($group);
+        }
+        return null;
     }
+
+
+
 }

@@ -4,8 +4,16 @@ namespace App\Http\Controllers\Coupon;
 
 use App\Coupons;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Coupon\StoreCoupon;
+use App\Http\Requests\Coupon\UpdateCoupon;
+use App\Http\Resources\Coupon\CouponResource;
 use App\Traits\ApiResponser;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Validation\ValidationException;
 
 class CouponController extends Controller
 {
@@ -14,106 +22,92 @@ class CouponController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection|Response|LengthAwarePaginator
      */
     public function index()
     {
-        $coupons = Coupons::all();
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showAll($coupons);
+            $coupons = Coupons::all();
+            return $this->showCollection(CouponResource::collection($coupons));
         }
+        return null;
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StoreCoupon $request
+     * @return CouponResource|Response
      */
-    public function store(Request $request)
+    public function store(StoreCoupon $request)
     {
-        $code = null;
-        $discountRate = null;
-        if($request->has('code')){
-            $code = $request->get('code');
-
-        }else{
-            $code = Coupons::randomCouponCode();
-
-        }
-        $rules = [
-            'discountRate'=>'required|integer|min:1',
-            'code' => 'min:6|max:6',
-        ];
-        $this->validate($request,$rules);
-
-
-        $newCoupon = Coupons::create([
-            'code' => $code,
-            'discountRate' => $request->discountRate,
-
-        ]);
-
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($newCoupon);
+
+            $newCoupon = Coupons::create([
+                'code' => $request->code,
+                'discountRate' => $request->discountRate,
+            ]);
+
+            return new CouponResource($newCoupon);
         }
+        return null;
     }
 
     /**
      * Display the specified resource.
      *
      * @param Coupons $coupon
-     * @return \Illuminate\Http\Response
+     * @return CouponResource|Response
      */
     public function show(Coupons $coupon)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($coupon);
+            return new CouponResource($coupon);
         }
+        return null;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateCoupon $request
      * @param Coupons $coupon
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @return CouponResource|\Illuminate\Http\JsonResponse|Response
      */
-    public function update(Request $request, Coupons $coupon)
+    public function update(UpdateCoupon $request, Coupons $coupon)
     {
-        $rules = [
-            'discountRate'=>'required|integer|min:1|max:100',
-        ];
+        if (request()->expectsJson() && request()->acceptsJson()){
+            $coupon->fill($request->only([
+                'discountRate',
+            ]));
 
-        $this->validate($request,$rules);
+            if($coupon->isClean()){
+                return $this->errorResponse([
+                    'error'=> 'you need to specify a different value to update',
+                    'code'=> 422],
+                    422);
+            }
 
-        $coupon->fill($request->only([
-            'discountRate',
-        ]));
-
-        if($coupon->isClean()){
-            return $this->errorResponse([
-                'error'=> 'you need to specify a different value to update',
-                'code'=> 422],
-                422);
+            $coupon->save();
+            return new CouponResource($coupon);
         }
 
-        $coupon->save();
-        return $this->showOne($coupon);
+        return null;
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Coupons $coupon
-     * @return \Illuminate\Http\Response
-     * @throws \Exception
+     * @return CouponResource|Response
+     * @throws Exception
      */
     public function destroy(Coupons $coupon)
     {
-        $coupon->delete();
-        return $this->showOne($coupon);
+        if (request()->expectsJson() && request()->acceptsJson()){
+            $coupon->delete();
+            return new CouponResource($coupon);
+        }
+        return null;
     }
 }

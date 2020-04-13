@@ -4,8 +4,16 @@ namespace App\Http\Controllers\Company;
 
 use App\Companies;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Company\StoreCompany;
+use App\Http\Requests\Company\UpdateCompany;
+use App\Http\Resources\Company\CompanyResource;
 use App\Traits\ApiResponser;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
@@ -14,37 +22,32 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection|LengthAwarePaginator
      */
     public function index()
     {
-        $companies = Companies::all();
-
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showAll($companies);
+            $companies = Companies::all();
+            return $this->showCollection(CompanyResource::collection($companies));
         }
+
+        return null;
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StoreCompany $request
+     * @return CompanyResource
      */
-    public function store(Request $request)
+    public function store(StoreCompany $request)
     {
-        $rules = [
-            'name'=>'required|min:2|max:255|unique:companies,name',
-            'phone'=>'required|unique:companies,phone',
-        ];
-
-        $this->validate($request,$rules);
-
-        $newCompany = Companies::create($request->only(['name','phone']));
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($newCompany);
+            $newCompany = Companies::create($request->only(['name','phone']));
+            return new CompanyResource($newCompany);
         }
+
+        return null;
 
     }
 
@@ -52,75 +55,59 @@ class CompanyController extends Controller
      * Display the specified resource.
      *
      * @param Companies $company
-     * @return \Illuminate\Http\Response
+     * @return CompanyResource
      */
     public function show(Companies $company)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($company);
+            return new CompanyResource($company);
         }
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param UpdateCompany $request
      * @param Companies $company
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @return CompanyResource|JsonResponse|Response
      */
-    public function update(Request $request, Companies $company)
+    public function update(UpdateCompany $request, Companies $company)
     {
-        $rules = [];
-        if($request->has(['name'])){
-            $rules += [
-                'name'=>['min:2|max:100',
-                    Rule::unique($company->getTable())->ignore(request()->segment(3))
-                ],
-
-            ];
-
+        if (request()->expectsJson() && request()->acceptsJson()){
             $company->fill($request->only([
                 'name',
-            ]));
-
-        }
-        if($request->has(['phone'])){
-                $rules += [
-                    'phone'=>['required',
-                        Rule::unique($company->getTable())->ignore(request()->segment(3))
-                        ],
-                ];
-
-            $company->fill($request->only([
                 'phone',
             ]));
+
+            if($company->isClean()){
+                return $this->errorResponse([
+                    'error'=> 'you need to specify a different value to update',
+                    'code'=> 422],
+                    422);
+            }
+
+            $company->save();
+            return new CompanyResource($company);
+
         }
-        $this->validate($request,$rules);
 
+        return null;
 
-
-        if($company->isClean()){
-            return $this->errorResponse([
-                'error'=> 'you need to specify a different value to update',
-                'code'=> 422],
-                422);
-        }
-
-        $company->save();
-        return $this->showOne($company);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Companies $company
-     * @return \Illuminate\Http\Response
-     * @throws \Exception
+     * @return CompanyResource|null
+     * @throws Exception
      */
     public function destroy(Companies $company)
     {
-        $company->delete();
-        return $this->showOne($company);
+        if (request()->expectsJson() && request()->acceptsJson()) {
+            $company->delete();
+            return new CompanyResource($company);
+        }
+        return null;
     }
 }
