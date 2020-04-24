@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAttachmentType extends FormRequest
 {
+
+    private $table = 'attachment_types';
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +15,7 @@ class StoreAttachmentType extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,7 @@ class StoreAttachmentType extends FormRequest
     public function rules()
     {
         return [
-            //
+            'type'=>'required|min:2|max:100|unique:'. $this->table .',type',
         ];
     }
 }

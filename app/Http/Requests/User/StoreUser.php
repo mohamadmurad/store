@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUser extends FormRequest
 {
+
+    private $table = 'users';
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +15,7 @@ class StoreUser extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,14 @@ class StoreUser extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'=>'required|string|min:5|max:100',
+            'email'=>'required|email|max:255|unique:'. $this->table .',email',
+            'phone'=>'required|unique:'. $this->table .',phone',
+            'username'=>'required|unique:'. $this->table .',username',
+            'location'=>'required|string',
+            'password'=>'required|min:8|confirmed',
         ];
     }
+
+
 }

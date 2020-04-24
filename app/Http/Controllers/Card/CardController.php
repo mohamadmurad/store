@@ -9,6 +9,7 @@ use App\Http\Requests\Card\UpdateCard;
 use App\Http\Resources\Card\CardResource;
 use App\Traits\ApiResponser;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -79,7 +80,7 @@ class CardController extends Controller
      *
      * @param UpdateCard $request
      * @param Cards $card
-     * @return CardResource|\Illuminate\Http\JsonResponse|Response
+     * @return CardResource|JsonResponse|Response
      */
     public function update(UpdateCard $request, Cards $card)
     {

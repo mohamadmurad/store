@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAttribute extends FormRequest
 {
+
+    private $table = 'attributes';
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +15,7 @@ class StoreAttribute extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,7 @@ class StoreAttribute extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'=>'required|min:2|max:100|unique:'. $this->table .',name',
         ];
     }
 }

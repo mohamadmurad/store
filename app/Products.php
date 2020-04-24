@@ -11,6 +11,8 @@ class Products extends Model
     const UNAVAILABEL_PRODUCT = 'unavailable';
     const AVAILABEL_PRODUCT = 'available';
 
+    protected $with = ['attachments'];
+
     protected $fillable =[
         'name',
         'latinName',
@@ -70,7 +72,7 @@ class Products extends Model
 
 
     public function attachments(){
-        return $this->hasMany(Attachment::class);
+        return $this->hasMany(Attachment::class,'products_id');
     }
 
     public function branch(){

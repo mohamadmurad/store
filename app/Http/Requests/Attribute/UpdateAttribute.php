@@ -3,9 +3,12 @@
 namespace App\Http\Requests\Attribute;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAttribute extends FormRequest
 {
+
+    private $table = 'attributes';
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +16,7 @@ class UpdateAttribute extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +27,12 @@ class UpdateAttribute extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name'=>[
+                'required',
+                'min:2',
+                'max:100',
+                Rule::unique($this->table)->ignore(request()->segment(3))
+            ],
         ];
     }
 }

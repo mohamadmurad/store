@@ -3,11 +3,20 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\StoreUser;
+use App\Http\Requests\User\UpdateUser;
+use App\Http\Resources\User\UserResource;
 use App\Traits\ApiResponser;
 use App\User;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -16,180 +25,126 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnonymousResourceCollection|Response|LengthAwarePaginator
      */
     public function index()
     {
-        $users = User::all();
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showAll($users);
+            $users = User::all();
+            return $this->showCollection(UserResource::collection($users));
         }
+
+        return null;
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param StoreUser $request
+     * @return UserResource|Response
      */
-    public function store(Request $request)
+    public function store(StoreUser $request)
     {
-        $rules = [
-            'name'=>'required|string|min:5|max:100',
-            'email'=>'required|email|max:255|unique:users,email',
-            'phone'=>'required|unique:users,phone',
-            'username'=>'required|unique:users,username',
-            'location'=>'required|string',
-            'password'=>'required|min:8|confirmed',
-        ];
-
-        $this->validate($request,$rules);
-        $request->password = bcrypt(request()->password);
-        $newUser = User::create([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'phone' => $request->get('phone'),
-            'username' => $request->get('username'),
-            'location' => $request->get('location'),
-            'password' => bcrypt($request->get('password')),
-            ]);
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($newUser);
+
+            $request->password = bcrypt($request->password);
+            $newUser = User::create([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'phone' => $request->get('phone'),
+                'username' => $request->get('username'),
+                'location' => $request->get('location'),
+                'password' => bcrypt($request->get('password')),
+            ]);
+            if (request()->expectsJson() && request()->acceptsJson()){
+                return new UserResource($newUser);
+            }
         }
+        return null;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return UserResource|Response
      */
     public function show(User $user)
     {
-
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showOne($user);
+            return new UserResource($user);
         }
+        return null;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\User $user
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param UpdateUser $request
+     * @param User $user
+     * @return UserResource|JsonResponse|Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUser $request, User $user)
     {
-        $rules = [];
-        $rules += [
-            'password'=>'required|min:8',
-        ];
-        $this->validate($request,$rules);
+        if (request()->expectsJson() && request()->acceptsJson()){
 
-        if(!Hash::check($request->password, $user->password)){
-            return $this->errorResponse([
-                'error'=> 'your password is not correct',
-                'code'=> 422],
-                422);
-        }
-
-
-        if($request->has(['name'])){
-            $rules += [
-                'name'=>'required|string|min:5|max:100',
-            ];
+            if(!Hash::check($request->password, $user->password)){
+                return $this->errorResponse([
+                    'error'=> 'your password is not correct',
+                    'code'=> 422],
+                    422);
+            }
 
             $user->fill($request->only([
                 'name',
-            ]));
-        }
-        if($request->has(['email'])){
-            $rules += [
-                'email' =>['required','email','max:255',
-                    Rule::unique($user->getTable())->ignore(request()->segment(3))
-                ],
-            ];
-
-            $user->fill($request->only([
                 'email',
-            ]));
-        }
-        if($request->has(['phone'])){
-            $rules += [
-                'phone'=>['required',
-                    Rule::unique($user->getTable())->ignore(request()->segment(3))
-                    ],
-
-            ];
-
-            $user->fill($request->only([
                 'phone',
-            ]));
-        }
-
-        if($request->has(['username'])){
-            $rules += [
-                'username'=>['required',
-                    Rule::unique($user->getTable())->ignore(request()->segment(3))
-                ],
-            ];
-
-            $user->fill($request->only([
                 'username',
-            ]));
-        }
-
-        if($request->has(['location'])){
-            $rules += [
-                'location'=>'required|string',
-            ];
-
-            $user->fill($request->only([
                 'location',
             ]));
+
+            if($request->has(['newPassword'])){
+
+                $user->fill([
+                    'password' => bcrypt($request->get('newPassword')),
+                ]);
+            }
+
+            if($user->isClean()){
+                return $this->errorResponse([
+                    'error'=> 'you need to specify a different value to update',
+                    'code'=> 422],
+                    422);
+            }
+
+            $user->save();
+            return new UserResource($user);
+
+
         }
-
-
-        if($request->has(['newPassword'])){
-            $rules += [
-                'newPassword'=>'required|min:8|confirmed|different:password',
-            ];
-
-            $user->fill([
-                'password' => bcrypt($request->get('newPassword')),
-            ]);
-        }
-
-        $this->validate($request,$rules);
+        return null;
 
 
 
 
 
-        if($user->isClean()){
-            return $this->errorResponse([
-                'error'=> 'you need to specify a different value to update',
-                'code'=> 422],
-                422);
-        }
 
-        $user->save();
-        return $this->showOne($user);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\User $user
-     * @return \Illuminate\Http\Response
-     * @throws \Exception
+     * @param User $user
+     * @return UserResource|Response
+     * @throws Exception
      */
     public function destroy(User $user)
     {
-        $user->delete();
-        return $this->showOne($user);
+        if (request()->expectsJson() && request()->acceptsJson()){
+            $user->delete();
+            return new UserResource($user);
+        }
+        return null;
+
     }
 }

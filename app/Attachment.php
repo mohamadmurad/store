@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Attachment extends Model
 {
     use SoftDeletes;
+
+    protected $with = ['type'];
     protected $fillable = [
         'src',
         'products_id',
@@ -18,7 +20,7 @@ class Attachment extends Model
         return $this->belongsTo(Products::class);
     }
 
-    public function attachmentType(){
-        return $this->belongsTo(AttachmentType::class);
+    public function type(){
+        return $this->belongsTo(AttachmentType::class,'attachmentType_id');
     }
 }

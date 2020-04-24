@@ -60,7 +60,7 @@ Route::resource('attributes','Attribute\AttributeController');
 /*
  * Attachment
  */
-Route::resource('attachmentType','Attachment\AttachmentController');
+Route::resource('attachmentType','Attachment\AttachmentTypeController');
 
 /*
  * Attachment

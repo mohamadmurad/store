@@ -14,6 +14,9 @@ class AttachmentResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'path' => $this->src,
+            'type' => new AttachmentTypeResource($this->whenLoaded('type')),
+        ];
     }
 }

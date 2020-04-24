@@ -7,7 +7,6 @@ use App\AttachmentType;
 use Faker\Generator as Faker;
 
 $factory->define(Attachment::class, function (Faker $faker) {
-  //  $product = Products::all()->random();
     $attachmentType = AttachmentType::all()->random();
     return [
         'src' => '1.png',
