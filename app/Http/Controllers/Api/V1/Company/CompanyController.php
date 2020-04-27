@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Branch;
+namespace App\Http\Controllers\Api\V1\Company;
 
+use App\Companies;
 use App\Http\Controllers\Controller;
-use App\branches;
-use App\Http\Requests\Branch\StoreBranch;
-use App\Http\Requests\Branch\UpdateBranch;
-use App\Http\Resources\Branch\BranchResource;
+use App\Http\Requests\Company\StoreCompany;
+use App\Http\Requests\Company\UpdateCompany;
+use App\Http\Resources\Company\CompanyResource;
 use App\Traits\ApiResponser;
-use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,9 +16,8 @@ use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\Rule;
 
-class BranchController extends Controller
+class CompanyController extends Controller
 {
-
     use ApiResponser;
     /**
      * Display a listing of the resource.
@@ -29,8 +27,8 @@ class BranchController extends Controller
     public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $branches = Branches::all();
-            return $this->showCollection(BranchResource::collection($branches));
+            $companies = Companies::all();
+            return $this->showCollection(CompanyResource::collection($companies));
         }
 
         return null;
@@ -39,60 +37,57 @@ class BranchController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreBranch $request
-     * @return BranchResource
+     * @param StoreCompany $request
+     * @return CompanyResource
      */
-    public function store(StoreBranch $request)
+    public function store(StoreCompany $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $newBranch = Branches::create($request->only(['name','location','company_id','user_id']));
-            return new BranchResource($newBranch);
+            $newCompany = Companies::create($request->only(['name','phone']));
+            return new CompanyResource($newCompany);
         }
+
         return null;
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param branches $branch
-     * @return BranchResource
+     * @param Companies $company
+     * @return CompanyResource
      */
-    public function show(branches $branch)
+    public function show(Companies $company)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return new BranchResource($branch);
+            return new CompanyResource($company);
         }
-        return null;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateBranch $request
-     * @param branches $branch
-     * @return BranchResource|JsonResponse|void
+     * @param UpdateCompany $request
+     * @param Companies $company
+     * @return CompanyResource|JsonResponse|Response
      */
-    public function update(UpdateBranch $request, branches $branch)
+    public function update(UpdateCompany $request, Companies $company)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $branch->fill($request->only([
+            $company->fill($request->only([
                 'name',
-                'location',
-                'balance',
-                'user_id',
-                'company_id',
+                'phone',
             ]));
 
-
-            if($branch->isClean()){
+            if($company->isClean()){
                 return $this->errorResponse([
                     'error'=> 'you need to specify a different value to update',
                     'code'=> 422],
                     422);
             }
 
-            $branch->save();
-            return new BranchResource($branch);
+            $company->save();
+            return new CompanyResource($company);
 
         }
 
@@ -103,17 +98,16 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param branches $branch
-     * @return BranchResource
+     * @param Companies $company
+     * @return CompanyResource|null
      * @throws Exception
      */
-    public function destroy(branches $branch)
+    public function destroy(Companies $company)
     {
         if (request()->expectsJson() && request()->acceptsJson()) {
-            $branch->delete();
-            return new BranchResource($branch);
+            $company->delete();
+            return new CompanyResource($company);
         }
         return null;
-
     }
 }

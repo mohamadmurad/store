@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Api\V1\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUser;
@@ -123,12 +123,6 @@ class UserController extends Controller
 
         }
         return null;
-
-
-
-
-
-
     }
 
     /**

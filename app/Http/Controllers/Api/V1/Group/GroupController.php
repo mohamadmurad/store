@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Group;
+namespace App\Http\Controllers\Api\V1\Group;
 
 use App\Groups;
 use App\Http\Controllers\Controller;

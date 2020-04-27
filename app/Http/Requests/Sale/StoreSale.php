@@ -13,7 +13,7 @@ class StoreSale extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,29 @@ class StoreSale extends FormRequest
      */
     public function rules()
     {
+
+        $fieldName = $this->attributes();
+
         return [
-            //
+            $fieldName['saleRate'] => 'required|max:100|min:1',
+            $fieldName['newPrice'] => '',
+            $fieldName['start'] => 'required|date',
+            $fieldName['end'] => 'required|date',
+            $fieldName['product_id'] => [
+                'required',
+                'exists:products,id',
+                'unique:sales,product_id,null,id,deleted_at,NULL',
+            ],
+         ];
+    }
+
+    public function attributes(){
+        return [
+            'saleRate' => 'sale',
+            'newPrice' => 'price',
+            'start' => 'start',
+            'end' => 'end',
+            'product_id' => 'product',
         ];
     }
 }

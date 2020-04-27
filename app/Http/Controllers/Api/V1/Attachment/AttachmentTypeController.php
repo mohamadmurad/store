@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Attachment;
+namespace App\Http\Controllers\Api\V1\Attachment;
 
 use App\AttachmentType;
 use App\Attributes;

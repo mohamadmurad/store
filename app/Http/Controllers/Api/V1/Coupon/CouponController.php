@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Coupon;
+namespace App\Http\Controllers\Api\V1\Coupon;
 
 use App\Coupons;
 use App\Http\Controllers\Controller;

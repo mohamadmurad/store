@@ -11,7 +11,7 @@ class Products extends Model
     const UNAVAILABEL_PRODUCT = 'unavailable';
     const AVAILABEL_PRODUCT = 'available';
 
-    protected $with = ['attachments'];
+    protected $with = ['attachments','sales'];
 
     protected $fillable =[
         'name',
@@ -117,7 +117,7 @@ class Products extends Model
 
 
     public function sales(){
-        return $this->hasMany(Sales::class,'products_id');
+        return $this->hasMany(Sales::class,'product_id');
     }
 
     public function favorite(){

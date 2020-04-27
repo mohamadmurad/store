@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Attribute;
+namespace App\Http\Controllers\Api\V1\Attribute;
 
 use App\Attributes;
 use App\Http\Controllers\Controller;

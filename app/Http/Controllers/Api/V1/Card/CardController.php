@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Card;
+namespace App\Http\Controllers\Api\V1\Card;
 
 use App\Cards;
 use App\Http\Controllers\Controller;
