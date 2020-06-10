@@ -58,6 +58,7 @@ class AuthApiController extends Controller
             return $this->getTokenAndRefreshToken(request('email'), request('password'));
         }
         else {
+            /////////
             return response()->json(['error'=>'Unauthorised'], 401);
         }
     }

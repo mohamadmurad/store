@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Branch;
+namespace App\Http\Resources\Company;
 
+use App\Http\Resources\User\SampleUserResource;
+use App\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BranchResource extends JsonResource
+class CompanyBranchResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,7 +22,10 @@ class BranchResource extends JsonResource
             'location' =>$this->location,
             'balance' => (float)$this->balance,
             'company' => (int) $this->company_id,
-            'user' => (int)$this->user_id,
+            'company' => new CompanyResource($this->whenLoaded('company')),
+            'user' => new SampleUserResource(User::findOrFail($this->user_id)),
+            //'posts' => Product::collection($this->whenLoaded('products')),
+           // 'category' => new CategoryResource(Categories::findOrFail($this->category_id)),
         ];
     }
 }

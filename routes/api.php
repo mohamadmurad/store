@@ -41,9 +41,11 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
     //Company
     Route::resource('companies','Company\CompanyController');
-
+    Route::resource('companies.branches','Company\CompanyBranchController',['except'=>['create','edit']]);
     // Branch
     Route::resource('branches','Branch\BranchController');
+
+
 
     // Attributes
     Route::resource('attributes','Attribute\AttributeController');
