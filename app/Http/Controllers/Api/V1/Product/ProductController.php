@@ -49,6 +49,7 @@ class ProductController extends Controller
     public function store(StoreProduct $request)
     {
         $fieldName = $request->attributes();
+
         $saved_files_for_roleBack = [];
         if (request()->expectsJson() && request()->acceptsJson()){
             $user = Branches::first()->pluck('user_id');

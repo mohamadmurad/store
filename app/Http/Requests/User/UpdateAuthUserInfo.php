@@ -3,9 +3,10 @@
 namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class UpdateUser extends FormRequest
+class UpdateAuthUserInfo extends FormRequest
 {
     private $table = 'users';
     /**
@@ -42,7 +43,7 @@ class UpdateUser extends FormRequest
                     'required',
                     'email',
                     'max:255',
-                    Rule::unique($this->table)->ignore(request()->segment(count($url)))
+                    Rule::unique($this->table)->ignore(Auth::user()->id)
                 ],
             ];
 
@@ -51,7 +52,7 @@ class UpdateUser extends FormRequest
             $rules += [
                 'phone'=>[
                     'required',
-                    Rule::unique($this->table)->ignore(request()->segment(count($url)))
+                    Rule::unique($this->table)->ignore(Auth::user()->id)
                 ],
 
             ];
@@ -61,7 +62,7 @@ class UpdateUser extends FormRequest
             $rules += [
                 'username'=>[
                     'required',
-                    Rule::unique($this->table)->ignore(request()->segment(count($url)))
+                    Rule::unique($this->table)->ignore(Auth::user()->id)
                 ],
             ];
 

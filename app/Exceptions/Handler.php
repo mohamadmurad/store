@@ -10,6 +10,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -104,10 +107,27 @@ class Handler extends ExceptionHandler
         if ($exception instanceof MethodNotAllowedHttpException){
             return $this->errorResponse('The specified method for the requests is invalid.',404);
         }
-        //all other http
-        if ($exception instanceof HttpException){
-            return $this->errorResponse($exception->getMessage(),$exception->getCode());
+
+
+
+        // PermissionDoesNotExist
+        if ($exception instanceof PermissionDoesNotExist){
+            return $this->errorResponse($exception->getMessage(),500);
         }
+
+        // RoleDoesNotExist
+        if ($exception instanceof RoleDoesNotExist){
+            return $this->errorResponse($exception->getMessage(),500);
+        }
+
+        // PermissionDoesNotExist
+        if ($exception instanceof UnauthorizedException){
+            return $this->errorResponse($exception->getMessage(),403);
+        }
+
+
+
+
         //sql
         if ($exception instanceof QueryException){
             $errorCode = $exception->errorInfo ? $exception->errorInfo[1] : 0;
@@ -126,6 +146,13 @@ class Handler extends ExceptionHandler
             }
 
         }
+
+
+        //all other http
+        if ($exception instanceof HttpException){
+            return $this->errorResponse($exception->getMessage(),$exception->getCode());
+        }
+
 
         if(config('app.debug')){
             return parent::render($request, $exception);

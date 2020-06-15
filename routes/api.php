@@ -15,17 +15,33 @@ use Laravel\Passport\Http\Controllers\AccessTokenController;
 |
 */
 Route::post('/login', 'Api\V1\AuthApiController@login');
-Route::post('/register', 'Api\V1\User\UserController@registerNewUserAccount');
+Route::post('/register', 'Api\V1\AuthApiController@registerNewUserAccount');
 
-Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware' => [/*'auth:api'*/]],function (){
+
+
+Route::resource('v1/companies','Api\V1\Company\CompanyController')->only(['index','show']);
+
+Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware' => ['auth:api']],function (){
 
 
     // logout
     Route::post('/logout', 'AuthApiController@logout');
 
+    // check token
+    Route::get('/checkToken',function (){
+
+
+        return response([
+            'message' => 'your token is valid',
+        ],200);
+    });
+
 
     // User
     Route::resource('users','User\UserController');
+
+    Route::get('/myAccount', 'User\UserController@getMyInfo');
+    Route::put('/myAccount', 'User\UserController@updateMyInfo');
 
     // Product
     Route::resource('products','Product\ProductController',['except'=>['create','edit']]);
@@ -40,7 +56,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::resource('groups','Group\GroupController');
 
     //Company
-    Route::resource('companies','Company\CompanyController');
+    Route::resource('companies','Company\CompanyController')->only(['store','update']);
     Route::resource('companies.branches','Company\CompanyBranchController',['except'=>['create','edit']]);
     // Branch
     Route::resource('branches','Branch\BranchController');

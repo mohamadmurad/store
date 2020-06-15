@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\RegisterRequest;
 use App\Traits\ApiResponser;
 use App\User;
 use Illuminate\Http\Request;
@@ -16,27 +17,36 @@ class AuthApiController extends Controller
     private $getTokenURI = 'http://127.0.0.1:8000/api/v1/oauth/token';
 
 
-    public function register(RegisterAuthRequest $request)
+    public function registerNewUserAccount(RegisterRequest $request)
     {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
+        if (request()->expectsJson() && request()->acceptsJson()){
 
-        if ($this->loginAfterSignUp) {
-            return $this->login($request);
+            $newUser = User::create([
+                'name' => $request->get('name'),
+                'email' => $request->get('email'),
+                'phone' => $request->get('phone'),
+                'username' => $request->get('username'),
+                'location' => $request->get('location'),
+                'password' => bcrypt($request->get('password')),
+            ]);
+
+
+            /// verify email and phone code
+            ///
+            ///
+            ///
+
+            return $this->successResponse([
+                'message' => 'User Saved',
+            ],201);;
+
         }
+        return null;
 
-        return response()->json([
-            'success' => true,
-            'data' => $user
-        ], Response::HTTP_OK);
     }
 
     public function logout(Request $request)
     {
-
         $user = Auth::user();
         $delete = $user->token()->delete();
 
@@ -45,10 +55,6 @@ class AuthApiController extends Controller
         }else{
             return $this->errorResponse('Error in logout.',401);
         }
-
-
-
-
     }
 
     public function login() {
@@ -58,29 +64,9 @@ class AuthApiController extends Controller
             return $this->getTokenAndRefreshToken(request('email'), request('password'));
         }
         else {
-            /////////
-            return response()->json(['error'=>'Unauthorised'], 401);
+
+            return response()->json(['error'=>'Unauthorized. email or password error!'], 401);
         }
-    }
-
-    public function regist2er(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error'=>$validator->errors()], 401);
-        }
-
-        $password = $request->password;
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $oClient = OClient::where('password_client', 1)->first();
-        return $this->getTokenAndRefreshToken($oClient, $user->email, $password);
     }
 
     public function getTokenAndRefreshToken($email, $password) {
@@ -88,7 +74,7 @@ class AuthApiController extends Controller
         $client = Client::where('password_client', 1)->first();
 
         if (!$client){
-            return $this->errorResponse('login was not work please come back later ! .',401);
+            return $this->errorResponse('Sorry login is not work now please come back later.',403);
         }
 
         $data = [

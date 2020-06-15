@@ -4,7 +4,7 @@ namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUser extends FormRequest
+class RegisterRequest extends FormRequest
 {
 
     private $table = 'users';
@@ -32,7 +32,6 @@ class StoreUser extends FormRequest
             'username'=>'required|unique:'. $this->table .',username',
             'location'=>'required|string',
             'password'=>'required|min:8|confirmed',
-            'roles'=>'required',
         ];
     }
 
