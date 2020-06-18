@@ -22,7 +22,6 @@ class Attributes extends Model
             ->as('attribute_values')
             ->withPivot([
                 'value',
-                'name',
-            ]);;
+            ]);
     }
 }

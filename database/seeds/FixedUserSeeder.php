@@ -1,5 +1,6 @@
 <?php
 
+use App\Branches;
 use App\User;
 use Illuminate\Database\Seeder;
 
@@ -13,7 +14,7 @@ class FixedUserSeeder extends Seeder
     public function run()
     {
 
-
+        // super admin
         $user = User::create([
             'name' => 'Mohamad Murad',
             'email' => 'mhdite7@gmail.com',
@@ -25,6 +26,7 @@ class FixedUserSeeder extends Seeder
 
         $user->assignRole('super_admin');
 
+        // super employee
         $user1 = User::create([
             'name' => 'Mouaz He',
             'email' => 'mouaz@gmail.com',
@@ -33,9 +35,37 @@ class FixedUserSeeder extends Seeder
             'location' => 'Damascus',
             'password' => bcrypt('12345678'),
         ]);
+        $user1->assignRole(['super_employee']);
+
+        $rand_branch = Branches::all()->random(1)->first();
+        $rand_branch->user_id = $user1->id;
+        $rand_branch->save();
+
+        // employee
+        $user2 = User::create([
+            'name' => 'Hasan As',
+            'email' => 'hasan@gmail.com',
+            'phone' => '+963960602321',
+            'username' => 'Hasan',
+            'location' => 'Damascus',
+            'password' => bcrypt('12345678'),
+        ]);
+        $user2->assignRole(['employee']);
+
+        $rand_branch = Branches::all()->random(1)->first();
+        $rand_branch->user_id = $user2->id;
+        $rand_branch->save();
 
 
-
-        $user1->assignRole(['employee']);
+        // costumer
+        $user3 = User::create([
+            'name' => 'meheden kh',
+            'email' => 'meheden@gmail.com',
+            'phone' => '+963960602320',
+            'username' => 'meheden',
+            'location' => 'Damascus',
+            'password' => bcrypt('12345678'),
+        ]);
+        $user3->assignRole(['customer']);
     }
 }

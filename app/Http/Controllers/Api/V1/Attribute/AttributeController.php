@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Attribute;
 
 use App\Attributes;
+use App\Branches;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Attribute\StoreAttribute;
 use App\Http\Requests\Attribute\UpdateAttribute;
@@ -13,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 class AttributeController extends Controller
 {
@@ -22,13 +24,24 @@ class AttributeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection|Response|LengthAwarePaginator
+     * @return JsonResponse|AnonymousResourceCollection|Response|LengthAwarePaginator
      */
     public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $attributes = Attributes::all();
-            return $this->showCollection(AttributeResource::collection($attributes));
+            $employee = Auth::user();
+            $employee_branch_attribute = Branches::where('user_id',$employee->id)->with('attributes')->first()->attributes;
+
+            if ($employee_branch_attribute->isEmpty()){
+                return $this->successResponse([
+                    'message' => 'no attribute',
+                ],404);
+            }else{
+                return $this->successResponse([
+                    'data' => AttributeResource::collection($employee_branch_attribute)],
+                    200);
+            }
+
         }
         return null;
     }

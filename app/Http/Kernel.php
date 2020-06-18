@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use App\Http\Middleware\addUser;
+use App\Http\Middleware\attributeCheck;
+use App\Http\Middleware\checkIfUserHasProduct;
 use App\Http\Middleware\checkUserPassword;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -69,5 +71,7 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'addUser' => addUser::class,
         'checkUserPassword' => checkUserPassword::class,
+        'attributeCheck' => attributeCheck::class,
+        'checkIfUserHasProduct' => checkIfUserHasProduct::class
     ];
 }

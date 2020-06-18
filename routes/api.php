@@ -20,6 +20,10 @@ Route::post('/register', 'Api\V1\AuthApiController@registerNewUserAccount');
 
 
 Route::resource('v1/companies','Api\V1\Company\CompanyController')->only(['index','show']);
+Route::get('v1/companies/{company}/branches','Api\V1\Company\CompanyBranchController@index');
+
+Route::resource('v1/products','Api\V1\Product\WebProductController',['only'=>['index','show']]);
+
 
 Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware' => ['auth:api']],function (){
 
@@ -44,7 +48,9 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::put('/myAccount', 'User\UserController@updateMyInfo');
 
     // Product
-    Route::resource('products','Product\ProductController',['except'=>['create','edit']]);
+    Route::resource('employee_products','Product\DeskTopProductController');
+    Route::get('employee_product_sale','Product\DeskTopProductController@productWithSale');
+    Route::get('employee_product_not_sale','Product\DeskTopProductController@productWithoutSale');
 
     // Sale
     Route::resource('sale','Sale\SaleController',['except'=>['create','edit']]);
@@ -57,7 +63,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
     //Company
     Route::resource('companies','Company\CompanyController')->only(['store','update']);
-    Route::resource('companies.branches','Company\CompanyBranchController',['except'=>['create','edit']]);
+    //Route::resource('companies.branches','Company\CompanyBranchController',['except'=>['create','edit']]);
     // Branch
     Route::resource('branches','Branch\BranchController');
 

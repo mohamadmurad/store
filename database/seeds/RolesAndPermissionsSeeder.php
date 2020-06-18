@@ -58,6 +58,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $edit_product_per->assignRole($employee_role);
         $delete_product_per->assignRole($employee_role);
 
+        $add_product_per->assignRole($super_employee_role);
+        $edit_product_per->assignRole($super_employee_role);
+        $delete_product_per->assignRole($super_employee_role);
+
 
         // sales
         $add_sale_per = Permission::create(['guard_name' => 'api','name' => 'add_sale']);
@@ -67,6 +71,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $add_sale_per->assignRole($employee_role);
         $edit_sale_per->assignRole($employee_role);
         $delete_sale_per->assignRole($employee_role);
+
+        $add_sale_per->assignRole($super_employee_role);
+        $edit_sale_per->assignRole($super_employee_role);
+        $delete_sale_per->assignRole($super_employee_role);
 
 
         // offers
@@ -79,18 +87,18 @@ class RolesAndPermissionsSeeder extends Seeder
         $edit_offer_per->assignRole($employee_role);
         $delete_offer_per->assignRole($employee_role);
 
+        $add_offer_per->assignRole($super_employee_role);
+        $edit_offer_per->assignRole($super_employee_role);
+        $delete_offer_per->assignRole($super_employee_role);
 
-        // create "employee" permissions for account
-        $read_account_per = Permission::create(['guard_name' => 'api','name' => 'read_account']);
-        $edit_account_per = Permission::create(['guard_name' => 'api','name' => 'edit_account']);
-
-        $read_account_per->assignRole($employee_role);
-        $edit_account_per->assignRole($employee_role);
 
         // global permissions for all user
 //        Permission::create(['guard_name' => 'api','name' => 'read_product']);
 //        Permission::create(['guard_name' => 'api','name' => 'read_sale']);
 //        Permission::create(['guard_name' => 'api','name' => 'read_offer']);
+
+        $read_account_per = Permission::create(['guard_name' => 'api','name' => 'read_account']);
+        $edit_account_per = Permission::create(['guard_name' => 'api','name' => 'edit_account']);
 
 
 

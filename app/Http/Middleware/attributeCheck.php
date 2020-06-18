@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Attributes;
 use Closure;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class addUser
+class attributeCheck
 {
     /**
      * Handle an incoming request.
@@ -17,14 +16,11 @@ class addUser
      */
     public function handle($request, Closure $next)
     {
-        $role = $request->role;
-        if ($role){
-            Role::findById((int) $role,'api');
+
+        $attributes = $request->get('attributes');
+        foreach ($attributes as $key => $attribute){
+           Attributes::findOrFail((int) $key);
         }
-
-
-        $request->password = bcrypt($request->password);
-
         return $next($request);
     }
 }

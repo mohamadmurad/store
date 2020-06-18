@@ -72,8 +72,7 @@ class UserController extends Controller
                 'password' => bcrypt($request->get('password')),
             ]);
 
-            $newUser->syncRoles($request->roles);
-
+            $newUser->assignRole($request->role);
 
             return $this->successResponse([
                 'message' => 'User Saved',

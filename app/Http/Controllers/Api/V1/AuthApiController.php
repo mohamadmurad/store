@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Branches;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegisterRequest;
 use App\Traits\ApiResponser;
@@ -30,8 +31,11 @@ class AuthApiController extends Controller
                 'password' => bcrypt($request->get('password')),
             ]);
 
+            $newUser->assignRole('customer');
 
             /// verify email and phone code
+            ///
+            ///
             ///
             ///
             ///

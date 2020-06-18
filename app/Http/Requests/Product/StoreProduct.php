@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Product;
 
 use App\Products;
+use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProduct extends FormRequest
@@ -24,51 +25,35 @@ class StoreProduct extends FormRequest
      */
     public function rules()
     {
+
+      //  User::all()->pluck('name')->join(',');
+
         $rules = [
-            'title'=>'required|min:2|max:100',
-            'latinTitle'=>'required|min:2|max:100',
-            'productCode'=>'required|unique:products,code',
-            'stock'=>'required|min:1|integer',
-            'situation'=>'in:' . Products::AVAILABEL_PRODUCT . ',' . Products::UNAVAILABEL_PRODUCT,
+            'name'=>'required|min:2|max:100',
+            'latinName'=>'required|min:2|max:100',
+            'code'=>'required|unique:products,code',
+            'quantity'=>'required|min:1|integer',
+            'status'=>'in:' . Products::AVAILABEL_PRODUCT . ',' . Products::UNAVAILABEL_PRODUCT,
             'price'=>'required|Numeric|min:0',
-            'description'=>'required|string',
-            'parentProduct'=>'required',
-            'category'=>'required|exists:categories,id',
-            'group'=>'required',
-            'media'=>'required', ///////////////////////////
+            'details'=>'required|string',
+            'parent_id'=>'required',
+            'category_id'=>'required|exists:categories,id',
+            'group_id'=>'required',
+            'files'=>'required', ///////////////////////////
+
         ];
-        if ($this->parentProduct !== 'null') {
-            $rules['parentProduct'] .= '|exists:products,id';
+        if ($this->parent_id !== 'null') {
+            $rules['parent_id'] .= '|exists:products,id';
 
         }
 
-        if ($this->group !== 'null') {
-            $rules['group'] .= '|exists:groups,id';
+        if ($this->group_id !== 'null') {
+            $rules['group_id'] .= '|exists:groups,id';
 
         }
 
       //  dd($rules);
         return $rules;
     }
-
-
-    public function attributes()
-    {
-        return [
-            'name' => 'title',
-            'latinName' => 'latinTitle',
-            'code' => 'productCode',
-            'quantity' => 'stock',
-            'status' => 'situation',
-            'price' => 'price',
-            'details' => 'description',
-            'parent_id' => 'parentProduct',
-            'category_id' => 'category',
-            'group_id' => 'group',
-            'files' => 'media', ///////////////////////////
-        ];
-    }
-
-
 
 }

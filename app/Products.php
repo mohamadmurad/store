@@ -11,7 +11,7 @@ class Products extends Model
     const UNAVAILABEL_PRODUCT = 'unavailable';
     const AVAILABEL_PRODUCT = 'available';
 
-    protected $with = ['attachments','sales'];
+   // protected $with = ['firstAttachments','sales'];
 
     protected $fillable =[
         'name',
@@ -75,6 +75,12 @@ class Products extends Model
         return $this->hasMany(Attachment::class,'products_id');
     }
 
+    public function firstAttachments() {
+
+        $imageId = AttachmentType::where('type','=','image')->pluck('id')->first();
+        return $this->hasOne(Attachment::class)->where('attachmentType_id','=',$imageId);
+    }
+
     public function branch(){
         return $this->belongsTo(Branches::class);
     }
@@ -117,7 +123,7 @@ class Products extends Model
 
 
     public function sales(){
-        return $this->hasMany(Sales::class,'product_id');
+        return $this->hasOne(Sales::class,'product_id');
     }
 
     public function favorite(){
@@ -129,7 +135,6 @@ class Products extends Model
             ->as('attribute_values')
             ->withPivot([
                 'value',
-                'name',
             ]);
     }
 }
