@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -123,7 +124,8 @@ class Products extends Model
 
 
     public function sales(){
-        return $this->hasOne(Sales::class,'product_id');
+
+        return $this->hasOne(Sales::class,'product_id')->whereDate('end','>=',Carbon::now());
     }
 
     public function favorite(){

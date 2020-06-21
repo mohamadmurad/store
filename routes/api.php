@@ -23,7 +23,7 @@ Route::resource('v1/companies','Api\V1\Company\CompanyController')->only(['index
 Route::get('v1/companies/{company}/branches','Api\V1\Company\CompanyBranchController@index');
 
 Route::resource('v1/products','Api\V1\Product\WebProductController',['only'=>['index','show']]);
-
+Route::resource('v1/sales','Api\V1\Sale\SaleController',['only'=>['index','show']]);
 
 Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware' => ['auth:api']],function (){
 
@@ -52,8 +52,11 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::get('employee_product_sale','Product\DeskTopProductController@productWithSale');
     Route::get('employee_product_not_sale','Product\DeskTopProductController@productWithoutSale');
 
+
     // Sale
-    Route::resource('sale','Sale\SaleController',['except'=>['create','edit']]);
+    Route::resource('employee_products.sales','Sale\SaleController',['only'=>['store','destroy']]);
+
+
 
     // Category
     Route::resource('categories','Category\CategoryController');
