@@ -21,12 +21,18 @@ class BranchController extends Controller
 {
 
     use ApiResponser;
+
+    public function __construct()
+    {
+        $this->middleware('role:super_admin')->only(['store','destroy']);
+        $this->middleware(['role:employee|super_employee'])->only('update');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return AnonymousResourceCollection|LengthAwarePaginator
      */
-    public function index()
+   /* public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $branches = Branches::all();
@@ -34,7 +40,7 @@ class BranchController extends Controller
         }
 
         return null;
-    }
+    }*/
 
     /**
      * Store a newly created resource in storage.
@@ -57,13 +63,13 @@ class BranchController extends Controller
      * @param branches $branch
      * @return BranchResource
      */
-    public function show(branches $branch)
+    /*public function show(branches $branch)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             return new BranchResource($branch);
         }
         return null;
-    }
+    }*/
 
     /**
      * Update the specified resource in storage.
@@ -75,7 +81,7 @@ class BranchController extends Controller
     public function update(UpdateBranch $request, branches $branch)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $branch->fill($request->only([
+          /*  $branch->fill($request->only([
                 'name',
                 'location',
                 'balance',
@@ -89,9 +95,9 @@ class BranchController extends Controller
                     'error'=> 'you need to specify a different value to update',
                     'code'=> 422],
                     422);
-            }
+            }*/
 
-            $branch->save();
+           // $branch->save();
             return new BranchResource($branch);
 
         }

@@ -21,6 +21,14 @@ class AttributeController extends Controller
 
     use  ApiResponser;
 
+    public function __construct()
+    {
+        $this->middleware('permission:add_product|edit_product')->only(['index']);
+        $this->middleware('permission:add_attribute')->only(['store']);
+        $this->middleware('permission:edit_attribute')->only(['update']);
+        $this->middleware('permission:delete_attribute')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -64,20 +72,7 @@ class AttributeController extends Controller
         return null;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Attributes $attribute
-     * @return AttributeResource|null
-     */
-    public function show(Attributes $attribute)
-    {
-        if (request()->expectsJson() && request()->acceptsJson()){
-            return new AttributeResource($attribute);
-        }
 
-        return null;
-    }
 
     /**
      * Update the specified resource in storage.

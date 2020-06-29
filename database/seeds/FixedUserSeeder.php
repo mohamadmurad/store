@@ -24,7 +24,7 @@ class FixedUserSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ]);
 
-        $user->assignRole('super_admin');
+        $user->assignRole('Super Admin');
 
         // super employee
         $user1 = User::create([

@@ -24,10 +24,8 @@ class SaleController extends Controller
 
     public function __construct()
     {
-
-        $this->middleware('checkIfUserHasProduct')->only('show');
-        $this->middleware(['permission:add_product','checkIfUserHasProduct'])->only('store');
-        $this->middleware(['permission:delete_product','checkIfUserHasProduct'])->only('destroy');
+        $this->middleware(['permission:add_sale','checkIfUserHasProduct'])->only('store');
+        $this->middleware(['permission:delete_sale','checkIfUserHasProduct'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -57,42 +55,52 @@ class SaleController extends Controller
      * @param Products $employee_product
      * @return SaleResource|JsonResponse|Response
      */
-    public function store(StoreSale $request,int $employee_product)
+    public function store(StoreSale $request,Products $employee_product)
     {
 
-       // dd('sd');
-
-
         if(request()->expectsJson() && request()->acceptsJson()){
-            $product = Products::findOrFail($employee_product);
 
-            if (!$product->sales()->exists()){
 
-                // frmat and validate dates
+
+            if (!$employee_product->sales()->exists()){
+
+                // format and validate dates
                 $startDate = Carbon::make($request->get('start'));
                 $endDate = Carbon::make($request->get('end'));
                 if($startDate > $endDate){
                     return $this->errorResponse('End Sale Date must next the Start Date' ,422);
                 }
 
+                if ($startDate < Carbon::today()){
+                    return $this->errorResponse('Start Date must be newer' ,422);
+                }
+
                 // calc new price
                 $newPrice = 0;
                 $saleRate = 0;
-                if ($request->has('newPrice')){
-                    if ($request->get('newPrice') >= $product->price){
+                if ($request->has('newPrice') &&  !$request->has('saleRate')){
+
+                    if ($request->get('newPrice') >= $employee_product->price){
                         return $this->errorResponse('New Price must be less than old' ,422);
                     }
 
                     $newPrice =  $request->get('newPrice');
-                    $saleRate = ($newPrice * 100) / $product->price;
-                }elseif ($request->has('saleRate')){
-
-                    $newPrice = ($product->price * (int) $request->get('saleRate')) / 100;
+                    $saleRate = ($newPrice * 100) / $employee_product->price;
+                }elseif ($request->has('saleRate') && !$request->has('newPrice')){
+                    $newPrice = ($employee_product->price * (int) $request->get('saleRate')) / 100;
                     $saleRate = $request->get('saleRate');
+                }else{
+
+                    $newPrice =  $request->get('newPrice');
+                    $saleRate = $request->get('saleRate');
+                    $temp_price = ($employee_product->price * (int) $request->get('saleRate')) / 100;
+                    if ($newPrice !== $temp_price){
+                        return $this->errorResponse('New Price and Sale Rate must be correct' ,422);
+                    }
                 }
 
-                $newSale = Sales::create([
-                    'product_id' => $employee_product,
+
+                $employee_product->sales()->create([
                     'saleRate' => $saleRate,
                     'newPrice' => $newPrice,
                     'start' => $startDate,
@@ -104,7 +112,9 @@ class SaleController extends Controller
                 return $this->errorResponse('this product already have sale',422);
             }
 
-            return new SaleResource($newSale);
+            return $this->successResponse([
+                'message'=>'New Sale on Product was added successful',
+                'code' => 201],201);
 
         }
 
@@ -120,13 +130,13 @@ class SaleController extends Controller
      * @return SaleResource|JsonResponse|Response
      * @throws Exception
      */
-    public function destroy(int $product, int $sale)
+    public function destroy(Products $employee_product,Sales $sale)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-           // dd($sale);
-            $sale = Sales::findOrFail($sale);
+
+
             $sale_product_id = $sale->product_id;
-            if ($product === $sale_product_id){
+            if ($employee_product->id === $sale_product_id){
                 $sale->delete();
                 return $this->successResponse(['message' => 'sale was deleted.'],200);
             }else{

@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Attachment;
+namespace App\Http\Resources\roles;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
-class AttachmentResource extends JsonResource
+class RolesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +14,9 @@ class AttachmentResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
-            'path' => $request->getHttpHost() . '/'. 'files/products/'.$this->src,
-            'type' => $this->type->type,
+            'id' => $this->id,
+            'name' => $this->name,
         ];
     }
 }

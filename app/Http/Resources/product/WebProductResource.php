@@ -27,7 +27,7 @@ class WebProductResource extends JsonResource
             'status' => $this->status,
             'price' => (float) $this->price,
             'details' => $this->details,
-            'category' => $this->category_id,
+            'category' => new CategoryResource(Categories::findOrFail($this->category_id)),
             'media' => AttachmentResource::collection($this->whenLoaded('attachments')),
             'image' => new AttachmentResource ($this->whenLoaded('firstAttachments')),
             'sale' => new SaleResource($this->whenLoaded('sales')),

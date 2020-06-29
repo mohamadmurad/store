@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Branch\BranchResource;
 use App\Http\Resources\Company\CompanyBranchResource;
 use App\Traits\ApiResponser;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CompanyBranchController extends Controller
 {
@@ -23,7 +25,8 @@ class CompanyBranchController extends Controller
     public function index(Companies $company)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $branches = $company->branches()->with('company')->get();
+            $branches = $company->branches()->get();
+
             return $this->showCollection(CompanyBranchResource::collection($branches));
         }
 

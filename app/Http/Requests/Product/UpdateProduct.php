@@ -29,36 +29,36 @@ class UpdateProduct extends FormRequest
     {
         $rules = [];
 
-        if($this->has(['title'])){
+        if($this->has(['name'])){
             $rules += [
-                'title'=>'min:2|max:100',
+                'name'=>'min:2|max:100',
             ];
         }
 
-        if($this->has(['latinTitle'])){
+        if($this->has(['latinName'])){
             $rules += [
-                'latinTitle'=>'min:2|max:100',
+                'latinName'=>'min:2|max:100',
             ];
         }
 
-        if($this->has(['productCode'])){
+        if($this->has(['code'])){
             $rules += [
-                'productCode'=>[
+                'code'=>[
                     Rule::unique($this->table,'code')->ignore(request()->segment(3))
                 ],
             ];
         }
 
-        if($this->has(['stock'])){
+        if($this->has(['quantity'])){
             $rules += [
-                'stock'=>'min:0|Numeric',
+                'quantity'=>'min:0|Numeric',
             ];
         }
 
 
-        if($this->has(['situation'])){
+        if($this->has(['status'])){
             $rules += [
-                'situation'=>'in:' . Products::AVAILABEL_PRODUCT . ',' . Products::UNAVAILABEL_PRODUCT,
+                'status'=>'in:' . Products::AVAILABEL_PRODUCT . ',' . Products::UNAVAILABEL_PRODUCT,
             ];
         }
 
@@ -68,53 +68,38 @@ class UpdateProduct extends FormRequest
             ];
         }
 
-        if($this->has(['description'])){
+        if($this->has(['details'])){
             $rules += [
-                'description'=>'string',
+                'details'=>'string',
             ];
         }
 
-        if($this->has(['parentProduct'])){
+
+
+        if($this->has(['parent_id'])){
 
             if ($this->parentProduct !== 'null') {
                 $rules+= [
-                    'parentProduct'=>'exists:products,id'];
+                    'parent_id'=>'exists:products,id'];
             }
 
         }
 
-        if($this->has(['category'])){
+        if($this->has(['category_id'])){
             $rules += [
-                'category'=>'required|exists:categories,id',
+                'category_id'=>'required|exists:categories,id',
             ];
         }
 
 
-        if($this->has(['group'])){
+        if($this->has(['group_id'])){
             if ($this->group !== 'null') {
                 $rules += [
-                    'group'=>'exists:groups,id',
+                    'group_id'=>'exists:groups,id',
                 ];
             }
         }
 
         return $rules;
-    }
-
-
-    public function attributes(){
-        return [
-            'name' => 'title',
-            'latinName' => 'latinTitle',
-            'code' => 'productCode',
-            'quantity' => 'stock',
-            'status' => 'situation',
-            'price' => 'price',
-            'details' => 'description',
-            'parent_id' => 'parentProduct',
-            'category_id' => 'category',
-            'group_id' => 'group',
-            'files' => 'media', ///////////////////////////
-        ];
     }
 }

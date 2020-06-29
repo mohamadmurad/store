@@ -89,9 +89,16 @@ class DatabaseSeeder extends Seeder
         $ordersQuantity=100;
 
 
+        $this->call(RolesAndPermissionsSeeder::class);
+
+        $this->call(FixedAttachment::class);
+
+
         factory(User::class, $userQuantity)->create()->each(function ($u){
             $rand = rand(1,0);
             $rand === 1 ? $u->card()->save(factory(Cards::class)->make()) : null;
+
+            $rand === 1 ? $u->assignRole(['employee']) : $u->assignRole(['super_employee']);
         });
 
         factory(Attributes::class, $attributesQuantity)->create();
@@ -99,7 +106,7 @@ class DatabaseSeeder extends Seeder
 
         factory(Companies::class, $CompaniesQuantity)->create();
 
-        factory(AttachmentType::class, $attach_typeQuantity)->create();
+      //  factory(AttachmentType::class, $attach_typeQuantity)->create();
 
         factory(Categories::class, $categoryQuantity)->create()->each(function ($cat){
             $rand = rand(1,0);
@@ -189,10 +196,7 @@ class DatabaseSeeder extends Seeder
         });
 
 
-        $this->call(RolesAndPermissionsSeeder::class);
-
         $this->call(FixedUserSeeder::class);
-
 
     }
 }

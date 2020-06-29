@@ -4,6 +4,8 @@ namespace App\Http;
 
 use App\Http\Middleware\addUser;
 use App\Http\Middleware\attributeCheck;
+use App\Http\Middleware\checkIfAttachmentForProduct;
+use App\Http\Middleware\checkIfUserAdminBranch;
 use App\Http\Middleware\checkIfUserHasProduct;
 use App\Http\Middleware\checkUserPassword;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -72,6 +74,8 @@ class Kernel extends HttpKernel
         'addUser' => addUser::class,
         'checkUserPassword' => checkUserPassword::class,
         'attributeCheck' => attributeCheck::class,
-        'checkIfUserHasProduct' => checkIfUserHasProduct::class
+        'checkIfUserHasProduct' => checkIfUserHasProduct::class,
+        'checkIfUserAdminBranch' => checkIfUserAdminBranch::class,
+        'checkIfAttachmentForProduct' =>checkIfAttachmentForProduct::class
     ];
 }

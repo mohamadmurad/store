@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Product;
 
+use App\AttachmentType;
 use App\Products;
 use App\User;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +27,7 @@ class StoreProduct extends FormRequest
     public function rules()
     {
 
-      //  User::all()->pluck('name')->join(',');
+        $types = AttachmentType::all()->pluck('type')->join(',');
 
         $rules = [
             'name'=>'required|min:2|max:100',
@@ -39,9 +40,12 @@ class StoreProduct extends FormRequest
             'parent_id'=>'required',
             'category_id'=>'required|exists:categories,id',
             'group_id'=>'required',
-            'files'=>'required', ///////////////////////////
+            'files'=>'required',
+            'files.*'=>'mimeTypes:' . $types,
 
         ];
+
+
         if ($this->parent_id !== 'null') {
             $rules['parent_id'] .= '|exists:products,id';
 

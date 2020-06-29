@@ -5,14 +5,21 @@ namespace App\Http\Controllers\Api\V1;
 use App\Branches;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegisterRequest;
+use App\Http\Resources\roles\RolesResource;
 use App\Traits\ApiResponser;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Client;
+use Spatie\Permission\Models\Role;
 
 class AuthApiController extends Controller
 {
+
+    public function __construct()
+    {
+
+    }
 
     use ApiResponser;
     private $getTokenURI = 'http://127.0.0.1:8000/api/v1/oauth/token';
@@ -97,4 +104,6 @@ class AuthApiController extends Controller
         return $this->successResponse($content,200);
         //return response()->json($content, 200);
     }
+
+
 }

@@ -19,6 +19,14 @@ use Illuminate\Validation\Rule;
 class CompanyController extends Controller
 {
     use ApiResponser;
+
+    public function __construct()
+    {
+        $this->middleware(['permission:add_company'])->only('store');
+        $this->middleware(['permission:edit_company'])->only('update');
+        $this->middleware(['permission:delete_company'])->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
