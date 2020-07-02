@@ -89,15 +89,16 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::resource('groups','Group\GroupController');
 
     //Company
-    Route::resource('companies','Company\CompanyController')->only(['store','update']);
+    Route::resource('companies','Company\CompanyController')->only(['store','update','destroy']);
 
     // Branch
     Route::resource('branches','Branch\BranchController')->only(['store','update','destroy']);
-
+    Route::post('syncAttributes/{branch}','Branch\BranchController@syncAttribute');
 
 
     // Attributes
-    Route::resource('attributes','Attribute\AttributeController')->except(['show']);
+    Route::resource('attributes','Attribute\AttributeController')->except(['show','showAttributeBranch']);
+    Route::get('showAttributeBranch/{branch}','Attribute\AttributeController@showAttributeBranch');
 
 
     // Attachment

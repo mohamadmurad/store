@@ -13,19 +13,19 @@ class FixedAttachment extends Seeder
     public function run()
     {
         AttachmentType::create([
-            'type'=>'jpeg'
+            'type'=>'image/jpeg'
         ]);
 
         AttachmentType::create([
-            'type'=>'png'
+            'type'=>'image/png'
         ]);
 
         AttachmentType::create([
-            'type'=>'mp4'
+            'type'=>'video/mp4'
         ]);
 
         AttachmentType::create([
-            'type'=>'3gp'
+            'type'=>'video/3gp'
         ]);
     }
 }

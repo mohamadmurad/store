@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1\Branch;
 
+use App\Attributes;
 use App\Http\Controllers\Controller;
 use App\branches;
+use App\Http\Requests\Attribute\SyncAttribute;
 use App\Http\Requests\Branch\StoreBranch;
 use App\Http\Requests\Branch\UpdateBranch;
 use App\Http\Resources\Branch\BranchResource;
@@ -24,8 +26,11 @@ class BranchController extends Controller
 
     public function __construct()
     {
-        $this->middleware('role:super_admin')->only(['store','destroy']);
-        $this->middleware(['role:employee|super_employee'])->only('update');
+        $this->middleware('permission:add_branch')->only('store');
+        $this->middleware('permission:edit_branch')->only('update');
+        $this->middleware('permission:delete_branch')->only('destroy');
+
+        $this->middleware(['role:Super Admin'])->only('syncAttributes');
     }
     /**
      * Display a listing of the resource.
@@ -46,13 +51,23 @@ class BranchController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreBranch $request
-     * @return BranchResource
+     * @return BranchResource|JsonResponse
      */
     public function store(StoreBranch $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $newBranch = Branches::create($request->only(['name','location','company_id','user_id']));
-            return new BranchResource($newBranch);
+            $branch = Branches::where('user_id','=',$request->user_id)->get();
+
+            if (count($branch) > 0){
+                return $this->errorResponse('This User Have a branch',422);
+            }else{
+                $newBranch = Branches::create($request->only(['name','location','company_id','user_id']));
+                return $this->successResponse([
+                    'message' => 'Branch added successful',
+                    'code'=> 201,
+                ],201);
+            }
+
         }
         return null;
     }
@@ -81,24 +96,37 @@ class BranchController extends Controller
     public function update(UpdateBranch $request, branches $branch)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-          /*  $branch->fill($request->only([
-                'name',
-                'location',
-                'balance',
-                'user_id',
-                'company_id',
-            ]));
+
+            $testBranch = Branches::where('user_id','=',$request->user_id)->where('id','!=',$branch->id)->get();
+
+            if (count($testBranch) > 0){
+
+                return $this->errorResponse('This User Have a branch',422);
+            }else{
+                $branch->fill([
+                    'name' => $request->has('name') ? $request->get('name') : $branch->name,
+                    'location' => $request->has('location') ? $request->get('location') : $branch->location,
+                    'balance' => $request->has('balance') ? $request->get('balance') : $branch->balance,
+                    'user_id' => $request->has('user_id') ? $request->get('user_id') : $branch->user_id,
+                    'company_id' => $request->has('company_id') ? $request->get('company_id') : $branch->company_id,
+                ]);
 
 
-            if($branch->isClean()){
-                return $this->errorResponse([
-                    'error'=> 'you need to specify a different value to update',
-                    'code'=> 422],
-                    422);
-            }*/
 
-           // $branch->save();
-            return new BranchResource($branch);
+                if($branch->isClean()){
+                    return $this->errorResponse([
+                        'error'=> 'you need to specify a different value to update',
+                        'code'=> 422],
+                        422);
+                }
+
+                $branch->save();
+                return $this->successResponse([
+                    'message' => 'Branch Updated successful',
+                    'code'=> 200,
+                ],200);
+            }
+
 
         }
 
@@ -110,16 +138,37 @@ class BranchController extends Controller
      * Remove the specified resource from storage.
      *
      * @param branches $branch
-     * @return BranchResource
+     * @return BranchResource|JsonResponse
      * @throws Exception
      */
     public function destroy(branches $branch)
     {
         if (request()->expectsJson() && request()->acceptsJson()) {
             $branch->delete();
-            return new BranchResource($branch);
+            return $this->successResponse([
+                'message' => 'Branch Deleted successful',
+                'code'=> 200,
+            ],200);
         }
         return null;
+
+    }
+
+
+    public function syncAttribute(SyncAttribute $request,Branches $branch){
+
+        $attributesIds = $request->attributesIds;
+        foreach ($attributesIds as $attributesId){
+            Attributes::findOrFail($attributesId);
+        }
+
+        $branch->attributes()->sync($attributesIds,true);
+
+
+        return $this->successResponse([
+            'message' => 'Branch Attribute Sync successful',
+            'code' => 200,
+        ],200);
 
     }
 }

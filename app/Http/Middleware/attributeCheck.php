@@ -26,15 +26,18 @@ class attributeCheck
         $user = Auth::user();
         $branch = $user->branch()->first();
 
-        $attributes = $request->get('attributes');
-        foreach ($attributes as $key => $attribute){
-           $att = Attributes::findOrFail((int) $key);
+        if ($request->has('attributes')){
+            $attributes = $request->get('attributes');
+            foreach ($attributes as $key => $attribute){
+                $att = Attributes::findOrFail((int) $key);
 
 
-           if(count($att->branches()->where('branches_id','=',$branch->id)->get()) == 0){
-                return $this->errorResponse('attribute "' .$att->name  .'" not for this branch',422);
-           }
+                if(count($att->branches()->where('branches_id','=',$branch->id)->get()) == 0){
+                    return $this->errorResponse('attribute "' .$att->name  .'" not for this branch',422);
+                }
+            }
         }
+
         return $next($request);
     }
 }

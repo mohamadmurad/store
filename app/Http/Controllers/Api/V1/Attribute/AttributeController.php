@@ -7,6 +7,7 @@ use App\Branches;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Attribute\StoreAttribute;
 use App\Http\Requests\Attribute\UpdateAttribute;
+use App\Http\Resources\Attribute\AttributeBranchResource;
 use App\Http\Resources\Attribute\AttributeResource;
 use App\Traits\ApiResponser;
 use Exception;
@@ -27,6 +28,8 @@ class AttributeController extends Controller
         $this->middleware('permission:add_attribute')->only(['store']);
         $this->middleware('permission:edit_attribute')->only(['update']);
         $this->middleware('permission:delete_attribute')->only(['destroy']);
+
+        $this->middleware('role:Super Admin')->only(['showAttributeBranch']);
     }
 
     /**
@@ -117,5 +120,16 @@ class AttributeController extends Controller
 
         return null;
 
+    }
+
+
+
+    function showAttributeBranch(Branches $branch){
+
+        $att = Attributes::with(['branches'=> function ($query) use ($branch){
+            $query->where('id','=',$branch->id);
+        }])->get();
+
+       return AttributeBranchResource::collection($att);
     }
 }

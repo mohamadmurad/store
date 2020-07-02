@@ -25,23 +25,54 @@ class UpdateBranch extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'=>[
-                'required',
-                'min:2',
-                'max:100',
-                Rule::unique($this->table)->ignore(request()->segment(3))
-            ],
-            'location'=>[
-                'required',
-                'min:2',
-                'max:100',
-                Rule::unique($this->table)->ignore(request()->segment(3))
-            ],
-            'balance'=>'required|integer|min:0',
-            'user_id'=>'required|integer|exists:users,id',
-            'company_id'=> 'required|integer|exists:companies,id',
 
-        ];
+        $rules = [];
+
+        if ($this->has('namre')){
+            $rules+= [
+                'name'=> [
+                    'required',
+                    'min:2',
+                    'max:100',
+                    Rule::unique($this->table)->ignore(request()->segment(4))
+                    ]
+
+            ];
+        }
+
+        if ($this->has('location')){
+            $rules+= [
+                'location'=>[
+                    'required',
+                    'min:2',
+                    'max:100',
+                    Rule::unique($this->table)->ignore(request()->segment(4))
+                ]
+
+            ];
+        }
+
+        if ($this->has('balance')){
+            $rules+= [
+                'balance'=>'required|integer|min:0',
+            ];
+        }
+
+
+        if ($this->has('user_id')){
+            $rules+= [
+                'user_id'=>'required|integer|exists:users,id',
+            ];
+        }
+
+
+        if ($this->has('company_id')){
+            $rules+= [
+                'company_id'=> 'required|integer|exists:companies,id',
+            ];
+        }
+
+
+        return $rules;
     }
 }

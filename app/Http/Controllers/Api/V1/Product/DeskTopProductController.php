@@ -163,12 +163,13 @@ class DeskTopProductController extends Controller
                     'branch_id' => $branch->id,
                 ]);
 
-
-                $attributes = $request->get('attributes');
-
-                foreach ($attributes as $key => $attribute){
-                    $newProduct->attributes()->attach($key, ['value' => $attribute]);
+                if ($request->has('attributes')){
+                    $attributes = $request->get('attributes');
+                    foreach ($attributes as $key => $attribute){
+                        $newProduct->attributes()->attach($key, ['value' => $attribute]);
+                    }
                 }
+
 
                 $AllFiles = $request->file('files');
                 foreach ($AllFiles as $file){
@@ -190,6 +191,7 @@ class DeskTopProductController extends Controller
                     File::delete(public_path('files/products'. str_replace(' ','',$branch->name)) . '/' . $file);
                 }
                 DB::rollBack();
+
 
 
 
@@ -303,7 +305,7 @@ class DeskTopProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Products $product
-     * @return ProductResource|Response
+     * @return ProductResource|JsonResponse
      * @throws Exception
      */
     public function destroy(Products $employee_product)
@@ -313,26 +315,6 @@ class DeskTopProductController extends Controller
 
             try {
 
-                foreach ($employee_product->children()->get() as $child){
-
-                    $child->parent_id = null;
-                    $child->save();
-                }
-
-
-
-
-                $employee_product->sales()->delete();
-
-                $employee_product->offers()->detach();
-
-                $employee_product->favorite()->detach();
-
-                $employee_product->orders()->detach();
-
-                $employee_product->attributes()->detach();
-
-                $employee_product->attachments->each->delete();
 
                 $employee_product->delete();
 

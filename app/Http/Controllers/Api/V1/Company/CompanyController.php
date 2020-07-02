@@ -46,13 +46,16 @@ class CompanyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreCompany $request
-     * @return CompanyResource
+     * @return CompanyResource|JsonResponse
      */
     public function store(StoreCompany $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $newCompany = Companies::create($request->only(['name','phone']));
-            return new CompanyResource($newCompany);
+            return $this->successResponse([
+                'message' => 'Company added Successful',
+                'code' => 201,
+            ],201);
         }
 
         return null;
@@ -81,6 +84,8 @@ class CompanyController extends Controller
      */
     public function update(UpdateCompany $request, Companies $company)
     {
+
+
         if (request()->expectsJson() && request()->acceptsJson()){
             $company->fill($request->only([
                 'name',
@@ -95,7 +100,10 @@ class CompanyController extends Controller
             }
 
             $company->save();
-            return new CompanyResource($company);
+            return $this->successResponse([
+                'message' => 'Company Updated Successful',
+                'code' => 200,
+            ],200);
 
         }
 
@@ -107,14 +115,17 @@ class CompanyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Companies $company
-     * @return CompanyResource|null
+     * @return JsonResponse
      * @throws Exception
      */
     public function destroy(Companies $company)
     {
         if (request()->expectsJson() && request()->acceptsJson()) {
             $company->delete();
-            return new CompanyResource($company);
+            return $this->successResponse([
+                'message' => 'Company Deleted Successful',
+                'code' => 200,
+            ],200);
         }
         return null;
     }

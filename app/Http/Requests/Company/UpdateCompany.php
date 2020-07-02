@@ -26,16 +26,19 @@ class UpdateCompany extends FormRequest
      */
     public function rules()
     {
+
+
+    //    dd(request()->segment(env('hhh')));
         return [
             'name' => [
                 'required',
                 'min:2',
                 'max:100',
-                Rule::unique($this->table)->ignore(request()->segment(3))
+                Rule::unique($this->table)->ignore(request()->segment(4))
             ],
             'phone'=>[
                 'required',
-                Rule::unique($this->table)->ignore(request()->segment(3))
+                Rule::unique($this->table)->ignore(request()->segment(4))
             ],
 
         ];
