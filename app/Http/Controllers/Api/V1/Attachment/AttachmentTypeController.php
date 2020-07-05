@@ -22,6 +22,15 @@ class AttachmentTypeController extends Controller
 {
 
     use  ApiResponser;
+
+    public function __construct()
+    {
+        $this->middleware(['role:Super Admin'])->only('store');
+        $this->middleware(['permission:add_attachType'])->only('store');
+        $this->middleware(['permission:edit_attachType'])->only('update');
+        $this->middleware(['permission:delete_attachType'])->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -42,13 +51,16 @@ class AttachmentTypeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreAttachmentType $request
-     * @return AttachmentTypeResource|Response
+     * @return JsonResponse
      */
     public function store(StoreAttachmentType $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $newAttachmentType = AttachmentType::create($request->only(['type']));
-            return new AttachmentTypeResource($newAttachmentType);
+            return $this->successResponse([
+                'message' => 'type added successful',
+                'code'=> 201,
+            ],201);
         }
         return null;
     }
@@ -90,7 +102,10 @@ class AttachmentTypeController extends Controller
             }
 
             $attachmentType->save();
-            return new AttachmentTypeResource($attachmentType);
+            return $this->successResponse([
+                'message' => 'type updated successful',
+                'code'=> 200,
+            ],200);
         }
         return null;
 
@@ -100,14 +115,17 @@ class AttachmentTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param AttachmentType $attachmentType
-     * @return AttachmentTypeResource|Response
+     * @return JsonResponse
      * @throws Exception
      */
     public function destroy(AttachmentType $attachmentType)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $attachmentType->delete();
-            return new AttachmentTypeResource($attachmentType);
+            return $this->successResponse([
+                'message' => 'type deleted successful',
+                'code'=> 200,
+            ],200);
         }
 
         return null;

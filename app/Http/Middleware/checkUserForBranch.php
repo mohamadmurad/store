@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
 use Closure;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class addUser
+class checkUserForBranch
 {
     /**
      * Handle an incoming request.
@@ -17,12 +16,10 @@ class addUser
      */
     public function handle($request, Closure $next)
     {
-        $role = $request->role;
-        if ($role){
-            Role::findById((int) $role,'api');
+        if($request->has('user_id')){
+            $user = User::findOrFail($request->user_id)->first();
+
         }
-
-
 
 
         return $next($request);

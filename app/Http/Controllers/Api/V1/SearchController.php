@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Categories;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Category\CategoryResource;
 use App\Http\Resources\roles\RolesResource;
 use App\Http\Resources\User\UserResource;
 use App\User;
@@ -16,8 +17,8 @@ class SearchController extends Controller
 
     public function __construct()
     {
-        $this->middleware('role:super_admin')->only('employeeSearchByEmail');
-        $this->middleware('role:super_employee|employee')->only('categorySearch');
+        $this->middleware('permission:employee_search')->only('employeeSearchByEmail');
+        $this->middleware('permission:category_search')->only('categorySearch');
     }
 
 
@@ -47,8 +48,8 @@ class SearchController extends Controller
 
         $name = trim($request->name);
 
-        $categories = Categories::where('name','like','%'. $name .'%')->get();
+        $categories = Categories::where('name','like','%'. $name .'%')->with('children')->get();
 
-        return UserResource::collection($categories);
+        return CategoryResource::collection($categories);
     }
 }

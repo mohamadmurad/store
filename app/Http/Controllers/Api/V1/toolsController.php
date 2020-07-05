@@ -17,7 +17,7 @@ class toolsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('role:super_admin')->only(['getAllRoles']);
+        $this->middleware('permission:show_roles')->only(['getAllRoles']);
 
 
     }

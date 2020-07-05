@@ -75,7 +75,8 @@ class UserController extends Controller
             $newUser->assignRole($request->role);
 
             return $this->successResponse([
-                'message' => 'User Saved',
+                'message' => 'User added',
+                'code' => 201,
             ],201);;
 
         }
@@ -105,7 +106,7 @@ class UserController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             return new AccountInfoResource(Auth::user());
-            //return new UserResource($user);
+
         }
         return null;
     }

@@ -26,8 +26,8 @@ class BranchController extends Controller
 
     public function __construct()
     {
-        $this->middleware('permission:add_branch')->only('store');
-        $this->middleware('permission:edit_branch')->only('update');
+        $this->middleware(['permission:add_branch','checkUserForBranch'])->only('store');
+        $this->middleware(['permission:edit_branch','checkUserForBranch'])->only('update');
         $this->middleware('permission:delete_branch')->only('destroy');
 
         $this->middleware(['role:Super Admin'])->only('syncAttributes');

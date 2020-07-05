@@ -56,8 +56,6 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
     // check token
     Route::get('/checkToken',function (){
-
-
         return response([
             'message' => 'your token is valid',
         ],200);
@@ -80,13 +78,8 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     // Sale
     Route::resource('employee_products.sales','Sale\SaleController',['only'=>['store','destroy']]);
 
-
-
     // Category
     Route::resource('categories','Category\CategoryController')->only(['store','update','destroy']);
-
-    // Group
-    Route::resource('groups','Group\GroupController');
 
     //Company
     Route::resource('companies','Company\CompanyController')->only(['store','update','destroy']);
@@ -94,7 +87,6 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     // Branch
     Route::resource('branches','Branch\BranchController')->only(['store','update','destroy']);
     Route::post('syncAttributes/{branch}','Branch\BranchController@syncAttribute');
-
 
     // Attributes
     Route::resource('attributes','Attribute\AttributeController')->except(['show','showAttributeBranch']);
@@ -104,11 +96,32 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     // Attachment
     Route::resource('attachmentType','Attachment\AttachmentTypeController');
 
+
+
+
+
+
+
+
+
     // card
     Route::resource('cards','Card\CardController');
-
     // Coupons
     Route::resource('coupons','Coupon\CouponController');
+    // Group
+    Route::resource('groups','Group\GroupController');
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 });

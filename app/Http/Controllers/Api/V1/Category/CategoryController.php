@@ -19,6 +19,13 @@ class CategoryController extends Controller
 
     use  ApiResponser;
 
+    public function __construct()
+    {
+        $this->middleware(['permission:add_category'])->only(['store']);
+        $this->middleware(['permission:edit_category'])->only(['update']);
+        $this->middleware(['permission:delete_category'])->only(['destroy']);
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -42,7 +49,7 @@ class CategoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param StoreCategory $request
-     * @return CategoryResource
+     * @return JsonResponse
      */
     public function store(StoreCategory $request)
     {
@@ -51,27 +58,16 @@ class CategoryController extends Controller
                 'name' => $request->name,
                 'parent_id' => $request->parent_id === null ? null : $request->parent_id,
             ]);
-            return new CategoryResource($newCategory);
+            return $this->successResponse([
+                'message' => 'Category added successful.',
+                'code' => 201,
+            ],201);
         }
 
         return null;
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Categories $category
-     * @return CategoryResource
-     */
-    public function show(Categories $category)
-    {
-        if (request()->expectsJson() && request()->acceptsJson()){
-            return new CategoryResource($category);
-        }
-
-        return null;
-    }
 
     /**
      * Update the specified resource in storage.
@@ -96,7 +92,10 @@ class CategoryController extends Controller
             }
 
             $category->save();
-            return new CategoryResource($category);
+            return $this->successResponse([
+                'message' => 'Category updated successful.',
+                'code' => 200,
+            ],200);
         }
 
         return null;
@@ -107,14 +106,17 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Categories $category
-     * @return CategoryResource|Response
+     * @return JsonResponse
      * @throws Exception
      */
     public function destroy(Categories $category)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $category->delete();
-            return new CategoryResource($category);
+            return $this->successResponse([
+                'message' => 'Category deleted successful.',
+                'code' => 200,
+            ],200);
         }
         return null;
     }

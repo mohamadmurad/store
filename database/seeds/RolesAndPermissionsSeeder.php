@@ -35,18 +35,41 @@ class RolesAndPermissionsSeeder extends Seeder
 
 
 
-
-
+        // attachment type
+        $add_attachType_per = Permission::create(['guard_name' => 'api','name' => 'add_attachType']);
+        $edit_attachType_per = Permission::create(['guard_name' => 'api','name' => 'edit_attachType']);
+        $delete_attachType_per = Permission::create(['guard_name' => 'api','name' => 'delete_attachType']);
 
         // create admin permissions
-//        Permission::create(['guard_name' => 'api','name' => 'add_user']);
-//        Permission::create(['guard_name' => 'api','name' => 'edit_user']);
-//        Permission::create(['guard_name' => 'api','name' => 'delete_user']);
-//        Permission::create(['guard_name' => 'api','name' => 'read_user']);
+        $add_user_per = Permission::create(['guard_name' => 'api','name' => 'add_user']);
+        $edit_user_per = Permission::create(['guard_name' => 'api','name' => 'edit_user']);
+        $delete_user_per = Permission::create(['guard_name' => 'api','name' => 'delete_user']);
+        $read_user_per = Permission::create(['guard_name' => 'api','name' => 'read_user']);
 
+
+        // search employee
+        $employee_search_per = Permission::create(['guard_name' => 'api','name' => 'employee_search']);
+
+        //show roles
+        $show_roles_per = Permission::create(['guard_name' => 'api','name' => 'show_roles']);
+
+
+        // category
+        $add_category_per = Permission::create(['guard_name' => 'api','name' => 'add_category']);
+        $edit_category_per = Permission::create(['guard_name' => 'api','name' => 'edit_category']);
+        $delete_category_per = Permission::create(['guard_name' => 'api','name' => 'delete_category']);
+
+        // attributes
         $add_attribute_per = Permission::create(['guard_name' => 'api','name' => 'add_attribute']);
         $edit_attribute_per = Permission::create(['guard_name' => 'api','name' => 'edit_attribute']);
         $delete_attribute_per = Permission::create(['guard_name' => 'api','name' => 'delete_attribute']);
+
+
+
+        // search category
+        $category_search_per = Permission::create(['guard_name' => 'api','name' => 'category_search']);
+        $category_search_per->assignRole($super_employee_role);
+        $category_search_per->assignRole($employee_role);
 
 
         // create permissions on company
