@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1\User;
 
+use App\Cards;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUser;
 use App\Http\Requests\User\UpdateAuthUserInfo;
 use App\Http\Requests\User\UpdateUser;
+use App\Http\Resources\Card\CardResource;
+use App\Http\Resources\Card\MyCardResource;
 use App\Http\Resources\User\AccountInfoResource;
 use App\Http\Resources\User\UserResource;
 use App\Traits\ApiResponser;
@@ -35,6 +38,8 @@ class UserController extends Controller
         $this->middleware(['permission:add_user','addUser'])->only('store');
         $this->middleware(['permission:edit_user','checkUserPassword'])->only('update');
         $this->middleware(['permission:delete_user'])->only('destroy');
+        $this->middleware(['permission:show_user_card'])->only('getUserCard');
+        $this->middleware(['role:customer'])->only('getMyCardInfo');
 
     }
 
@@ -111,6 +116,45 @@ class UserController extends Controller
         return null;
     }
 
+    /**
+     * Display the card user info.
+     *
+     * @return MyCardResource|JsonResponse
+     */
+    public function getMyCardInfo()
+    {
+        if (request()->expectsJson() && request()->acceptsJson()){
+            $user= Auth::user();
+            $card  = $user->card()->first();
+            if (!$card){
+                return $this->errorResponse('you dont have card yet',422);
+            }
+            return new MyCardResource($card);
+
+        }
+        return null;
+    }
+
+
+    /**
+     * Display my card info.
+     *
+     * @param User $user
+     * @return CardResource|JsonResponse
+     */
+    public function getUserCard(User $user)
+    {
+        if (request()->expectsJson() && request()->acceptsJson()){
+
+            $card  = $user->card()->first();
+            if (!$card){
+                return $this->errorResponse('User dont have card yet',422);
+            }
+            return new CardResource($card);
+
+        }
+        return null;
+    }
 
     /**
      * Update the specified resource in storage.

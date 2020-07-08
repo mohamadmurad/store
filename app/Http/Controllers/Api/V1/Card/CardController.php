@@ -21,6 +21,14 @@ class CardController extends Controller
 
     use ApiResponser;
 
+    public function __construct()
+    {
+        $this->middleware(['permission:show_all_card'])->only(['index']);
+        $this->middleware(['permission:add_card'])->only(['store']);
+        $this->middleware(['permission:update_card'])->only(['update']);
+        $this->middleware(['permission:delete_card'])->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -61,19 +69,7 @@ class CardController extends Controller
         return null;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Cards $card
-     * @return CardResource|Response
-     */
-    public function show(Cards $card)
-    {
-        if (request()->expectsJson() && request()->acceptsJson()){
-            return new CardResource($card);
-        }
-        return null;
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -106,7 +102,7 @@ class CardController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Cards $card
-     * @return CardResource|Response
+     * @return CardResource|JsonResponse|Response
      * @throws Exception
      */
     public function destroy(Cards $card)
@@ -114,7 +110,10 @@ class CardController extends Controller
         if (request()->expectsJson() && request()->acceptsJson()){
 
             $card->delete();
-            return new CardResource($card);
+            return $this->successResponse([
+                'message' => 'card deleted successful',
+                'code' => 200,
+            ],200);
         }
         return null;
     }

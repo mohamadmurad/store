@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Laravel\Passport\Http\Controllers\AccessTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,7 +70,10 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::resource('users','User\UserController');
 
     Route::get('/myAccount', 'User\UserController@getMyInfo');
+    Route::get('/myCard', 'User\UserController@getMyCardInfo');
     Route::put('/myAccount', 'User\UserController@updateMyInfo');
+
+    Route::get('/users/{user}/card', 'User\UserController@getUserCard');
 
     // Product
     Route::resource('employee_products','Product\DeskTopProductController');
@@ -102,17 +103,19 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     // Attachment
     Route::resource('attachmentType','Attachment\AttachmentTypeController');
 
-
-
-
-
-
-
     // offers
     Route::apiResource('offers','Offer\OfferController')->only(['store','destroy']);
 
     // card
-    Route::resource('cards','Card\CardController');
+    Route::resource('cards','Card\CardController')->except('show');
+
+
+
+
+
+
+
+
     // Coupons
     Route::resource('coupons','Coupon\CouponController');
     // Group
