@@ -27,16 +27,35 @@ class checkIfUserHasProduct
         $branch_id = $user->branch()->first()->id;
 
 
-       $product_branch_id = $request->employee_product->branch_id;
+        if ($request->has('employee_product')){
+            $product_branch_id = $request->employee_product->branch_id;
+            if ((int)$product_branch_id === (int)$branch_id){
+
+                return $next($request);
+            }else{
+
+                return $this->errorResponse('You can\'t access this product',404);
+            }
 
 
-        if ((int)$product_branch_id === (int)$branch_id){
+        }elseif($request->has('products')){
+            // for add offer
+            $products_ids = $request->products;
+            foreach ($products_ids as $product_id){
+                $product_branch_id = Products::findOrFail($product_id)->branch_id;
+
+                if ((int)$product_branch_id !== (int)$branch_id){
+                    return $this->errorResponse('You can\'t access this product',404);
+
+                }
+            }
 
             return $next($request);
-        }else{
-
-            return $this->errorResponse('You can\'t access this product',404);
         }
+
+
+
+
 
 
 

@@ -74,8 +74,9 @@ class Products extends Model
 
     public function firstAttachments() {
 
-        $imageId = AttachmentType::where('type','=','image')->pluck('id')->first();
-        return $this->hasOne(Attachment::class)->where('attachmentType_id','=',$imageId);
+        $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+
+        return $this->hasOne(Attachment::class)->whereIn('attachmentType_id',$imageId);
     }
 
     public function branch(){

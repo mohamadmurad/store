@@ -200,7 +200,9 @@ class DeskTopProductController extends Controller
 
             }
 
-            return new ProductResource($newProduct);
+         //   dd($newProduct->attachments);
+
+            return new ProductResource($newProduct->load('attachments'));
         }
 
         return null;

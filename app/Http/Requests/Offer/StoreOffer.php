@@ -13,7 +13,7 @@ class StoreOffer extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class StoreOffer extends FormRequest
     public function rules()
     {
         return [
-            //
+            'price' => 'required|min:0',
+            'products' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date',
+
         ];
     }
 }

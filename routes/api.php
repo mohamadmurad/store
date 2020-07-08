@@ -40,6 +40,12 @@ Route::resource('v1/products','Api\V1\Product\WebProductController',['only'=>['i
 
 Route::resource('v1/sales','Api\V1\Sale\SaleController',['only'=>['index']]);
 
+
+// offers
+Route::apiResource('v1/offers','Api\V1\Offer\OfferController')->only(['index','show']);
+
+
+
 Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware' => ['auth:api']],function (){
 
 
@@ -102,7 +108,8 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
 
 
-
+    // offers
+    Route::apiResource('offers','Offer\OfferController')->only(['store','destroy']);
 
     // card
     Route::resource('cards','Card\CardController');

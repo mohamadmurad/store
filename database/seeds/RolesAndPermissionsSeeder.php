@@ -117,6 +117,17 @@ class RolesAndPermissionsSeeder extends Seeder
         $delete_sale_per->assignRole($super_employee_role);
 
 
+        // create offer permissions on branch
+        $add_offer_per = Permission::create(['guard_name' => 'api','name' => 'add_offer']);
+        $delete_offer_per = Permission::create(['guard_name' => 'api','name' => 'delete_offer']);
+
+        $add_offer_per->assignRole($employee_role);
+        $delete_offer_per->assignRole($employee_role);
+
+        $add_offer_per->assignRole($super_employee_role);
+        $delete_offer_per->assignRole($super_employee_role);
+
+
         // offers
 //        $add_offer_per = Permission::create(['guard_name' => 'api','name' => 'add_offer']);
 //        $edit_offer_per = Permission::create(['guard_name' => 'api','name' => 'edit_offer']);

@@ -41,7 +41,7 @@ class StoreProduct extends FormRequest
             'category_id'=>'required|exists:categories,id',
             'group_id'=>'required',
             'files'=>'required',
-            'files.*'=>'mimeTypes:' . $types,
+            'files.0'=>'mimeTypes:' . $types,
 
         ];
 

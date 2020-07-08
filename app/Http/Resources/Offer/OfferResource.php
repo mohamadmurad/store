@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Offer;
 
+use App\Http\Resources\product\ProductResource;
+use App\Http\Resources\product\WebProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OfferResource extends JsonResource
@@ -14,6 +16,14 @@ class OfferResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'number' => $this->number,
+            'price' => $this->price,
+            'start' => $this->start,
+            'end' => $this->end,
+            'products' => WebProductResource::collection($this->whenLoaded('products')),
+
+        ];
     }
 }
