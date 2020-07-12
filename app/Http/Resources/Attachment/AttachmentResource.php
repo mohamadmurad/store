@@ -16,8 +16,9 @@ class AttachmentResource extends JsonResource
     public function toArray($request)
     {
 
+
         return [
-            'path' => $request->getHttpHost() . '/'. 'files/products/'.$this->src,
+            'path' => $request->getSchemeAndHttpHost() . '/'. 'files/products/'.$this->src,
             'type' => $this->type->type,
         ];
     }

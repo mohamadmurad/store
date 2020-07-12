@@ -91,7 +91,7 @@ class OfferController extends Controller
                     'end' => $endDate,
                 ]);
 
-                $newOffer->products()->attach($request->get('products'));
+                $newOffer->products()->attach($request->get('products'),['quantity'=>111]);
 
 
                 DB::commit();

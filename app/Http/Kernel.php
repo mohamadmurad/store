@@ -8,6 +8,7 @@ use App\Http\Middleware\checkIfAttachmentForProduct;
 use App\Http\Middleware\checkIfUserAdminBranch;
 use App\Http\Middleware\checkIfUserHasOffer;
 use App\Http\Middleware\checkIfUserHasProduct;
+use App\Http\Middleware\checkoutMiddleware;
 use App\Http\Middleware\checkUserForBranch;
 use App\Http\Middleware\checkUserPassword;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -80,6 +81,7 @@ class Kernel extends HttpKernel
         'checkIfUserAdminBranch' => checkIfUserAdminBranch::class,
         'checkIfAttachmentForProduct' =>checkIfAttachmentForProduct::class,
         'checkUserForBranch' => checkUserForBranch::class,
-        'checkIfUserHasOffer' => checkIfUserHasOffer::class
+        'checkIfUserHasOffer' => checkIfUserHasOffer::class,
+        'checkoutMiddleware' => checkoutMiddleware::class
     ];
 }

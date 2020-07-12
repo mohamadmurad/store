@@ -81,9 +81,11 @@ class CardController extends Controller
     public function update(UpdateCard $request, Cards $card)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $card->fill($request->only([
-                'balance',
-            ]));
+            $balance = $card->balance  + $request->balance;
+
+            $card->fill([
+                'balance' => $balance,
+            ]);
 
             if($card->isClean()){
                 return $this->errorResponse([

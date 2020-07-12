@@ -23,6 +23,12 @@ class CrateProductsOffersTable extends Migration
             $table->foreign('offers_id')->onDelete('cascade')->onUpdate('cascade')
                 ->references('id')
                 ->on('offers');
+
+
+
+
+            $table->integer('quantity')->default(1);
+
         });
     }
 

@@ -84,7 +84,7 @@ class Products extends Model
     }
 
     public function offers(){
-        return $this->belongsToMany(Offers::class);
+        return $this->belongsToMany(Offers::class)->withPivot(['quantity']);
     }
 
     public function group(){

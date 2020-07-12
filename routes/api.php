@@ -112,6 +112,8 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
 
 
+    Route::post('/order','Order\OrderController@checkout');
+
 
 
 
