@@ -43,14 +43,31 @@ class UserController extends Controller
 
     }
 
-        /**
+    /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return AnonymousResourceCollection|Response|LengthAwarePaginator
      */
-    public function index()
+    public function index(Request $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
+
+            if ($request->has('type')){
+                $type = $request->get('type');
+                switch ($type){
+                    case "customer":{
+                        $users = User::role('customer')->get();
+                        return $this->showCollection(UserResource::collection($users));
+                    }break;
+
+                    case "employee":{
+                        $users = User::role(['employee','super_employee'])->get();
+                        return $this->showCollection(UserResource::collection($users));
+                    }break;
+
+                }
+            }
             $users = User::all();
             return $this->showCollection(UserResource::collection($users));
         }
