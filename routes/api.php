@@ -107,11 +107,11 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::apiResource('offers','Offer\OfferController')->only(['store','destroy']);
 
     // card
-    Route::resource('cards','Card\CardController')->except('show');
+    Route::resource('cards','Card\CardController')->only(['update']);
 
 
 
-
+    // order
     Route::post('/order','Order\OrderController@checkout');
 
 

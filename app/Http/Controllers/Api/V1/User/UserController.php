@@ -57,7 +57,7 @@ class UserController extends Controller
                 $type = $request->get('type');
                 switch ($type){
                     case "customer":{
-                        $users = User::role('customer')->get();
+                        $users = User::role('customer')->with('card')->get();
                         return $this->showCollection(UserResource::collection($users));
                     }break;
 

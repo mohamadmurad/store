@@ -23,10 +23,10 @@ class CardController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['permission:show_all_card'])->only(['index']);
-        $this->middleware(['permission:add_card'])->only(['store']);
+       // $this->middleware(['permission:show_all_card'])->only(['index']);
+       // $this->middleware(['permission:add_card'])->only(['store']);
         $this->middleware(['permission:update_card'])->only(['update']);
-        $this->middleware(['permission:delete_card'])->only(['destroy']);
+      //  $this->middleware(['permission:delete_card'])->only(['destroy']);
     }
 
     /**
@@ -34,7 +34,7 @@ class CardController extends Controller
      *
      * @return AnonymousResourceCollection|LengthAwarePaginator|null
      */
-    public function index()
+   /* public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $cards = Cards::all();
@@ -42,15 +42,15 @@ class CardController extends Controller
         }
         return null;
 
-    }
+    }*/
 
     /**
      * Store a newly created resource in storage.
      *
      * @param StoreCard $request
      * @return CardResource|Response
-     */
-    public function store(StoreCard $request)
+   /  */
+   /* public function store(StoreCard $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $code = Cards::randomCardCode(true);
@@ -67,7 +67,7 @@ class CardController extends Controller
         }
 
         return null;
-    }
+    }*/
 
 
 
@@ -107,7 +107,7 @@ class CardController extends Controller
      * @return CardResource|JsonResponse|Response
      * @throws Exception
      */
-    public function destroy(Cards $card)
+   /* public function destroy(Cards $card)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
 
@@ -118,5 +118,5 @@ class CardController extends Controller
             ],200);
         }
         return null;
-    }
+    }*/
 }

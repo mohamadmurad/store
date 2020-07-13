@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Branches;
+use App\Cards;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Resources\roles\RolesResource;
@@ -39,6 +40,15 @@ class AuthApiController extends Controller
             ]);
 
             $newUser->assignRole('customer');
+
+
+            $code = Cards::randomCardCode(true);
+            $pin = Cards::randomCardPin();
+            $newUser->card()->create([
+                'pin' => $pin,
+                'code' => $code,
+                'balance' => 0,
+            ]);
 
             /// verify email and phone code
             ///
