@@ -29,6 +29,10 @@ class Offers extends Model
         return $this->belongsToMany(Products::class)->withPivot(['quantity']);
     }
 
+    public function orders(){
+        return $this->belongsToMany(Orders::class);
+    }
+
     /**
      * Return the String of a SWIFT/BIC number
      *

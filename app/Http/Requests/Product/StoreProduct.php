@@ -27,19 +27,23 @@ class StoreProduct extends FormRequest
     public function rules()
     {
 
+
+
         $types = AttachmentType::all()->pluck('type')->join(',');
 
         $rules = [
             'name'=>'required|min:2|max:100',
             'latinName'=>'required|min:2|max:100',
-            'code'=>'required|unique:products,code',
+           // 'code'=>'required',
             'quantity'=>'required|min:1|integer',
             'status'=>'in:' . Products::AVAILABEL_PRODUCT . ',' . Products::UNAVAILABEL_PRODUCT,
             'price'=>'required|Numeric|min:0',
             'details'=>'required|string',
             'parent_id'=>'required',
-            'category_id'=>'required|exists:categories,id',
-            'group_id'=>'required',
+            'category'=>'required',
+            'category.id'=>'required|exists:categories,id',
+            'group'=>'required',
+            'group.id'=>'required',
             'files'=>'required',
             'files.0'=>'mimeTypes:' . $types,
 
@@ -51,8 +55,8 @@ class StoreProduct extends FormRequest
 
         }
 
-        if ($this->group_id !== 'null') {
-            $rules['group_id'] .= '|exists:groups,id';
+        if ($this->group !== 'null') {
+            $rules['group.id'] .= '|exists:groups,id';
 
         }
 

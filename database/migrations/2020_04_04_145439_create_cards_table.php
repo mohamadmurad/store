@@ -16,8 +16,8 @@ class CreateCardsTable extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->integer('pin')->unique();
-            $table->decimal('balance');
+            $table->integer('pin');
+            $table->integer('balance');
             $table->timestamps();
             $table->softDeletes();
 

@@ -18,7 +18,7 @@ class infoAttributeResource extends JsonResource
 
         return [
             'value' => $this->attribute_values->value,
-            'name' => $this->name,
+            'column' => new AttributeResource($this),
         ];
     }
 }

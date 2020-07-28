@@ -73,6 +73,16 @@ class User extends Authenticatable
         return $this->hasOne(Cards::class);
     }
 
+
+    public function CardCharge(){
+        return $this->belongsToMany(Cards::class,'CardCharge')->withPivot(['amount','chargeDate']);
+    }
+
+
+    public function branchExpense(){
+        return $this->belongsToMany(Branches::class,'branch_expense')->withPivot(['amount','expenseDate']);
+    }
+
 //    public function rates(){
 //        return $this->hasMany(Rate::class);
 //    }

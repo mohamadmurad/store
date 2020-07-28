@@ -48,4 +48,9 @@ class Branches extends Model
     public function employee(){
         return $this->hasOne(User::class);
     }
+
+    public function branchExpense(){
+        return $this->belongsToMany(User::class,'branch_expense')->withPivot(['amount','expenseDate']);
+    }
+
 }

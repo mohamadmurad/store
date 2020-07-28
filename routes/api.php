@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/login', 'Api\V1\AuthApiController@login');
-Route::post('/register', 'Api\V1\AuthApiController@registerNewUserAccount');
+Route::post('v1/login', 'Api\V1\AuthApiController@login');
+Route::post('v1/register', 'Api\V1\AuthApiController@registerNewUserAccount');
 
 
 

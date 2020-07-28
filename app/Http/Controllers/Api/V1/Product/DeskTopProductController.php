@@ -32,7 +32,7 @@ class DeskTopProductController extends Controller
         $this->middleware(['permission:show_all_product_info'])->only(['index','show']);
         $this->middleware(['permission:show_product_with_without_sale'])->only(['productWithSale','productWithoutSale']);
 
-        $this->middleware(['permission:add_product','attributeCheck'])->only('store');
+       // $this->middleware(['permission:add_product','attributeCheck'])->only('store');
         $this->middleware(['permission:edit_product','attributeCheck'])->only('update');
         $this->middleware(['permission:delete_product'])->only('destroy');
 
@@ -135,8 +135,11 @@ class DeskTopProductController extends Controller
      * @param StoreProduct $request
      * @return ProductResource|JsonResponse
      */
-    public function store(StoreProduct $request)
+    public function store(Request $request)
     {
+
+        return $request->all();
+
         $saved_files_for_roleBack = [];
         if (request()->expectsJson() && request()->acceptsJson()){
             $user = Auth::user();
@@ -147,8 +150,9 @@ class DeskTopProductController extends Controller
 
             $branch = $user->branch()->first();
 
-            DB::beginTransaction();
-            try {
+           // DB::beginTransaction();
+           // try {
+
                 $newProduct = Products::create([
                     'name' => $request->get('name'),
                     'latinName' => $request->get('latinName'),
@@ -158,20 +162,21 @@ class DeskTopProductController extends Controller
                     'price' => $request->get('price'),
                     'details' => $request->get('details'),
                     'parent_id' => $request->get('parent_id') === 'null' ? null : $request->get('parent_id'),
-                    'category_id' => $request->get('category_id'),
-                    'group_id' => $request->get('group_id') === 'null' ? null : $request->get('group_id'),
+                    'category_id' => $request->get('category')['id'],
+                    'group_id' => $request->get('group') === 'null' ? null : $request->get('group')['id'],
                     'branch_id' => $branch->id,
                 ]);
 
                 if ($request->has('attributes')){
                     $attributes = $request->get('attributes');
-                    foreach ($attributes as $key => $attribute){
-                        $newProduct->attributes()->attach($key, ['value' => $attribute]);
+
+                    foreach ($attributes as $attribute){
+                        $newProduct->attributes()->attach($attribute['attribute']['id'], ['value' => $attribute['value']]);
                     }
                 }
 
 
-                $AllFiles = $request->file('files');
+               /* $AllFiles = $request->file('files');
                 foreach ($AllFiles as $file){
                     $attachType = AttachmentType::where('type','like',$file->getMimeType())->first();
                     $saved_file = $this->upload($file,public_path('files/products/'. str_replace(' ','',$branch->name)));
@@ -183,9 +188,9 @@ class DeskTopProductController extends Controller
                         ]);
                         $newProduct->attachments()->save($newAttachment);
                     }
-                }
+                }*/
 
-                DB::commit();
+             /*   DB::commit();
             }catch (Exception $e){
                 foreach ($saved_files_for_roleBack as $file){
                     File::delete(public_path('files/products'. str_replace(' ','',$branch->name)) . '/' . $file);
@@ -198,7 +203,7 @@ class DeskTopProductController extends Controller
                 return $this->errorResponse('Product doesnt added please try again' ,422);
 
 
-            }
+            }*/
 
          //   dd($newProduct->attachments);
 

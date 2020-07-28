@@ -23,6 +23,10 @@ class Cards extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function CardCharge(){
+        return $this->belongsToMany(User::class,'CardCharge')->withPivot(['amount','chargeDate']);
+    }
+
 
     public static function randomCardCode($formatted = false, $separator = '-'){
 

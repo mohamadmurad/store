@@ -1,6 +1,7 @@
 <?php
 
 use App\Branches;
+use App\Cards;
 use App\User;
 use Illuminate\Database\Seeder;
 
@@ -67,5 +68,14 @@ class FixedUserSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ]);
         $user3->assignRole(['customer']);
+
+
+        $code = Cards::randomCardCode(true);
+        $pin = Cards::randomCardPin();
+        $user3->card()->create([
+            'pin' => $pin,
+            'code' => $code,
+            'balance' => 70000,
+        ]);
     }
 }

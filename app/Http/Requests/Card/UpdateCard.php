@@ -27,6 +27,7 @@ class UpdateCard extends FormRequest
     {
         return [
             'balance'=>'required|integer|min:0',
+            'cost'=>'required|integer|min:0',
         ];
     }
 
@@ -34,6 +35,8 @@ class UpdateCard extends FormRequest
     {
         return [
             'balance'=> (float) $this->balance,
+            'cost' => $this->cost,
+
         ];
     }
 }
