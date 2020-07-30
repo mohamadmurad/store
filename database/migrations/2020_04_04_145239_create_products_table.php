@@ -23,7 +23,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('latinName');
-            $table->string('code');
+            $table->string('code')->nullable();
             $table->integer('quantity');
             $table->enum('status',$this->product_status);
             $table->decimal('price');

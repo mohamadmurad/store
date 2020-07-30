@@ -76,6 +76,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::get('/users/{user}/card', 'User\UserController@getUserCard');
 
     // Product
+
     Route::resource('employee_products','Product\DeskTopProductController');
     Route::get('employee_product_sale','Product\DeskTopProductController@productWithSale');
     Route::get('employee_product_not_sale','Product\DeskTopProductController@productWithoutSale');

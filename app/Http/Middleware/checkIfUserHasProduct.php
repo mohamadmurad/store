@@ -21,14 +21,16 @@ class checkIfUserHasProduct
      */
     public function handle($request, Closure $next)
     {
-
         $user = Auth::user();
 
         $branch_id = $user->branch()->first()->id;
 
 
-        if ($request->has('employee_product')){
-            $product_branch_id = $request->employee_product->branch_id;
+
+
+        if ($request->route()->hasParameter('employee_product')){
+
+            $product_branch_id = $request->route()->parameter('employee_product')->branch_id;
             if ((int)$product_branch_id === (int)$branch_id){
 
                 return $next($request);
@@ -40,6 +42,7 @@ class checkIfUserHasProduct
 
         }elseif($request->has('products')){
             // for add offer
+
             $products_ids = $request->products;
             foreach ($products_ids as $product_id){
                 $product_branch_id = Products::findOrFail($product_id)->branch_id;
@@ -53,14 +56,7 @@ class checkIfUserHasProduct
             return $next($request);
         }
 
-
-
-
-
-
-
-
-
+        return abort(403,'access denied');
 
     }
 }

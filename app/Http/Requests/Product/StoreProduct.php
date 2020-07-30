@@ -34,33 +34,30 @@ class StoreProduct extends FormRequest
         $rules = [
             'name'=>'required|min:2|max:100',
             'latinName'=>'required|min:2|max:100',
-           // 'code'=>'required',
             'quantity'=>'required|min:1|integer',
             'status'=>'in:' . Products::AVAILABEL_PRODUCT . ',' . Products::UNAVAILABEL_PRODUCT,
             'price'=>'required|Numeric|min:0',
             'details'=>'required|string',
-            'parent_id'=>'required',
-            'category'=>'required',
-            'category.id'=>'required|exists:categories,id',
-            'group'=>'required',
-            'group.id'=>'required',
+            'category_id'=>'required|exists:categories,id',
             'files'=>'required',
             'files.0'=>'mimeTypes:' . $types,
+            'parent_id' => '',
+            'group_id' => '',
 
         ];
 
 
-        if ($this->parent_id !== 'null') {
-            $rules['parent_id'] .= '|exists:products,id';
+        if ($this->has('parent_id')) {
+            $rules['parent_id'] .= 'exists:products,id';
 
         }
 
-        if ($this->group !== 'null') {
-            $rules['group.id'] .= '|exists:groups,id';
+        if ($this->has('group_id')) {
+            $rules['group_id'] .= 'exists:groups,id';
 
         }
 
-      //  dd($rules);
+
         return $rules;
     }
 

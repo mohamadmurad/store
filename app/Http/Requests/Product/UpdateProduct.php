@@ -42,11 +42,11 @@ class UpdateProduct extends FormRequest
         }
 
         if($this->has(['code'])){
-            $rules += [
+           /* $rules += [
                 'code'=>[
                     Rule::unique($this->table,'code')->ignore(request()->segment(3))
                 ],
-            ];
+            ];*/
         }
 
         if($this->has(['quantity'])){
@@ -77,12 +77,8 @@ class UpdateProduct extends FormRequest
 
 
         if($this->has(['parent_id'])){
-
-            if ($this->parentProduct !== 'null') {
                 $rules+= [
                     'parent_id'=>'exists:products,id'];
-            }
-
         }
 
         if($this->has(['category_id'])){
@@ -93,11 +89,11 @@ class UpdateProduct extends FormRequest
 
 
         if($this->has(['group_id'])){
-            if ($this->group !== 'null') {
+
                 $rules += [
                     'group_id'=>'exists:groups,id',
                 ];
-            }
+
         }
 
         return $rules;
