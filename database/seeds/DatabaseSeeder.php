@@ -93,7 +93,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(FixedAttachment::class);
 
-
+        // users
         factory(User::class, $userQuantity)->create()->each(function ($u){
             $rand = rand(1,0);
             $rand === 1 ? $u->card()->save(factory(Cards::class)->make()) : null;
@@ -101,13 +101,14 @@ class DatabaseSeeder extends Seeder
             $rand === 1 ? $u->assignRole(['employee']) : $u->assignRole(['super_employee']);
         });
 
+        // attribute
         factory(Attributes::class, $attributesQuantity)->create();
 
-
+        // company
         factory(Companies::class, $CompaniesQuantity)->create();
 
-      //  factory(AttachmentType::class, $attach_typeQuantity)->create();
 
+        // category
         factory(Categories::class, $categoryQuantity)->create()->each(function ($cat){
             $rand = rand(1,0);
             if( Categories::first()->id  && $rand === 1){
@@ -117,6 +118,7 @@ class DatabaseSeeder extends Seeder
             }
         });
 
+        // branches
         factory(Branches::class, $branchesQuantity)->create()->each(function ($branch){
             $usersInBranchTable = Branches::all()->pluck('user_id');
             $user = User::all()->whereNotIn('id',$usersInBranchTable)->random(1);
@@ -129,11 +131,13 @@ class DatabaseSeeder extends Seeder
 
         });
 
+        // groups
         factory(Groups::class, $groupsQuantity)->create();
 
+        // coupons
         factory(Coupons::class, $couponsQuantity)->create();
 
-
+        // products
         factory(Products::class, $productsQuantity)->create()->each(function ($product) {
             $rand = rand(1,0);
             if($rand===1 && Products::first()->id){
@@ -172,28 +176,44 @@ class DatabaseSeeder extends Seeder
 
         });
 
+        // rate
         factory(Rate::class, $ratesQuantity)->create();
 
+        // sale
         factory(Sales::class, $salesQuantity)->create();
 
+        // offer
         factory(Offers::class, $offersQuantity)->create()->each(function ($offer) {
-            $product = products::all()->random(3)->pluck('id');
+            $branch_id = rand(1,25);
+
+            $product = products::all()->where('branch_id','=',$branch_id);
+            if (count($product) > 2){
+
+                $product = $product->random(3)->pluck('id');
+            }else{
+                $product= $product->pluck('id');
+            }
+
+
+
+
             $offer->products()->attach($product);
         });
 
+        // favorate
         for ($i=0;$i<$favoriteQuantity;$i++){
             $product = products::all()->random();
             $user = User::all()->random()->id;
             $product->favorite()->attach($user);
         //    DB::insert('insert into favorite (users_id , products_id) values (?, ?)',[$user,$product]);
         }
-
+/*
         factory(Orders::class, $ordersQuantity)->create()->each(function ($order) {
             $rand = rand(1,6);
             $product = products::all()->random($rand)->pluck('id');
 
             $order->products()->attach($product);
-        });
+        });*/
 
 
         $this->call(FixedUserSeeder::class);

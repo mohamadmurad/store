@@ -7,6 +7,7 @@ use App\Cards;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Resources\roles\RolesResource;
+use App\Http\Resources\User\UserResource;
 use App\Traits\ApiResponser;
 use App\User;
 use Illuminate\Http\Request;
@@ -42,14 +43,6 @@ class AuthApiController extends Controller
             $newUser->assignRole('customer');
 
 
-            $code = Cards::randomCardCode(true);
-            $pin = Cards::randomCardPin();
-            $newUser->card()->create([
-                'pin' => $pin,
-                'code' => $code,
-                'balance' => 0,
-            ]);
-
             /// verify email and phone code
             ///
             ///
@@ -57,9 +50,11 @@ class AuthApiController extends Controller
             ///
             ///
 
-            return $this->successResponse([
-                'message' => 'User Saved',
-            ],201);;
+            return new UserResource($newUser);
+//            return $this->successResponse([
+//                'message' => 'User Saved',
+//                'code' => 201,
+//            ],201);;
 
         }
         return null;

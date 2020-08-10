@@ -19,6 +19,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('discount');
             $table->decimal('delevareAmount');
 
+
             $table->foreignId('user_id');
             $table->foreign('user_id')->onDelete('cascade')->onUpdate('cascade')
                 ->references('id')
@@ -29,6 +30,12 @@ class CreateOrdersTable extends Migration
             $table->foreign('coupon_id')
                 ->references('id')
                 ->on('coupons');
+
+
+            $table->foreignId('branch_id');
+            $table->foreign('branch_id')->onDelete('cascade')->onUpdate('cascade')
+                ->references('id')
+                ->on('branches');
 
             $table->timestamps();
         });

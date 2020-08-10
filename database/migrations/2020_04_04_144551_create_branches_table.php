@@ -17,7 +17,6 @@ class CreateBranchesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('location');
-            $table->integer('balance')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

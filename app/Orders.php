@@ -9,7 +9,7 @@ class Orders extends Model
 {
 
     use SoftDeletes;
-    protected $fillable = ['date','discount','delevareAmount','user_id'];
+    protected $fillable = ['date','discount','delevareAmount','user_id','branch_id'];
     public function user(){
         return $this->belongsTo(User::class);
     }

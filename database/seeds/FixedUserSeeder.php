@@ -25,6 +25,16 @@ class FixedUserSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ]);
 
+        $code = Cards::randomCardCode(true);
+        $pin = Cards::randomCardPin();
+        $user->card()->create([
+            'pin' => $pin,
+            'code' => $code,
+            'balance' => 0
+        ]);
+
+
+
         $user->assignRole('Super Admin');
 
         // super employee
@@ -37,6 +47,14 @@ class FixedUserSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ]);
         $user1->assignRole(['super_employee']);
+
+        $code = Cards::randomCardCode(true);
+        $pin = Cards::randomCardPin();
+        $user1->card()->create([
+            'pin' => $pin,
+            'code' => $code,
+            'balance' => 0
+        ]);
 
         $rand_branch = Branches::all()->random(1)->first();
         $rand_branch->user_id = $user1->id;
@@ -52,6 +70,15 @@ class FixedUserSeeder extends Seeder
             'password' => bcrypt('12345678'),
         ]);
         $user2->assignRole(['employee']);
+
+        $code = Cards::randomCardCode(true);
+        $pin = Cards::randomCardPin();
+        $user2->card()->create([
+            'pin' => $pin,
+            'code' => $code,
+            'balance' => 0
+        ]);
+
 
         $rand_branch = Branches::all()->random(1)->first();
         $rand_branch->user_id = $user2->id;
@@ -75,7 +102,7 @@ class FixedUserSeeder extends Seeder
         $user3->card()->create([
             'pin' => $pin,
             'code' => $code,
-            'balance' => 70000,
+            'balance' => 100000,
         ]);
     }
 }

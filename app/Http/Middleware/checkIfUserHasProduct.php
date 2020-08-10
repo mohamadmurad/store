@@ -26,8 +26,6 @@ class checkIfUserHasProduct
         $branch_id = $user->branch()->first()->id;
 
 
-
-
         if ($request->route()->hasParameter('employee_product')){
 
             $product_branch_id = $request->route()->parameter('employee_product')->branch_id;
@@ -40,20 +38,39 @@ class checkIfUserHasProduct
             }
 
 
-        }elseif($request->has('products')){
+        }elseif($request->isJson()){
+            $data = $request->json();
             // for add offer
 
-            $products_ids = $request->products;
-            foreach ($products_ids as $product_id){
-                $product_branch_id = Products::findOrFail($product_id)->branch_id;
+            if($data->has('products')){
 
-                if ((int)$product_branch_id !== (int)$branch_id){
-                    return $this->errorResponse('You can\'t access this product',404);
+                $products = $data->get('products');
+
+                foreach ($products as $product){
+                    if (isset($product['product_id'])){
+                        $product_branch_id = Products::findOrFail((int)$product['product_id'])->branch_id;
+                        if ((int)$product_branch_id !== (int)$branch_id){
+                            return $this->errorResponse('You can\'t access this product',404);
+
+                        }
+                    }else{
+                        return $this->errorResponse('Please send product ids',422);
+                    }
+
+
 
                 }
+
+                return $next($request);
+
+            }else{
+                return $this->errorResponse('Please send products array',422);
             }
 
-            return $next($request);
+
+
+
+
         }
 
         return abort(403,'access denied');

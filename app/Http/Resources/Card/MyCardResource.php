@@ -17,6 +17,7 @@ class MyCardResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'code'=> $this->code,
             'balance' => (float) $this->balance,
         ];
     }

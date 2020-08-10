@@ -54,6 +54,7 @@ class OfferController extends Controller
     public function store(StoreOffer $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
+            $data = $request->json();
             $user = Auth::user();
 
             if ($user->hasRole('Super Admin')){
@@ -61,8 +62,12 @@ class OfferController extends Controller
             }
 
             // format and validate dates
-            $startDate = Carbon::make($request->get('start'));
-            $endDate = Carbon::make($request->get('end'));
+
+            $startDate = Carbon::make($data->get('start'));
+
+            $endDate = Carbon::make($data->get('end'));
+
+
             if($startDate > $endDate){
                 return $this->errorResponse('End Offer Date must next the Start Date' ,422);
             }
@@ -71,19 +76,11 @@ class OfferController extends Controller
                 return $this->errorResponse('Start Date must be newer' ,422);
             }
 
-            $products_ids = $request->products;
-            $all_product_price = 0;
-            foreach ($products_ids as $product_id){
-                $product_price= Products::findOrFail($product_id)->price;
-                $all_product_price+=$product_price;
-            }
-            if ($all_product_price <= $request->price){
-                return $this->errorResponse('Offer Price must lower than sum products price ( '. $all_product_price .' )' ,422);
-            }
-
             DB::beginTransaction();
             try {
 
+                $products= $data->has('products') ? $data->get('products') : [];
+                $all_product_price = 0;
                 $newOffer = Offers::create([
                     'price' => $request->price,
                     'number' => Offers::randomOfferNumber(),
@@ -91,7 +88,24 @@ class OfferController extends Controller
                     'end' => $endDate,
                 ]);
 
-                $newOffer->products()->attach($request->get('products'),['quantity'=>111]);
+                foreach ($products as $product){
+                    $product_id = (int)$product['product_id'];
+                    $product_quantity = (int)$product['quantity'];
+                    $product_in_db= Products::findOrFail($product_id);
+                    $product_price  = $product_in_db->price;
+                    if($product_quantity > $product_in_db->quantity){
+                        return $this->errorResponse('product ( ' . $product_in_db->name .  ' ) has only '. $product_in_db->quantity .' item' ,422);
+                    }
+                    $all_product_price+=$product_price;
+                    $newOffer->products()->attach($product_id,['quantity'=>$product_quantity]);
+                }
+                if ($all_product_price <= $request->price){
+                    return $this->errorResponse('Offer Price must lower than sum products price ( '. $all_product_price .' )' ,422);
+                }
+
+
+
+
 
 
                 DB::commit();

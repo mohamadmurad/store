@@ -46,7 +46,7 @@ class Branches extends Model
     }
 
     public function employee(){
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class,'id','user_id');
     }
 
     public function branchExpense(){

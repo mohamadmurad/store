@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'username' => $this->username,
             'location' => $this->location,
-            'card' => new CardResource($this->whenLoaded('card')),
+            'card' => new CardResource($this->card()->first()),
         ];
     }
 }
