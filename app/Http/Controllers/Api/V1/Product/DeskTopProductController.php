@@ -233,7 +233,8 @@ class DeskTopProductController extends Controller
         if (request()->expectsJson() && request()->acceptsJson()){
             $product =$employee_product->load(['sales','attachments']);
 
-            return new ProductResource($product);
+         //   return new ProductResource($product);
+            return $this->showModel(new ProductResource($product));
 
         }
         return null;
@@ -311,7 +312,8 @@ class DeskTopProductController extends Controller
 
 
 
-            return new ProductResource($employee_product);
+           // return new ProductResource($employee_product);
+            return $this->showModel(new ProductResource($employee_product));
 
 
         }
@@ -344,7 +346,11 @@ class DeskTopProductController extends Controller
             }
 
 
-            return new ProductResource($employee_product);
+            //return new ProductResource($employee_product);
+            return $this->successResponse([
+                'message' => 'product deleted successful',
+                'code' => 200,
+            ],200);
         }
 
         return null;
