@@ -13,6 +13,7 @@ use App\Http\Resources\product\ProductResource;
 use App\Http\Resources\product\WebProductResource;
 use App\Products;
 use App\Traits\ApiResponser;
+use App\Traits\checks;
 use App\Traits\UploadAble;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -26,13 +27,13 @@ use Illuminate\Validation\ValidationException;
 
 class DeskTopProductAttachmentController extends Controller
 {
-    use  ApiResponser,UploadAble;
+    use  ApiResponser,UploadAble,checks;
 
     public function __construct()
     {
 
         $this->middleware(['permission:add_product','checkIfUserHasProduct'])->only('store');
-        $this->middleware(['permission:delete_product','checkIfUserHasProduct','checkIfAttachmentForProduct'])->only('destroy');
+        $this->middleware(['permission:delete_product'])->only('destroy');
 
     }
 
@@ -110,9 +111,19 @@ class DeskTopProductAttachmentController extends Controller
      * @param Attachment $attachment
      * @return JsonResponse
      */
-    public function destroy(Products $employee_product , Attachment $attachment)
+    public function destroy(Attachment $attachment)
     {
+
         if (request()->expectsJson() && request()->acceptsJson()){
+            $user = Auth::user();
+            $product  = $attachment->products()->withoutGlobalScope('status')->first();
+
+            if (!$this->checkIfUserHasProduct($user,$product)){
+                return $this->errorResponse('You can\'t access this product',404);
+            }
+
+
+
             DB::beginTransaction();
 
             try {

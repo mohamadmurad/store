@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\addUser;
 use App\Http\Middleware\attributeCheck;
+use App\Http\Middleware\attributeCheckForAdd;
 use App\Http\Middleware\chechProductWithUser;
 use App\Http\Middleware\checkIfAttachmentForProduct;
 use App\Http\Middleware\checkIfUserAdminBranch;
@@ -78,6 +79,7 @@ class Kernel extends HttpKernel
         'addUser' => addUser::class,
         'checkUserPassword' => checkUserPassword::class,
         'attributeCheck' => attributeCheck::class,
+        'attributeCheckForAdd' => attributeCheckForAdd::class,
         'checkIfUserHasProduct' => checkIfUserHasProduct::class,
         'checkIfUserAdminBranch' => checkIfUserAdminBranch::class,
         'checkIfAttachmentForProduct' =>checkIfAttachmentForProduct::class,

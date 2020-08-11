@@ -29,8 +29,8 @@ class Attachment extends Model
         });
     }
 
-    public function product(){
-        return $this->belongsTo(Products::class);
+    public function products(){
+        return $this->belongsTo(Products::class,'products_id');
     }
 
     public function type(){

@@ -54,7 +54,6 @@ class CompanyController extends Controller
     public function store(StoreCompany $request)
     {
 
-//dd(config('app.COMPANY_LOGO_PATH','files//'));
 
         if (request()->expectsJson() && request()->acceptsJson()){
             $saved_files_for_roleBack = [];
@@ -73,7 +72,9 @@ class CompanyController extends Controller
                 $newCompany = Companies::create([
                     'name' => $request->get('name'),
                     'phone' => $request->get('phone'),
+                    'category_id' => $request->get('category_id'),
                     'logo' => $fileName,
+
                 ]);
 
                 DB::commit();
@@ -107,7 +108,7 @@ class CompanyController extends Controller
     public function show(Companies $company)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return new CompanyResource($company);
+            return $this->showModel(new CompanyResource($company));
         }
     }
 
@@ -126,6 +127,7 @@ class CompanyController extends Controller
             $company->fill($request->only([
                 'name',
                 'phone',
+                'category_id',
             ]));
 
             if($company->isClean()){

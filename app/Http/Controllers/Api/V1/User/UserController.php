@@ -39,7 +39,7 @@ class UserController extends Controller
         $this->middleware(['permission:edit_user','checkUserPassword'])->only('update');
         $this->middleware(['permission:delete_user'])->only('destroy');
         $this->middleware(['permission:show_user_card'])->only('getUserCard');
-        $this->middleware(['role:customer'])->only('getMyCardInfo');
+        //$this->middleware(['role:customer'])->only('getMyCardInfo');
 
     }
 
@@ -109,12 +109,13 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param User $user
-     * @return UserResource|Response
+     * @return JsonResponse
      */
     public function show(User $user)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return new UserResource($user);
+           // return new UserResource($user);
+            return $this->showModel(new UserResource($user));
         }
         return null;
     }
@@ -127,7 +128,7 @@ class UserController extends Controller
     public function getMyInfo()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return new AccountInfoResource(Auth::user());
+            return $this->showModel(new AccountInfoResource(Auth::user()));
 
         }
         return null;
@@ -146,7 +147,7 @@ class UserController extends Controller
             if (!$card){
                 return $this->errorResponse('you dont have card yet',422);
             }
-            return new MyCardResource($card);
+            return $this->showModel(new MyCardResource($card));
 
         }
         return null;
@@ -167,7 +168,7 @@ class UserController extends Controller
             if (!$card){
                 return $this->errorResponse('User dont have card yet',422);
             }
-            return new CardResource($card);
+            return $this->showModel(new CardResource($card));
 
         }
         return null;

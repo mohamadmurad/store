@@ -74,7 +74,7 @@ class AttachmentTypeController extends Controller
     public function show(AttachmentType $attachmentType)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return new AttachmentTypeResource($attachmentType);
+            return $this->showModel(new AttachmentTypeResource($attachmentType));
         }
         return null;
     }

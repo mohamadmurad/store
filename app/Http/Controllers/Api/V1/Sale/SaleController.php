@@ -9,6 +9,7 @@ use App\Http\Resources\Sale\SaleResource;
 use App\Products;
 use App\Sales;
 use App\Traits\ApiResponser;
+use App\Traits\checks;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -20,12 +21,12 @@ use Illuminate\Support\Facades\Auth;
 class SaleController extends Controller
 {
 
-    use ApiResponser;
+    use ApiResponser,checks;
 
     public function __construct()
     {
-        $this->middleware(['permission:add_sale','checkIfUserHasProduct'])->only('store');
-        $this->middleware(['permission:delete_sale','checkIfUserHasProduct'])->only('destroy');
+        $this->middleware(['permission:add_sale'])->only('store');
+        $this->middleware(['permission:delete_sale'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -60,6 +61,12 @@ class SaleController extends Controller
 
         if(request()->expectsJson() && request()->acceptsJson()){
 
+            $user = Auth::user();
+
+
+            if (!$this->checkIfUserHasProduct($user,$employee_product)){
+                return $this->errorResponse('You can\'t access this product',404);
+            }
 
 
             if (!$employee_product->sales()->exists()){
@@ -130,18 +137,20 @@ class SaleController extends Controller
      * @return SaleResource|JsonResponse|Response
      * @throws Exception
      */
-    public function destroy(Products $employee_product,Sales $sale)
+    public function destroy(Sales $sale)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
 
+            $user = Auth::user();
+            $employee_product = $sale->product()->first();
 
-            $sale_product_id = $sale->product_id;
-            if ($employee_product->id === $sale_product_id){
-                $sale->delete();
-                return $this->successResponse(['message' => 'sale was deleted.'],200);
-            }else{
-                $this->errorResponse('this sale not for this product',422);
+
+            if (!$this->checkIfUserHasProduct($user,$employee_product)){
+                return $this->errorResponse('You can\'t access this product',404);
             }
+
+            $sale->delete();
+            return $this->successResponse(['message' => 'sale was deleted.'],200);
 
         }
         return null;

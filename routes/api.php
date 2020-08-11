@@ -20,19 +20,19 @@ Route::post('v1/register', 'Api\V1\AuthApiController@registerNewUserAccount');
 Route::resource('v1/companies','Api\V1\Company\CompanyController')->only(['index','show']);
 
 // get all branches for company
-Route::get('v1/companies/{company}/branches','Api\V1\Company\CompanyBranchController@index');
+Route::get('v1/branchesByCompany/{company}/','Api\V1\Company\CompanyBranchController@index');
 
 // get all products by branch
-Route::get('v1/branches/{branch}/products','Api\V1\Branch\BranchProductController@index');
+Route::get('v1/productsByBranch/{branch}','Api\V1\Branch\BranchProductController@index');
 
 // get all sales by branch
-Route::get('v1/branches/{branch}/sales','Api\V1\Branch\BranchSalesController@index');
+Route::get('v1/salesByBranch/{branch}/','Api\V1\Branch\BranchSalesController@index');
 
 // all category
 Route::get('v1/categories','Api\V1\Category\CategoryController@index');
 
 // all product by category
-Route::get('v1/categories/{category}/products','Api\V1\Category\CategoryProductController@index');
+Route::get('v1/productByCategory/{category}','Api\V1\Category\CategoryProductController@index');
 
 Route::resource('v1/products','Api\V1\Product\WebProductController',['only'=>['index','show']]);
 
@@ -73,18 +73,22 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::get('/myCard', 'User\UserController@getMyCardInfo');
     Route::put('/myAccount', 'User\UserController@updateMyInfo');
 
-    Route::get('/users/{user}/card', 'User\UserController@getUserCard');
+    Route::get('/userCard/{user}', 'User\UserController@getUserCard');
 
     // Product
 
     Route::resource('employee_products','Product\DeskTopProductController');
+    Route::post('addAttribute/{employee_product}','Product\DeskTopProductController@addAttributeToProduct');
     Route::get('employee_product_sale','Product\DeskTopProductController@productWithSale');
     Route::get('employee_product_not_sale','Product\DeskTopProductController@productWithoutSale');
 
-    Route::resource('employee_products.attachment','Product\DeskTopProductAttachmentController')->only(['store','destroy']);
+
+    Route::post('AddAttachmentToProduct/{employee_product}','Product\DeskTopProductAttachmentController@store');
+    Route::delete('deleteAttachmentToProduct/{attachment}','Product\DeskTopProductAttachmentController@destroy');
 
     // Sale
-    Route::resource('employee_products.sales','Sale\SaleController',['only'=>['store','destroy']]);
+    Route::post('sales/{employee_product}','Sale\SaleController@store');
+    Route::delete('sales/{sale}','Sale\SaleController@destroy');
 
     // Category
     Route::resource('categories','Category\CategoryController')->only(['store','update','destroy']);

@@ -9,5 +9,6 @@ $factory->define(Companies::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->company(),
         'phone' => $faker->unique()->phoneNumber(),
+        'category_id' => rand(1,3),
     ];
 });

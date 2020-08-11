@@ -29,6 +29,7 @@ class StoreCompany extends FormRequest
             'name'=>'required|min:2|max:255|unique:'. $this->table .',name',
             'phone'=>'required|unique:'. $this->table .',phone',
             'logo'=>'',
+            'category_id'=>'required|exists:categories,id',
         ];
         if ($this->has('logo')) {
             $rules['logo'] .= 'mimeTypes:image/jpeg,image/png';

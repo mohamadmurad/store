@@ -137,7 +137,7 @@ class OfferController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()){
 
-            return new OfferResource($offer->load('products.firstAttachments'));
+            return $this->showModel(new OfferResource($offer->load('products.attachments')));
         }
 
         return null;

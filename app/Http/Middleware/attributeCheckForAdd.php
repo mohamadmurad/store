@@ -3,14 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Attributes;
-use App\Products;
 use App\Traits\ApiResponser;
 use Closure;
 use Illuminate\Support\Facades\Auth;
-use PHPUnit\Framework\MockObject\Api;
-use function MongoDB\BSON\toJSON;
 
-class attributeCheck
+class attributeCheckForAdd
 {
 
     use ApiResponser;
@@ -23,23 +20,22 @@ class attributeCheck
      */
     public function handle($request, Closure $next)
     {
-
-
         $user = Auth::user();
         $branch = $user->branch()->first();
+        $datas = $request->json();
+        foreach ($datas as $data){
 
-        if ($request->has('attributes')){
-            $attributes = $request->get('attributes');
+            if (isset($data['attribute'])){
+                $attributes = $data['attribute'];
+                $attribute_id = $attributes['id'];
 
-            foreach ($attributes as $attribute){
 
-                $id = $attribute['attribute']['id'];
-
-                $att = Attributes::findOrFail((int) $id);
-
+                $att = Attributes::findOrFail((int) $attribute_id);
                 if(count($att->branches()->where('branches_id','=',$branch->id)->get()) == 0){
                     return $this->errorResponse('attribute "' .$att->name  .'" not for this branch',422);
                 }
+
+
             }
         }
 

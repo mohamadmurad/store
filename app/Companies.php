@@ -15,6 +15,7 @@ class Companies extends Model
         'name',
         'phone',
         'logo',
+        'category_id'
     ];
 
 

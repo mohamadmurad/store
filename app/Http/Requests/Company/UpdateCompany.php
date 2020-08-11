@@ -27,20 +27,35 @@ class UpdateCompany extends FormRequest
     public function rules()
     {
 
+        $rules = [
 
-    //    dd(request()->segment(env('hhh')));
-        return [
-            'name' => [
+
+
+        ];
+
+        if ($this->has('name')){
+
+            $rules['name'] = [
                 'required',
                 'min:2',
                 'max:100',
                 Rule::unique($this->table)->ignore(request()->segment(4))
-            ],
-            'phone'=>[
+            ];
+        }
+
+
+        if ($this->has('phone')){
+
+            $rules['category_id'] = [
                 'required',
                 Rule::unique($this->table)->ignore(request()->segment(4))
-            ],
+            ];
+        }
 
-        ];
+
+        if ($this->has('category_id')){
+            $rules['category_id'] = 'required|exists:categories,id';
+        }
+        return $rules;
     }
 }

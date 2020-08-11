@@ -17,9 +17,20 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('phone')->unique();
+
+
+
             $table->string('logo')->default('DefaultLogo.png');
             $table->timestamps();
             $table->softDeletes();
+
+
+            $table->foreignId('category_id');
+            $table->foreign('category_id')
+                ->references('id')
+                ->on('categories');
+
+
         });
     }
 

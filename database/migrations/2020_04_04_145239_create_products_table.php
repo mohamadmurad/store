@@ -26,7 +26,7 @@ class CreateProductsTable extends Migration
             $table->string('code')->nullable();
             $table->integer('quantity');
             $table->enum('status',$this->product_status);
-            $table->decimal('price');
+            $table->integer('price');
             $table->text('details');
             $table->timestamps();
             $table->softDeletes();
@@ -47,7 +47,7 @@ class CreateProductsTable extends Migration
 
 
             $table->foreignId('category_id')->nullable();
-            $table->foreign('category_id')->onDelete('cascade')->onUpdate('cascade')
+            $table->foreign('category_id')
                 ->references('id')
                 ->on('categories');
 
