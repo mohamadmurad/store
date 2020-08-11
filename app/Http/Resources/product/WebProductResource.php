@@ -29,7 +29,7 @@ class WebProductResource extends JsonResource
             'details' => $this->details,
             'category' => new CategoryResource(Categories::findOrFail($this->category_id)),
             'media' => AttachmentResource::collection($this->whenLoaded('attachments')),
-            'image' => new AttachmentResource ($this->whenLoaded('firstAttachments')),
+            //'image' => new AttachmentResource ($this->whenLoaded('firstAttachments')),
             'sale' => new SaleResource($this->whenLoaded('sales')),
             'attributes' => infoAttributeResource::collection($this->attributes),
         ];

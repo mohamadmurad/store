@@ -17,6 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('phone')->unique();
+            $table->string('logo')->default('DefaultLogo.png');
             $table->timestamps();
             $table->softDeletes();
         });

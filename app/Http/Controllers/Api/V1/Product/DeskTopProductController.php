@@ -185,7 +185,7 @@ class DeskTopProductController extends Controller
                 foreach ($AllFiles as $file){
 
                     $attachType = AttachmentType::where('type','like',$file->getMimeType())->first();
-                    $saved_file = $this->upload($file,public_path('files/products/'. str_replace(' ','',$branch->name)));
+                    $saved_file = $this->upload($file,public_path(config('app.PRODUCTS_FILES_PATH','files/products/'). str_replace(' ','',$branch->name)));
                     $saved_files_for_roleBack += [$saved_file->getFilename()];
 
                     if ($attachType) {
@@ -200,7 +200,7 @@ class DeskTopProductController extends Controller
                 DB::commit();
             }catch (Exception $e){
                 foreach ($saved_files_for_roleBack as $file){
-                    File::delete(public_path('files/products'. str_replace(' ','',$branch->name)) . '/' . $file);
+                    File::delete(public_path(config('app.PRODUCTS_FILES_PATH','files/products/'). str_replace(' ','',$branch->name)) . '/' . $file);
                 }
                 DB::rollBack();
 

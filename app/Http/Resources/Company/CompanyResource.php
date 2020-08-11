@@ -18,6 +18,7 @@ class CompanyResource extends JsonResource
             'id' => (int)$this->id,
             'name' => $this->name,
             'phone' => $this->phone,
+            'logo' => $request->getSchemeAndHttpHost() . '/'. config('app.COMPANY_LOGO_PATH','files/companyLogos/') .$this->logo,
         ];
     }
 }

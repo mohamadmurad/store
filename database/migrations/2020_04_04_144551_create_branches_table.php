@@ -17,6 +17,7 @@ class CreateBranchesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('location');
+            $table->string('phone');
             $table->timestamps();
             $table->softDeletes();
 

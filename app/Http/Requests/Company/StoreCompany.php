@@ -25,9 +25,15 @@ class StoreCompany extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules =  [
             'name'=>'required|min:2|max:255|unique:'. $this->table .',name',
             'phone'=>'required|unique:'. $this->table .',phone',
+            'logo'=>'',
         ];
+        if ($this->has('logo')) {
+            $rules['logo'] .= 'mimeTypes:image/jpeg,image/png';
+
+        }
+        return $rules;
     }
 }

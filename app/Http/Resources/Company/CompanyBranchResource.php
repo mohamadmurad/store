@@ -22,12 +22,11 @@ class CompanyBranchResource extends JsonResource
             'id' => (int) $this->id,
             'name' => $this->name,
             'location' =>$this->location,
-            'balance' => (float)$this->balance,
+            'phone' => $this->phone,
             'company' => (int) $this->company_id,
             'company' => new CompanyResource($this->whenLoaded('company')),
             'user' => new SampleUserResource(User::findOrFail($this->user_id)),
-            //'posts' => Product::collection($this->whenLoaded('products')),
-           // 'category' => new CategoryResource(Categories::findOrFail($this->category_id)),
+
         ];
     }
 }

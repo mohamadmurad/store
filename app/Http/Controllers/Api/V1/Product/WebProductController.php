@@ -28,12 +28,17 @@ class WebProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection|Response
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $products = Products::with('firstAttachments')->with('sales')->get();
+            $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+            $products = Products::with(['attachments'=> function($query) use ($imageId){
+                $query->whereIn('attachmentType_id',$imageId);
+
+            }])->with('sales')->get();
+
             return $this->showCollection(WebProductResource::collection($products));
         }
 
@@ -50,7 +55,8 @@ class WebProductController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $product = $product->load(['sales','attachments']);
-            return new WebProductResource($product);
+            return $this->showModel(new WebProductResource($product));
+           // return new WebProductResource($product);
         }
         return null;
     }

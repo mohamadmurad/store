@@ -2,6 +2,9 @@
 
 return [
 
+
+    'COMPANY_LOGO_PATH' => 'files/companyLogos/',
+    'PRODUCTS_FILES_PATH' => 'files/products/',
     /*
     |--------------------------------------------------------------------------
     | Application Name

@@ -61,7 +61,7 @@ class BranchController extends Controller
             if (count($branch) > 0){
                 return $this->errorResponse('This User Have a branch',422);
             }else{
-                $newBranch = Branches::create($request->only(['name','location','company_id','user_id']));
+                $newBranch = Branches::create($request->only(['name','location','phone','company_id','user_id']));
                 return $this->successResponse([
                     'message' => 'Branch added successful',
                     'code'=> 201,

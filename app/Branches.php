@@ -13,6 +13,7 @@ class Branches extends Model
     protected $fillable = [
         'name',
         'location',
+        'phone',
         'company_id',
         'user_id',
         'balance',

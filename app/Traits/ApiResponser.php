@@ -3,6 +3,7 @@ namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -15,6 +16,8 @@ trait ApiResponser{
     private function successResponse($data, $code){
         return response()->json($data,$code);
     }
+
+
 
     protected function errorResponse($message,$code){
         return response()->json(['error'=>$message,'code'=>$code],$code);
@@ -37,6 +40,12 @@ trait ApiResponser{
         return $this->successResponse($collection,$code);
     }
 */
+
+    private function showModel(JsonResource $jsonResource){
+        return response()->json([
+            'data' => [$jsonResource]
+        ]);
+    }
     protected function showCollection(AnonymousResourceCollection $collection){
         //$collection = $this->filterData($collection,$transformer);
         //$collection = $this->sortData($collection,$transformer);

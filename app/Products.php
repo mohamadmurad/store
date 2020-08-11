@@ -99,6 +99,7 @@ class Products extends Model
     }
 
     public function attachments(){
+
         return $this->hasMany(Attachment::class,'products_id');
     }
 

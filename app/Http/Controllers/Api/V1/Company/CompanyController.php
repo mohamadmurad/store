@@ -8,17 +8,20 @@ use App\Http\Requests\Company\StoreCompany;
 use App\Http\Requests\Company\UpdateCompany;
 use App\Http\Resources\Company\CompanyResource;
 use App\Traits\ApiResponser;
+use App\Traits\UploadAble;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser,UploadAble;
 
     public function __construct()
     {
@@ -50,8 +53,41 @@ class CompanyController extends Controller
      */
     public function store(StoreCompany $request)
     {
+
+//dd(config('app.COMPANY_LOGO_PATH','files//'));
+
         if (request()->expectsJson() && request()->acceptsJson()){
-            $newCompany = Companies::create($request->only(['name','phone']));
+            $saved_files_for_roleBack = [];
+            DB::beginTransaction();
+            try {
+                $fileName = 'DefaultLogo.png';
+                if ($request->has('logo')){
+                    $logo = $request->file('logo');
+
+                    $logo_file_saved = $this->upload($logo,public_path(config('app.COMPANY_LOGO_PATH','files/companyLogos/')));
+                    $saved_files_for_roleBack += [$logo_file_saved->getFilename()];
+                    $fileName = $logo_file_saved->getFilename();
+
+                }
+
+                $newCompany = Companies::create([
+                    'name' => $request->get('name'),
+                    'phone' => $request->get('phone'),
+                    'logo' => $fileName,
+                ]);
+
+                DB::commit();
+            }catch (Exception $e){
+                foreach ($saved_files_for_roleBack as $file){
+                    File::delete(public_path(config('app.COMPANY_LOGO_PATH','files/companyLogos/')) . '/' . $file);
+                }
+                DB::rollBack();
+
+                return $this->errorResponse('company doesnt added please try again' ,422);
+
+
+            }
+
             return $this->successResponse([
                 'message' => 'Company added Successful',
                 'code' => 201,
