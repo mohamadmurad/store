@@ -22,6 +22,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware(['permission:add_category'])->only(['store']);
+        $this->middleware(['permission:show_category'])->only(['show']);
         $this->middleware(['permission:edit_category'])->only(['update']);
         $this->middleware(['permission:delete_category'])->only(['destroy']);
     }
@@ -42,6 +43,22 @@ class CategoryController extends Controller
         }
 
        return null;
+
+    }
+
+    /**
+     * Display of the resource.
+     *
+     * @return AnonymousResourceCollection|LengthAwarePaginator
+     */
+    public function show(Categories $category)
+    {
+        if (request()->expectsJson() && request()->acceptsJson()){
+
+            return $this->showModel(new CategoryResource($category));
+        }
+
+        return null;
 
     }
 

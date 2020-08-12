@@ -62,6 +62,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // category
         $add_category_per = Permission::create(['guard_name' => 'api','name' => 'add_category']);
+        $show_category_per = Permission::create(['guard_name' => 'api','name' => 'show_category']);
         $edit_category_per = Permission::create(['guard_name' => 'api','name' => 'edit_category']);
         $delete_category_per = Permission::create(['guard_name' => 'api','name' => 'delete_category']);
 

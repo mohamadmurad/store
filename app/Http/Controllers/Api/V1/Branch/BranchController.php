@@ -100,13 +100,12 @@ class BranchController extends Controller
             $testBranch = Branches::where('user_id','=',$request->user_id)->where('id','!=',$branch->id)->get();
 
             if (count($testBranch) > 0){
-
                 return $this->errorResponse('This User Have a branch',422);
             }else{
                 $branch->fill([
                     'name' => $request->has('name') ? $request->get('name') : $branch->name,
                     'location' => $request->has('location') ? $request->get('location') : $branch->location,
-                    'balance' => $request->has('balance') ? $request->get('balance') : $branch->balance,
+                    'phone' => $request->has('phone') ? $request->get('phone') : $branch->phone,
                     'user_id' => $request->has('user_id') ? $request->get('user_id') : $branch->user_id,
                     'company_id' => $request->has('company_id') ? $request->get('company_id') : $branch->company_id,
                 ]);

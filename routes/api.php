@@ -97,7 +97,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::delete('sales/{sale}','Sale\SaleController@destroy');
 
     // Category
-    Route::resource('categories','Category\CategoryController')->only(['store','update','destroy']);
+    Route::resource('categories','Category\CategoryController')->only(['show','store','update','destroy']);
 
     //Company
     Route::resource('companies','Company\CompanyController')->only(['store','update','destroy']);
