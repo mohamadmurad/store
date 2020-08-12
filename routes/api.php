@@ -26,6 +26,8 @@ Route::get('v1/branchesByCompany/{company}/','Api\V1\Company\CompanyBranchContro
 
 // get all products by branch
 Route::get('v1/productsByBranch/{branch}','Api\V1\Branch\BranchProductController@index');
+// get all offers by branch
+Route::get('v1/offersByBranch/{branch}','Api\V1\Branch\BranchOfferController@index');
 
 // get all sales by branch
 Route::get('v1/salesByBranch/{branch}/','Api\V1\Branch\BranchSalesController@index');
