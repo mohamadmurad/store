@@ -19,6 +19,8 @@ Route::post('v1/register', 'Api\V1\AuthApiController@registerNewUserAccount');
 
 Route::resource('v1/companies','Api\V1\Company\CompanyController')->only(['index','show']);
 
+Route::get('v1/branches/{branch}','Api\V1\Branch\BranchController@show');
+
 // get all branches for company
 Route::get('v1/branchesByCompany/{company}/','Api\V1\Company\CompanyBranchController@index');
 
@@ -34,8 +36,10 @@ Route::get('v1/categories','Api\V1\Category\CategoryController@index');
 // all product by category
 Route::get('v1/productByCategory/{category}','Api\V1\Category\CategoryProductController@index');
 
+// products
 Route::resource('v1/products','Api\V1\Product\WebProductController',['only'=>['index','show']]);
 
+// sales
 Route::resource('v1/sales','Api\V1\Sale\SaleController',['only'=>['index']]);
 
 

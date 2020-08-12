@@ -78,13 +78,13 @@ class BranchController extends Controller
      * @param branches $branch
      * @return BranchResource
      */
-    /*public function show(branches $branch)
+    public function show(branches $branch)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return new BranchResource($branch);
+            return $this->showModel(new BranchResource($branch));
         }
         return null;
-    }*/
+    }
 
     /**
      * Update the specified resource in storage.

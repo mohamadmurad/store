@@ -20,6 +20,7 @@ class BranchResource extends JsonResource
             'location' =>$this->location,
             'balance' => (float)$this->balance,
             'company' => (int) $this->company_id,
+            'phone' => $this->phone,
             'user' => (int)$this->user_id,
         ];
     }

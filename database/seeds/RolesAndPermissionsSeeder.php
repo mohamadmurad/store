@@ -86,11 +86,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $edit_company_per->assignRole($super_employee_role);
 
 
+    //    $show_branch_per = Permission::create(['guard_name' => 'api','name' => 'show_branch']);
         $add_branch_per = Permission::create(['guard_name' => 'api','name' => 'add_branch']);
         $edit_branch_per = Permission::create(['guard_name' => 'api','name' => 'edit_branch']);
         $delete_branch_per = Permission::create(['guard_name' => 'api','name' => 'delete_branch']);
 
         $edit_branch_per->assignRole($super_employee_role);
+
 
         // create product permissions on branch
         $add_product_per = Permission::create(['guard_name' => 'api','name' => 'add_product']);
