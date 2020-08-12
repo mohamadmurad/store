@@ -13,7 +13,7 @@ class CardCharge extends Migration
      */
     public function up()
     {
-        Schema::create('CardCharge', function (Blueprint $table) {
+        Schema::create('card_charge', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
@@ -27,6 +27,8 @@ class CardCharge extends Migration
             $table->unsignedInteger('cost');
 
             $table->dateTime('chargeDate');
+
+            $table->softDeletes();
 
         });
     }

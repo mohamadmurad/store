@@ -47,8 +47,8 @@ class checkIfUserHasProduct
                 $products = $data->get('products');
 
                 foreach ($products as $product){
-                    if (isset($product['product_id'])){
-                        $product_branch_id = Products::findOrFail((int)$product['product_id'])->branch_id;
+                    if (isset($product['id'])){
+                        $product_branch_id = Products::findOrFail((int)$product['id'])->branch_id;
                         if ((int)$product_branch_id !== (int)$branch_id){
                             return $this->errorResponse('You can\'t access this product',404);
 
@@ -66,10 +66,6 @@ class checkIfUserHasProduct
             }else{
                 return $this->errorResponse('Please send products array',422);
             }
-
-
-
-
 
         }
 

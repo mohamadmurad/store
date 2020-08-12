@@ -89,7 +89,7 @@ class OfferController extends Controller
                 ]);
 
                 foreach ($products as $product){
-                    $product_id = (int)$product['product_id'];
+                    $product_id = (int)$product['id'];
                     $product_quantity = (int)$product['quantity'];
                     $product_in_db= Products::findOrFail($product_id);
                     $product_price  = $product_in_db->price;

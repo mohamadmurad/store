@@ -34,9 +34,9 @@ class checkoutMiddleware
 
                 $products = $data->get('products');
                 foreach ($products as $product){
-                    if (isset($product['product_id'])){
-
-                        $product_in_db = Products::findOrFail((int)$product['product_id']);
+                    if (isset($product['id'])){
+                        $product_id = $product['id'];
+                        $product_in_db = Products::findOrFail((int)$product_id);
                         $checkout_quantity = (int)$product['quantity'];
 
                         $products_price_temp+= ($product_in_db->price * $checkout_quantity);
@@ -58,10 +58,10 @@ class checkoutMiddleware
 
                 foreach ($offers as $offer){
 
-                    if (isset($offer['offer_id'])){
+                    if (isset($offer['id'])){
 
-
-                        $offer_in_db = Offers::with('products')->findOrFail((int)$offer['offer_id']);
+                        $offer_id = $offer['id'];
+                        $offer_in_db = Offers::with('products')->findOrFail((int)$offer_id);
 
 
                         $checkout_quantity = $offer['quantity'];

@@ -168,17 +168,6 @@ class DeskTopProductController extends Controller
                     'branch_id' => $branch->id,
                 ]);
 
-//                if ($request->has('attributes')){
-//                    $attributes = $request->get('attributes');
-//
-//                    $jsonDecode = json_decode($attributes,true);
-//
-//                    foreach ($jsonDecode as $attribute){
-//                        $id = $attribute['attribute']['id'];
-//                        $value = $attribute['value'];
-//                        $newProduct->attributes()->attach($id, ['value' => $value]);
-//                    }
-//                }
 
 
                 $AllFiles = $request->file('files');
@@ -316,7 +305,7 @@ class DeskTopProductController extends Controller
                     'status' => $request->has('status') ? $request->get('status') : $employee_product->status,
                     'price' => $request->has('price') ? $request->get('price') : $employee_product->price,
                     'details' => $request->has('details') ? $request->get('details') : $employee_product->details,
-                    'parent_id' => $request->has('parent_id') ? $request->get('parent_id') : $employee_product->parent_id,
+                    'parent_id' => $request->has('parent_id') && $request->get('parent_id') > 0 ? $request->get('parent_id') : $employee_product->parent_id,
                     'category_id' => $request->has('category_id') ? $request->get('category_id') : $employee_product->category_id,
                     'group_id' => $request->has('group_id') ? $request->get('group_id') : $employee_product->group_id,
                 ]);

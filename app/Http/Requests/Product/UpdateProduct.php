@@ -76,7 +76,7 @@ class UpdateProduct extends FormRequest
 
 
 
-        if($this->has(['parent_id'])){
+        if($this->has(['parent_id']) && $this->parent_id > 0){
                 $rules+= [
                     'parent_id'=>'exists:products,id'];
         }

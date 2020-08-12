@@ -117,6 +117,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
     // card
     Route::resource('cards','Card\CardController')->only(['update']);
+    Route::get('AllChargedProcess','Card\CardController@AllChargedProcess');
 
 
 

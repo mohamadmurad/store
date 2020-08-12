@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api\V1\Card;
 
+use App\CardCharge;
 use App\Cards;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Card\StoreCard;
 use App\Http\Requests\Card\UpdateCard;
+use App\Http\Resources\card_charge\CardChargeResource;
 use App\Http\Resources\Card\CardResource;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
@@ -124,6 +126,26 @@ class CardController extends Controller
         }
         return null;
     }
+
+
+    /**
+     * all charge process
+     *
+     * @return LengthAwarePaginator|null
+     */
+    public function AllChargedProcess()
+    {
+        if (request()->expectsJson() && request()->acceptsJson()) {
+
+            $allChargeProcess  = CardCharge::with(['admin','card'])->get();
+
+            return $this->showCollection(CardChargeResource::collection($allChargeProcess));
+
+
+        }
+        return null;
+    }
+
 
     /**
      * Remove the specified resource from storage.

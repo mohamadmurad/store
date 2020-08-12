@@ -44,7 +44,7 @@ class OrderController extends Controller
             // add products to map  And delete quantity
             foreach ($OrderProducts as $product) {
 
-                $product_id = (int)$product['product_id'];
+                $product_id = (int)$product['id'];
                 $product_in_db = Products::findOrFail($product_id);
 
                 $branch_id = $product_in_db->branch_id;
@@ -61,7 +61,7 @@ class OrderController extends Controller
 
             // add offer to map And delete quantity
             foreach ($OrderOffers as $offer) {
-                $offer_id = (int)$offer['offer_id'];
+                $offer_id = (int)$offer['id'];
                 $offer_in_db = Offers::findOrFail($offer_id);
 
                 $branch_id = $offer_in_db->products()->first()->branch_id;
@@ -100,7 +100,7 @@ class OrderController extends Controller
                 foreach ($products as $product) {
 
                     foreach ($OrderProducts as $productJson) {
-                        if ($product === (int)$productJson['product_id']) {
+                        if ($product === (int)$productJson['id']) {
 
                             $product_in_db = Products::findOrFail($product);
                             $products_prices_temp += $product_in_db->price * (int)$productJson['quantity'];
@@ -126,9 +126,9 @@ class OrderController extends Controller
                     foreach ($offers_in_same_branch as $offer_in) {
                         foreach ($OrderOffers as $OfferJson) {
 
-                            if ($offer_in === (int)$OfferJson['offer_id']) {
+                            if ($offer_in === (int)$OfferJson['id']) {
 
-                                $offer_in_db = Offers::findOrFail($OfferJson['offer_id']);
+                                $offer_in_db = Offers::findOrFail($OfferJson['id']);
                                 $offer_price_temp += (int)$offer_in_db->price * (int) $OfferJson['quantity'];
 
                                 $offer_products = $offer_in_db->products()->get();
@@ -191,9 +191,9 @@ class OrderController extends Controller
                 foreach ($offers as $offer) {
                     foreach ($OrderOffers as $OfferJson) {
 
-                        if ($offer === (int)$OfferJson['offer_id']) {
+                        if ($offer === (int)$OfferJson['id']) {
 
-                            $offer_in_db = Offers::findOrFail($OfferJson['offer_id']);
+                            $offer_in_db = Offers::findOrFail($OfferJson['id']);
                             $offer_price_temp += (int)$offer_in_db->price * (int) $OfferJson['quantity'];;
 
                             $offer_products = $offer_in_db->products()->get();

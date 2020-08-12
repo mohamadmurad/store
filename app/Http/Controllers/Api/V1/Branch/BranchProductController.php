@@ -32,7 +32,7 @@ class BranchProductController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()){
 
-            $product = $branch->products()->with(['branch','firstAttachments','sales'])->get();
+            $product = $branch->products()->with(['branch','attachments','sales'])->get();
             return $this->showCollection(WebProductResource::collection($product));
         }
 

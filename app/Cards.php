@@ -24,7 +24,7 @@ class Cards extends Model
     }
 
     public function CardCharge(){
-        return $this->belongsToMany(User::class,'CardCharge')->withPivot(['amount','chargeDate']);
+        return $this->belongsToMany(User::class,'card_charge')->using(CardCharge::class)->withPivot(['amount','chargeDate']);
     }
 
 
