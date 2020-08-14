@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Api\V1\Order;
 
 use App\Branches;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Order\OrderResource;
 use App\Offers;
 use App\Orders;
 use App\Products;
 use App\Traits\ApiResponser;
 use Carbon\Carbon;
+use http\Env\Response;
 use http\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,8 @@ class OrderController extends Controller
     public function __construct()
     {
         $this->middleware(['role:customer', 'checkoutMiddleware'])->only('checkout');
+        $this->middleware(['role:customer'])->only('myOrders');
+        $this->middleware(['role:employee|super_employee'])->only('branchOrders');
     }
 
 
@@ -165,6 +169,8 @@ class OrderController extends Controller
 
                 $branch_card->balance += $total_price_to_branch;
 
+
+
                 $branch_card->save();
 
 
@@ -245,6 +251,46 @@ class OrderController extends Controller
             return $this->errorResponse('order not done. please try again', 422);
 
         }
+
+
+    }
+
+    public function myOrders(){
+
+        $customer = Auth::user();
+        $orders = $customer->orders()->with(['branch','products.attachments','offers'])->get();
+
+        return $this->showCollection(OrderResource::collection($orders));
+
+    }
+
+    public function branchOrders(){
+
+        $employee = Auth::user();
+        $branch = $employee->branch()->first();
+        $orders = $branch->orders()->with(['branch','products.attachments','offers'])->get();
+
+        return $this->showCollection(OrderResource::collection($orders));
+
+    }
+
+    public function show(Orders $order){
+
+        $employee = Auth::user();
+        if ($employee->hasRole('customer')) {
+            if($order->user_id != $employee->id){
+
+                return $this->errorResponse('you cant access this order',403);
+            }
+        }
+
+        if ($employee->hasRole('employee') || $employee->hasRole('super_employee')) {
+            if($order->branch_id != $employee->branch()->first()->id){
+
+                return $this->errorResponse('you cant access this order',403);
+            }
+        }
+        return $this->showModel(new OrderResource($order->load('products.attachments')));
 
 
     }

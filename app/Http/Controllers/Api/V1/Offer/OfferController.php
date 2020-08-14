@@ -40,7 +40,7 @@ class OfferController extends Controller
     public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $offers = Offers::with('products.firstAttachments')->get();
+            $offers = Offers::with('products.attachments')->get();
             return  $this->showCollection(OfferResource::collection($offers));
         }
     }

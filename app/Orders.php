@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Orders extends Model
 {
 
-    use SoftDeletes;
+    //use SoftDeletes;
     protected $fillable = ['date','discount','delevareAmount','user_id','branch_id'];
     public function user(){
         return $this->belongsTo(User::class);
@@ -16,6 +16,10 @@ class Orders extends Model
 
     public function coupon(){
         return $this->belongsTo(Coupons::class);
+    }
+
+    public function branch(){
+        return $this->belongsTo(Branches::class,'branch_id');
     }
 
     public function products(){

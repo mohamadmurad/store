@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
         }
         // model not found ...
         if ($exception instanceof ModelNotFoundException){
-
+dd($exception);
             $modelName = strtolower(class_basename($exception->getModel()));
             return $this->errorResponse("Does not exist any ". $modelName ." with the specific id",404);
         }
