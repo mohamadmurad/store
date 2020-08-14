@@ -96,7 +96,7 @@ class DatabaseSeeder extends Seeder
         // users
         factory(User::class, $userQuantity)->create()->each(function ($u){
             $rand = rand(1,0);
-            $rand === 1 ? $u->card()->save(factory(Cards::class)->make()) : null;
+            $u->card()->save(factory(Cards::class)->make());
 
             $rand === 1 ? $u->assignRole(['employee']) : $u->assignRole(['super_employee']);
         });
@@ -194,19 +194,16 @@ class DatabaseSeeder extends Seeder
                 $product= $product->pluck('id');
             }
 
-
-
-
             $offer->products()->attach($product);
         });
 
         // favorate
-        for ($i=0;$i<$favoriteQuantity;$i++){
+       /* for ($i=0;$i<$favoriteQuantity;$i++){
             $product = products::all()->random();
             $user = User::all()->random()->id;
             $product->favorite()->attach($user);
         //    DB::insert('insert into favorite (users_id , products_id) values (?, ?)',[$user,$product]);
-        }
+        }*/
 /*
         factory(Orders::class, $ordersQuantity)->create()->each(function ($order) {
             $rand = rand(1,6);
@@ -217,6 +214,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call(FixedUserSeeder::class);
+        $this->call(FixedOrders::class);
 
     }
 }

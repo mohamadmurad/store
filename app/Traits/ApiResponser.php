@@ -47,7 +47,8 @@ trait ApiResponser{
         ]);
     }
     protected function showCollection(AnonymousResourceCollection $collection){
-        //$collection = $this->filterData($collection,$transformer);
+        //$collection = $this->filterData($collection);
+
         //$collection = $this->sortData($collection,$transformer);
 
         $collection = $this->paginate($collection);
@@ -65,18 +66,19 @@ trait ApiResponser{
         return $this->successResponse(['data'=>$message],$code);
     }
 
-    protected function filterData(Collection $collection,$transformer){
+    protected function filterData(AnonymousResourceCollection $collection){
 
         foreach (request()->query() as $query => $value){
-            $attribute = $transformer::originalAttribute($query);
 
-            if(isset($attribute ,$value)){
-                $collection = $collection->where($attribute, $value);
+            if(isset($query ,$value)){
+                $collection = $collection->where($query, $value);
 
             }
         }
 
-        return $collection;
+       // return AnonymousResourceCollection::collection($collection);
+
+       // return $collection;
     }
 
     protected function sortData(Collection $collection,$transformer){

@@ -25,8 +25,29 @@ class OrderController extends Controller
     public function __construct()
     {
         $this->middleware(['role:customer', 'checkoutMiddleware'])->only('checkout');
-        $this->middleware(['role:customer'])->only('myOrders');
-        $this->middleware(['role:employee|super_employee'])->only('branchOrders');
+
+    }
+
+    public function index(){
+        $user = Auth::user();
+        $withRelations = ['branch','products.attachments','offers'];
+
+        if ($user->hasRole('customer')) {
+            $orders = $user->orders()->with($withRelations)->get();
+            return $this->showCollection(OrderResource::collection($orders));
+        }
+
+        if ($user->hasRole('employee') || $user->hasRole('super_employee')) {
+            $branch = $user->branch()->first();
+            $orders = $branch->orders()->with($withRelations)->get();
+            return $this->showCollection(OrderResource::collection($orders));
+        }
+
+        $orders = Orders::Date(\request())->with($withRelations)->get();
+
+
+        return $this->showCollection(OrderResource::collection($orders));
+
     }
 
 
@@ -255,24 +276,6 @@ class OrderController extends Controller
 
     }
 
-    public function myOrders(){
-
-        $customer = Auth::user();
-        $orders = $customer->orders()->with(['branch','products.attachments','offers'])->get();
-
-        return $this->showCollection(OrderResource::collection($orders));
-
-    }
-
-    public function branchOrders(){
-
-        $employee = Auth::user();
-        $branch = $employee->branch()->first();
-        $orders = $branch->orders()->with(['branch','products.attachments','offers'])->get();
-
-        return $this->showCollection(OrderResource::collection($orders));
-
-    }
 
     public function show(Orders $order){
 

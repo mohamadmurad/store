@@ -13,7 +13,7 @@ $factory->define(Offers::class, function (Faker $faker) {
 
     return [
         'number' => $faker->uuid,
-        'price' => $faker->randomFloat(2,100,10000),
+        'price' => $faker->numberBetween(100,1000),
         'start' => $start,
         'end' => $start->addDays(3),
 

@@ -102,7 +102,7 @@ class FixedUserSeeder extends Seeder
         $user3->card()->create([
             'pin' => $pin,
             'code' => $code,
-            'balance' => 100000,
+            'balance' => 10000,
         ]);
     }
 }

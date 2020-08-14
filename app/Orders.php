@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,5 +33,14 @@ class Orders extends Model
         return $this->belongsToMany(Offers::class)->withPivot([
             'quantity',
         ]);
+    }
+
+    public function scopeDate($query,$request){
+        $date = $request->get('date');
+
+        if (!empty($date)){
+
+            return $query->whereDate('date','=', $date);
+        }
     }
 }
