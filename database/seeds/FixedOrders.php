@@ -27,10 +27,10 @@ class FixedOrders extends Seeder
             'end' => Carbon::now()->addDays(2),
         ]);
         $product_id = $branch->products()->first();
-        $newOffer->products()->attach($product_id->id,['quantity'=>$product_id->quantity-1]);
+        $newOffer->products()->attach($product_id->id,['quantity'=>rand(1,2)]);
 
         $product_id = $branch->products()->get();
-        $newOffer->products()->attach($product_id[1]->id,['quantity'=>$product_id[1]->quantity-1]);
+        $newOffer->products()->attach($product_id[1]->id,['quantity'=>rand(1,2)]);
 
 
         $order = Orders::create([

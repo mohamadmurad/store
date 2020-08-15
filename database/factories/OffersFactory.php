@@ -9,7 +9,7 @@ use Illuminate\Support\Carbon;
 $factory->define(Offers::class, function (Faker $faker) {
     $rand = rand(1,0);
     $start = null;
-    $rand === 1 ? $start = Carbon::today() : $start = Carbon::today()->subDay();
+    $rand === 1 ? $start = Carbon::now() : $start = Carbon::today()->subDay();
 
     return [
         'number' => $faker->uuid,

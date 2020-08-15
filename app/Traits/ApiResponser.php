@@ -19,7 +19,7 @@ trait ApiResponser{
 
 
 
-    protected function errorResponse($message,$code){
+    protected function errorResponse($message,$code=422){
         return response()->json(['error'=>$message,'code'=>$code],$code);
     }
 /*
@@ -66,20 +66,7 @@ trait ApiResponser{
         return $this->successResponse(['data'=>$message],$code);
     }
 
-    protected function filterData(AnonymousResourceCollection $collection){
 
-        foreach (request()->query() as $query => $value){
-
-            if(isset($query ,$value)){
-                $collection = $collection->where($query, $value);
-
-            }
-        }
-
-       // return AnonymousResourceCollection::collection($collection);
-
-       // return $collection;
-    }
 
     protected function sortData(Collection $collection,$transformer){
         if(request()->has('sort_by')){

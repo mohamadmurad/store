@@ -17,7 +17,7 @@ class CreateCardsTable extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->integer('pin');
-            $table->integer('balance');
+            $table->unsignedInteger('balance');
             $table->timestamps();
             $table->softDeletes();
 

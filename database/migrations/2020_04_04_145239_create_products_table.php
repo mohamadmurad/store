@@ -24,7 +24,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->string('latinName');
             $table->string('code')->nullable();
-            $table->integer('quantity');
+            $table->unsignedInteger('quantity');
             $table->enum('status',$this->product_status);
             $table->integer('price');
             $table->text('details');

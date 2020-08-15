@@ -85,6 +85,6 @@ class Kernel extends HttpKernel
         'checkIfAttachmentForProduct' =>checkIfAttachmentForProduct::class,
         'checkUserForBranch' => checkUserForBranch::class,
         'checkIfUserHasOffer' => checkIfUserHasOffer::class,
-        'checkoutMiddleware' => checkoutMiddleware::class,
+
     ];
 }

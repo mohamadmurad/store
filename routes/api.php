@@ -124,7 +124,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
 
     // order
-    Route::post('/checkout','Order\OrderController@checkout');
+    Route::post('/checkout','Order\OrderController@checkout2');
     Route::get('/orders','Order\OrderController@index');
     Route::get('/orders/{order}','Order\OrderController@show');
 

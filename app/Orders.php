@@ -35,12 +35,23 @@ class Orders extends Model
         ]);
     }
 
-    public function scopeDate($query,$request){
+    public function scopeFilterData($query,$request){
+        $columns = ['user_id','branch_id'];
         $date = $request->get('date');
-
         if (!empty($date)){
-
-            return $query->whereDate('date','=', $date);
+            $query->whereDate('date','=', $date);
         }
+
+
+        foreach ($columns as $column){
+            $col_request = $request->get($column);
+
+            if (!empty($col_request)){
+                $query->where($column,'=', $col_request);
+            }
+        }
+
+
+        return $query;
     }
 }

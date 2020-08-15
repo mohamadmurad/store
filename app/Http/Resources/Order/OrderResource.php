@@ -5,6 +5,7 @@ namespace App\Http\Resources\Order;
 use App\Http\Resources\Branch\BranchResource;
 use App\Http\Resources\Offer\OfferResource;
 use App\Http\Resources\product\WebProductResource;
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderResource extends JsonResource
@@ -26,6 +27,7 @@ class OrderResource extends JsonResource
             'branch' => new BranchResource($this->whenLoaded('branch')),
             'products' => WebProductResource::collection($this->whenLoaded('products')),
             'offers' => OfferResource::collection($this->whenLoaded('offers')),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

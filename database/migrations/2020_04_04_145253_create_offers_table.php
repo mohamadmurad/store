@@ -17,8 +17,8 @@ class CreateOffersTable extends Migration
             $table->id();
             $table->string('number')->unique();
             $table->float('price');
-            $table->date('start');
-            $table->date('end');
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -13,8 +13,8 @@ $factory->define(Products::class, function (Faker $faker) {
     return [
         'name' => $product,
         'latinName' => $latinName,
-        'quantity' => $faker->numberBetween(1,10),
-        'status' => $faker->randomElement([products::UNAVAILABEL_PRODUCT,products::AVAILABEL_PRODUCT]),
+        'quantity' => $faker->numberBetween(5,20),
+        'status' => products::AVAILABEL_PRODUCT,
         'price' => $faker->numberBetween(1000,1500),
         'details' => $faker->paragraph(1),
         'code' => $faker->uuid,

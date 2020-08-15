@@ -65,7 +65,7 @@ class Products extends Model
            foreach ($offers as $offer){
 
                if($product->quantity < $offer->pivot->quantity){
-                   $offer->end = Carbon::now();
+                   $offer->end = Carbon::now()->subMinute();
 
                    $offer->save();
                }
@@ -163,5 +163,29 @@ class Products extends Model
             ->withPivot([
                 'value',
             ]);
+    }
+
+
+    public function scopeAvailable($query){
+        return $query->where('status', '=', self::AVAILABEL_PRODUCT)->where('quantity','>',0);
+    }
+
+    public function scopeFilterData($query,$request){
+        $columns = ['status','price'];
+        /*$date = $request->get('date');
+        if (!empty($date)){
+            $query->whereDate('date','=', $date);
+        }*/
+
+        foreach ($columns as $column){
+            $col_request = $request->get($column);
+
+            if (!empty($col_request)){
+                $query->where($column,'=', $col_request);
+            }
+        }
+
+
+        return $query;
     }
 }
