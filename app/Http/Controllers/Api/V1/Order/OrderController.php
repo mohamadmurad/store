@@ -380,28 +380,41 @@ class OrderController extends Controller
 
                     $branch_id = $product_in_db->branch_id;
 
+                    if (count($product_in_db->sales()->get())){
+
+                        $products_prices_temp = $product_in_db->sales()->first()->newPrice * (int)$product_quantity;
+                    }else{
+                        $products_prices_temp = $product_in_db->price * (int)$product_quantity;
+                    }
+
+
                     $temp_order = null;
                     if ($orders->has($branch_id)) {
                         $temp_order = $orders->get($branch_id);
+                        $temp_order->price = $temp_order->price + $products_prices_temp;
+                        $temp_order->save();
                     } else {
                         $temp_order = Orders::create([
                             'date' => Carbon::now(),
+                            'price' => $products_prices_temp,
                             'discount' => 0,
                             'delevareAmount' => 0,
                             'user_id' => $customer->id,
                             'branch_id' => $branch_id,
+
                         ]);
 
                         $orders->offsetSet($branch_id, $temp_order);
                     }
 
 
-                    $products_prices_temp = $product_in_db->price * (int)$product_quantity;
+
 
 
                     $product_in_db->quantity = $product_in_db->quantity - (int)$product_quantity;
-
                     $product_in_db->save();
+
+
                     $temp_order->products()->attach($product_id, [
                         'quantity' => (int)$product_quantity,
                     ]);
@@ -437,9 +450,16 @@ class OrderController extends Controller
                     }
 
                     $branch_id = $offer_in_db->products()->first()->branch_id;
+
+                    $offer_price_temp = (int)$offer_in_db->price * (int)$offer_quantity;
+
+
                     $temp_order = null;
+
                     if ($orders->has($branch_id)) {
                         $temp_order = $orders->get($branch_id);
+                        $temp_order->price = $temp_order->price + $offer_price_temp;
+                        $temp_order->save();
                     } else {
                         $temp_order = Orders::create([
                             'date' => Carbon::now(),
@@ -447,15 +467,15 @@ class OrderController extends Controller
                             'delevareAmount' => 0,
                             'user_id' => $customer->id,
                             'branch_id' => $branch_id,
+                            'price' => $offer_price_temp,
                         ]);
 
                         $orders->offsetSet($branch_id, $temp_order);
                     }
 
 
-                    $offer_price_temp = (int)$offer_in_db->price * (int)$offer_quantity;
-
                     $offer_products = $offer_in_db->products()->lockForUpdate()->get();
+
                     foreach ($offer_products as $o_p) {
                         $product_in_offer_quantity = $o_p->pivot->quantity;
                         $all_product_quantity_in_order = $product_in_offer_quantity * $offer_quantity;
@@ -489,7 +509,8 @@ class OrderController extends Controller
             return $this->errorResponse("Does not exist any ". $modelName ." with the specific id",404);
         }catch (\PDOException $e) {
             DB::rollBack();
-            return $this->errorResponse('your balance or quantity for a product is not enuf', 422);
+           //return $e;
+             return $this->errorResponse('your balance or quantity for a product is not enuf', 422);
         }catch (\Exception $e) {
             DB::rollBack();
             return $e;
@@ -515,15 +536,6 @@ class OrderController extends Controller
         $customer_card->save();
     }
 
-
-    private function checkUserInfoForCheckout($data, $products_price_temp)
-    {
-
-
-
-        return null;
-
-    }
 
 
 }

@@ -32,6 +32,11 @@ class FixedOrders extends Seeder
         $product_id = $branch->products()->get();
         $newOffer->products()->attach($product_id[1]->id,['quantity'=>rand(1,2)]);
 
+        $product = $branch->products()->limit(2);
+        $prices = $newOffer->price;
+        foreach ($product->get() as $p){
+            $prices+= $p->price;
+        }
 
         $order = Orders::create([
             'date' => Carbon::now(),
@@ -39,8 +44,9 @@ class FixedOrders extends Seeder
             'delevareAmount' => 0,
             'user_id' => $customer->id,
             'branch_id' => $branch->id,
+            'price' =>$prices,
         ]);
-        $product = $branch->products()->limit(2);
+
         $order->products()->attach($product->pluck('id'), [
             'quantity' => rand(1,2),
         ]);
@@ -49,14 +55,10 @@ class FixedOrders extends Seeder
             'quantity' => rand(1,2),
         ]);
 
-$prices = 0;
-foreach ($product->get() as $p){
 
-        $prices+= $p->price;
-}
 
         $customer_card = $customer->card()->first();
-        $total_price_to_branch = $newOffer->price + $prices;
+        $total_price_to_branch = $prices;
         $customer_card->balance -= $total_price_to_branch;
         $branch_card = $branch->employee()->first()->card()->first();
         $branch_card->balance += $total_price_to_branch;
@@ -65,16 +67,18 @@ foreach ($product->get() as $p){
 
 
         $branch =  Branches::all()->random(1)->first();
+        $product = $branch->products()->limit(1);
         $order = Orders::create([
             'date' => Carbon::now(),
             'discount' => 0,
             'delevareAmount' => 0,
             'user_id' => $customer->id,
             'branch_id' => $branch->id,
+            'price' =>  $product->first()->price
         ]);
 
 
-        $product = $branch->products()->limit(1);
+
         $order->products()->attach($product->pluck('id'), [
             'quantity' => rand(1,2),
         ]);

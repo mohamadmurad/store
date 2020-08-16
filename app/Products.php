@@ -150,7 +150,7 @@ class Products extends Model
 
     public function sales(){
 
-        return $this->hasOne(Sales::class,'product_id')->whereDate('end','>=',Carbon::now());
+        return $this->hasOne(Sales::class,'product_id')->whereDate('end','>',Carbon::now());
     }
 
     public function favorite(){

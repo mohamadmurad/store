@@ -17,8 +17,8 @@ class CreateSalesTable extends Migration
             $table->id();
             $table->decimal('saleRate');
             $table->decimal('newPrice');
-            $table->date('start');
-            $table->date('end');
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->timestamps();
             $table->softDeletes();
 

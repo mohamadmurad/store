@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->dateTime('date');
+            $table->unsignedInteger('price');
             $table->decimal('discount');
             $table->decimal('delevareAmount');
 
