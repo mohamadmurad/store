@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\card_charge;
+namespace App\Http\Resources\Withdraw;
 
 use App\Http\Resources\Card\CardResource;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CardChargeResource extends JsonResource
+class WithdrawResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -20,8 +20,7 @@ class CardChargeResource extends JsonResource
         return [
             'id' => $this->id,
             'amount' => (int) $this->amount,
-            'cost' => (float) $this->cost,
-            'chargeDate'=> $this->chargeDate,
+            'withdrawDate'=> $this->withdrawDate,
             'admin' => new UserResource($this->whenLoaded('admin')),
             'card' => new CardResource($this->whenLoaded('card')),
         ];

@@ -4,7 +4,7 @@ namespace App\Http\Requests\Card;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCard extends FormRequest
+class DepositCardRequest extends FormRequest
 {
 
     private $table = 'cards';
@@ -26,15 +26,15 @@ class UpdateCard extends FormRequest
     public function rules()
     {
         return [
-            'balance'=>'required|integer|min:0',
-            'cost'=>'required|integer|min:0',
+            'balance'=>'required|integer|min:1',
+            'cost'=>'required|integer|min:2',
         ];
     }
 
     protected function prepareForValidation()
     {
         return [
-            'balance'=> (float) $this->balance,
+            'balance'=> $this->balance,
             'cost' => $this->cost,
 
         ];

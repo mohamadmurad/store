@@ -13,6 +13,7 @@ use App\Http\Middleware\checkIfUserHasProduct;
 use App\Http\Middleware\checkoutMiddleware;
 use App\Http\Middleware\checkUserForBranch;
 use App\Http\Middleware\checkUserPassword;
+use App\Http\Middleware\localization;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -51,6 +52,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             'throttle:60,1',
+            'localization',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -85,6 +87,7 @@ class Kernel extends HttpKernel
         'checkIfAttachmentForProduct' =>checkIfAttachmentForProduct::class,
         'checkUserForBranch' => checkUserForBranch::class,
         'checkIfUserHasOffer' => checkIfUserHasOffer::class,
+        'localization'=> localization::class,
 
     ];
 }

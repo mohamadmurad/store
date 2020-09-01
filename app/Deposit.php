@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CardCharge extends Pivot
+class Deposit extends Pivot
 {
-    use SoftDeletes;
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *
@@ -20,11 +20,11 @@ class CardCharge extends Pivot
         'amount',
         'cards_id',
         'user_id',
-        'chargeDate',
+        'depositDate',
     ];
 
     protected $dates = [
-        'chargeDate',
+        'depositDate',
     ];
 
 
@@ -34,6 +34,29 @@ class CardCharge extends Pivot
 
     public function card(){
         return $this->belongsTo(Cards::class,'cards_id');
+    }
+
+
+    public function scopeFilterData($query,$request){
+        $columns = ['user_id','cards_id'];
+
+        $date = $request->get('date');
+
+        if (!empty($date)){
+            $query->whereDate('depositDate','=', $date);
+        }
+
+
+        foreach ($columns as $column){
+            $col_request = $request->get($column);
+
+            if (!empty($col_request)){
+                $query->where($column,'=', $col_request);
+            }
+        }
+
+
+        return $query;
     }
 
 }

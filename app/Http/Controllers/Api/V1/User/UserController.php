@@ -97,7 +97,7 @@ class UserController extends Controller
             $newUser->assignRole($request->role);
 
             return $this->successResponse([
-                'message' => 'User added',
+                'message' => trans('success.user_added'),
                 'code' => 201,
             ],201);;
 

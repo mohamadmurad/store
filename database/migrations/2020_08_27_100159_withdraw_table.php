@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CardCharge extends Migration
+class WithdrawTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,18 @@ class CardCharge extends Migration
      */
     public function up()
     {
-        Schema::create('card_charge', function (Blueprint $table) {
+        Schema::create('withdraw', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-
 
             $table->foreignId('cards_id');
             $table->foreign('cards_id')->references('id')->on('cards');
 
             $table->unsignedInteger('amount');
 
-            $table->unsignedInteger('cost');
-
-            $table->dateTime('chargeDate');
-
-            $table->softDeletes();
-
+            $table->dateTime('withdrawDate');
         });
     }
 
@@ -40,6 +35,6 @@ class CardCharge extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('CardCharge');
+        Schema::dropIfExists('withdraw');
     }
 }

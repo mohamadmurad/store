@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Branches;
 use App\Cards;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\LoginRequest;
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Resources\roles\RolesResource;
 use App\Http\Resources\User\UserResource;
@@ -67,21 +68,21 @@ class AuthApiController extends Controller
         $delete = $user->token()->delete();
 
         if($delete){
-            return $this->showMessage('Logout success.',200);
+            return $this->showMessage(trans('success.logout'),200);
         }else{
-            return $this->errorResponse('Error in logout.',401);
+            return $this->errorResponse(trans('error.logout'),401);
         }
     }
 
-    public function login() {
-        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
+    public function login(LoginRequest $request) {
+        if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
 
 
-            return $this->getTokenAndRefreshToken(request('email'), request('password'));
+            return $this->getTokenAndRefreshToken($request->get('email'), $request->get('password'));
         }
         else {
 
-            return response()->json(['error'=>'Unauthorized. email or password error!'], 401);
+            return response()->json(['error'=>trans('error.attempt')], 401);
         }
     }
 
@@ -90,7 +91,7 @@ class AuthApiController extends Controller
         $client = Client::where('password_client', 1)->first();
 
         if (!$client){
-            return $this->errorResponse('Sorry login is not work now please come back later.',403);
+            return $this->errorResponse(trans('error.passport_client'),403);
         }
 
         $data = [

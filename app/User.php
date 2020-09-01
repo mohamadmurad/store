@@ -86,7 +86,7 @@ class User extends Authenticatable
 
 
     public function CardCharge(){
-        return $this->belongsToMany(Cards::class,'card_charge')->using(CardCharge::class)->withPivot(['amount','chargeDate']);
+        return $this->belongsToMany(Cards::class,'card_charge')->using(Deposit::class)->withPivot(['amount','chargeDate']);
     }
 
 

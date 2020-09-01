@@ -49,7 +49,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $show_user_card_per = Permission::create(['guard_name' => 'api','name' => 'show_user_card']);
         $show_all_card_per = Permission::create(['guard_name' => 'api','name' => 'show_all_card']);
         $add_card_per = Permission::create(['guard_name' => 'api','name' => 'add_card']);
-        $update_card_per = Permission::create(['guard_name' => 'api','name' => 'update_card']);
+        $deposit_card_per = Permission::create(['guard_name' => 'api','name' => 'deposit']);
+        $show_all_deposit_per = Permission::create(['guard_name' => 'api','name' => 'show_all_deposit']);
+        $withdraw_card_per = Permission::create(['guard_name' => 'api','name' => 'withdraw']);
+        $show_all_withdraw_per = Permission::create(['guard_name' => 'api','name' => 'show_all_withdraw']);
         $delete_card_per = Permission::create(['guard_name' => 'api','name' => 'delete_card']);
 
 

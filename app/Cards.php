@@ -2,16 +2,18 @@
 
 namespace App;
 
+use App\Traits\Encryptable;
 use Faker\Calculator\Luhn;
 use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Ramsey\Uuid\Uuid;
 
 class Cards extends Model
 {
 
 
-    use SoftDeletes;
+    use SoftDeletes,Encryptable;
     protected $fillable = [
         'code',
         'pin',
@@ -19,16 +21,26 @@ class Cards extends Model
         'user_id',
     ];
 
+    protected $encryptable = ['code','pin'];
+
     public function user(){
         return $this->belongsTo(User::class);
     }
 
-    public function CardCharge(){
-        return $this->belongsToMany(User::class,'card_charge')->using(CardCharge::class)->withPivot(['amount','chargeDate']);
+    public function deposit(){
+        return $this->belongsToMany(User::class,'deposit')
+            ->using(Deposit::class)
+            ->withPivot(['amount','cost','depositDate']);
+    }
+
+    public function withdraw(){
+        return $this->belongsToMany(User::class,'withdraw')
+            ->using(Withdraw::class)
+            ->withPivot(['amount','withdrawDate']);
     }
 
 
-    public static function randomCardCode($formatted = false, $separator = '-'){
+    public static function randomCardCode($formatted = false, $separator = ''){
 
         $mask = "########";
 

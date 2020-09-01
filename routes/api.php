@@ -118,8 +118,10 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::apiResource('offers','Offer\OfferController')->only(['store','destroy']);
 
     // card
-    Route::resource('cards','Card\CardController')->only(['update']);
-    Route::get('AllChargedProcess','Card\CardController@AllChargedProcess');
+    Route::post('deposit/{id}','Card\CardController@deposit');
+    Route::post('withdraw/{id}','Card\CardController@withdraw');
+    Route::get('allDeposit','Card\CardController@allDeposit');
+    Route::get('allWithdraw','Card\CardController@allWithdraw');
 
 
 
