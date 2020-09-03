@@ -29,7 +29,7 @@ class UpdateUser extends FormRequest
         $url = request()->segments();
 
         $rules = [
-            'password'=>'required|min:8',
+          //  'password'=>'required|min:8',
         ];
         if($this->has(['name'])){
             $rules += [
@@ -76,7 +76,7 @@ class UpdateUser extends FormRequest
 
         if($this->has(['newPassword'])){
             $rules += [
-                'newPassword'=>'required|min:8|confirmed|different:password',
+                'newPassword'=>'required|min:8|confirmed',
             ];
         }
         return $rules;

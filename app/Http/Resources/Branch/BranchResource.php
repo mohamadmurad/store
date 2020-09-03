@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Branch;
 
+use App\Http\Resources\Company\CompanyResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BranchResource extends JsonResource
@@ -19,7 +20,7 @@ class BranchResource extends JsonResource
             'name' => $this->name,
             'location' =>$this->location,
             'balance' => (float)$this->balance,
-            'company' => (int) $this->company_id,
+            'company' => new CompanyResource($this->whenLoaded('company')) /*|| (int) $this->company_id*/ ,
             'phone' => $this->phone,
             'user' => (int)$this->user_id,
         ];

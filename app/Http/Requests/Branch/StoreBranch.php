@@ -26,7 +26,7 @@ class StoreBranch extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|min:2|max:255|unique:'. $this->table .',name',
+            'name'=>'required|min:2|max:255',
             'location'=>'required|min:2|max:100',
             'phone' => 'required',
             'company_id'=>'required|integer|exists:companies,id',

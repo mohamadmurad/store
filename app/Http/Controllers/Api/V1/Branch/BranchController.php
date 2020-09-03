@@ -59,11 +59,11 @@ class BranchController extends Controller
             $branch = Branches::where('user_id','=',$request->user_id)->get();
 
             if (count($branch) > 0){
-                return $this->errorResponse('This User Have a branch',422);
+                return $this->errorResponse(trans('error.userHaveBranch'),422);
             }else{
                 $newBranch = Branches::create($request->only(['name','location','phone','company_id','user_id']));
                 return $this->successResponse([
-                    'message' => 'Branch added successful',
+                    'message' => trans('success.branch.added'),
                     'code'=> 201,
                 ],201);
             }
@@ -76,7 +76,7 @@ class BranchController extends Controller
      * Display the specified resource.
      *
      * @param branches $branch
-     * @return BranchResource
+     * @return JsonResponse
      */
     public function show(branches $branch)
     {
@@ -100,7 +100,7 @@ class BranchController extends Controller
             $testBranch = Branches::where('user_id','=',$request->user_id)->where('id','!=',$branch->id)->get();
 
             if (count($testBranch) > 0){
-                return $this->errorResponse('This User Have a branch',422);
+                return $this->errorResponse(trans('error.userHaveBranch'),422);
             }else{
                 $branch->fill([
                     'name' => $request->has('name') ? $request->get('name') : $branch->name,
@@ -114,14 +114,14 @@ class BranchController extends Controller
 
                 if($branch->isClean()){
                     return $this->errorResponse([
-                        'error'=> 'you need to specify a different value to update',
+                        'error'=> trans('error.update_specify'),
                         'code'=> 422],
                         422);
                 }
 
                 $branch->save();
                 return $this->successResponse([
-                    'message' => 'Branch Updated successful',
+                    'message' => trans('success.branch.updated'),
                     'code'=> 200,
                 ],200);
             }
@@ -145,7 +145,7 @@ class BranchController extends Controller
         if (request()->expectsJson() && request()->acceptsJson()) {
             $branch->delete();
             return $this->successResponse([
-                'message' => 'Branch Deleted successful',
+                'message' => trans('success.branch.deleted'),
                 'code'=> 200,
             ],200);
         }
@@ -165,7 +165,7 @@ class BranchController extends Controller
 
 
         return $this->successResponse([
-            'message' => 'Branch Attribute Sync successful',
+            'message' => trans('success.branch.attributeSync'),
             'code' => 200,
         ],200);
 

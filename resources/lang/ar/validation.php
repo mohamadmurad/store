@@ -85,9 +85,9 @@ return [
     'mimes' => 'هذا الملف يجب ان يكون احد هذه الصيغ :values.',
     'mimetypes' => 'هذا الملف يجب ان يكون احد هذه الصيغ :values.',
     'min' => [
-        'numeric' => 'The :attribute must be at least :min.',
-        'file' => 'The :attribute must be at least :min kilobytes.',
-        'string' => 'The :attribute must be at least :min characters.',
+        'numeric' => 'حقل :attribute يجب ان يكون اكبر من :min رقم',
+        'file' => 'حقل :attribute يجب ان يكون اكبر من :min كيلو بايت',
+        'string' => 'حقل :attribute يجب ان يكون اكبر من :min محرف.',
         'array' => 'The :attribute must have at least :min items.',
     ],
     'not_in' => 'The selected :attribute is invalid.',
@@ -111,9 +111,9 @@ return [
         'array' => 'The :attribute must contain :size items.',
     ],
     'starts_with' => 'The :attribute must start with one of the following: :values.',
-    'string' => 'The :attribute must be a string.',
+    'string' => 'حقل :attribute يجب ان يكون محارف',
     'timezone' => 'The :attribute must be a valid zone.',
-    'unique' => 'The :attribute has already been taken.',
+    'unique' => 'هذا :attribute موجود مسبقاً',
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
@@ -151,6 +151,11 @@ return [
         'password' => 'كلمة المرور',
         'date' => 'تاريخ',
         'file' => 'ملف',
+        'username'=>'اسم المستخدم',
+        'phone' => 'رقم الهاتف',
+        'name' => 'الاسم',
+
+
     ],
 
 ];

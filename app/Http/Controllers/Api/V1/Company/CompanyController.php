@@ -38,7 +38,7 @@ class CompanyController extends Controller
     public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $companies = Companies::all();
+            $companies = Companies::orderBy('created_at', 'DESC')->get();
             return $this->showCollection(CompanyResource::collection($companies));
         }
 
@@ -84,13 +84,13 @@ class CompanyController extends Controller
                 }
                 DB::rollBack();
 
-                return $this->errorResponse('company doesnt added please try again' ,422);
+                return $this->errorResponse(trans('error.company.add') ,422);
 
 
             }
 
             return $this->successResponse([
-                'message' => 'Company added Successful',
+                'message' => trans('success.company.add'),
                 'code' => 201,
             ],201);
         }
@@ -103,7 +103,7 @@ class CompanyController extends Controller
      * Display the specified resource.
      *
      * @param Companies $company
-     * @return CompanyResource
+     * @return JsonResponse
      */
     public function show(Companies $company)
     {
@@ -132,14 +132,14 @@ class CompanyController extends Controller
 
             if($company->isClean()){
                 return $this->errorResponse([
-                    'error'=> 'you need to specify a different value to update',
+                    'error'=> trans('error.update_specify'),
                     'code'=> 422],
                     422);
             }
 
             $company->save();
             return $this->successResponse([
-                'message' => 'Company Updated Successful',
+                'message' => trans('success.company.updated'),
                 'code' => 200,
             ],200);
 
@@ -161,7 +161,7 @@ class CompanyController extends Controller
         if (request()->expectsJson() && request()->acceptsJson()) {
             $company->delete();
             return $this->successResponse([
-                'message' => 'Company Deleted Successful',
+                'message' => trans('success.company.deleted'),
                 'code' => 200,
             ],200);
         }

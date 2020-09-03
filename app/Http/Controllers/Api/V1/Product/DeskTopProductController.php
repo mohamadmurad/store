@@ -32,7 +32,7 @@ class DeskTopProductController extends Controller
         $this->middleware(['permission:show_all_product_info'])->only(['index', 'show']);
         $this->middleware(['permission:show_product_with_without_sale'])->only(['productWithSale', 'productWithoutSale']);
 
-        $this->middleware(['permission:add_product', 'attributeCheck'])->only('store');
+        $this->middleware(['permission:add_product'])->only('store');
 
         $this->middleware(['attributeCheckForAdd'])->only('addAttributeToProduct');
         $this->middleware(['permission:edit_product', 'attributeCheck'])->only('update');

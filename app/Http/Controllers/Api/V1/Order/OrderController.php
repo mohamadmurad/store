@@ -36,7 +36,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $withRelations = ['branch', 'products.attachments', 'offers', 'user'];
+        $withRelations = ['branch.company', 'products.attachments', 'offers', 'user'];
 
         if ($user->hasRole('customer')) {
             $orders = $user->orders()->with($withRelations)->get();

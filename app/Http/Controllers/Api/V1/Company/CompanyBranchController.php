@@ -16,16 +16,17 @@ class CompanyBranchController extends Controller
 {
 
     use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
      * @param Companies $company
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection|\Illuminate\Pagination\LengthAwarePaginator|void
+     * @return AnonymousResourceCollection|\Illuminate\Pagination\LengthAwarePaginator|void
      */
     public function index(Companies $company)
     {
-        if (request()->expectsJson() && request()->acceptsJson()){
-            $branches = $company->branches()->get();
+        if (request()->expectsJson() && request()->acceptsJson()) {
+            $branches = $company->branches()->orderBy('created_at', 'DESC')->get();;
 
             return $this->showCollection(CompanyBranchResource::collection($branches));
         }

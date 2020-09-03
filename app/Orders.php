@@ -20,7 +20,7 @@ class Orders extends Model
     }
 
     public function branch(){
-        return $this->belongsTo(Branches::class,'branch_id');
+        return $this->belongsTo(Branches::class,'branch_id')->with('company');
     }
 
     public function products(){

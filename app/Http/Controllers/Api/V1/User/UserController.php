@@ -97,7 +97,7 @@ class UserController extends Controller
             $newUser->assignRole($request->role);
 
             return $this->successResponse([
-                'message' => trans('success.user_added'),
+                'message' => trans('success.user.added'),
                 'code' => 201,
             ],201);;
 
@@ -123,7 +123,7 @@ class UserController extends Controller
     /**
      * Display the auth user info.
      *
-     * @return AccountInfoResource
+     * @return JsonResponse
      */
     public function getMyInfo()
     {
@@ -145,7 +145,7 @@ class UserController extends Controller
             $user= Auth::user();
             $card  = $user->card()->first();
             if (!$card){
-                return $this->errorResponse('you dont have card yet',422);
+                return $this->errorResponse(trans('error.card.dontHave'),422);
             }
             return $this->showModel(new MyCardResource($card));
 
@@ -166,7 +166,7 @@ class UserController extends Controller
 
             $card  = $user->card()->first();
             if (!$card){
-                return $this->errorResponse('User dont have card yet',422);
+                return $this->errorResponse(trans('error.card.dontHave'),422);
             }
             return $this->showModel(new CardResource($card));
 
@@ -202,14 +202,14 @@ class UserController extends Controller
 
             if($user->isClean()){
                 return $this->errorResponse([
-                    'message'=> 'you need to specify a different value to update',
+                    'message'=> trans('error.update_specify'),
                     'code'=> 422],
                     422);
             }
 
             $user->save();
             return $this->successResponse([
-                'message' => 'User Info Changed',
+                'message' => trans('user.updated'),
             ],200);
 
 
@@ -247,13 +247,13 @@ class UserController extends Controller
 
             if($user->isClean()){
                 return $this->errorResponse([
-                    'message'=> 'you need to specify a different value to update',
+                    'message'=> trans('error.update_specify'),
                     'code'=> 422],
                     422);
             }
 
             $user->save();
-            return new AccountInfoResource($user);;
+            return new AccountInfoResource($user);
 
 
         }
@@ -272,7 +272,7 @@ class UserController extends Controller
         if (request()->expectsJson() && request()->acceptsJson()){
             $user->delete();
             return $this->successResponse([
-                'message' => 'User deleted',
+                'message' => trans('success.deleted'),
             ],200);
         }
         return null;

@@ -28,13 +28,13 @@ class UpdateBranch extends FormRequest
 
         $rules = [];
 
-        if ($this->has('namre')){
+        if ($this->has('name')){
             $rules+= [
                 'name'=> [
                     'required',
                     'min:2',
                     'max:100',
-                    Rule::unique($this->table)->ignore(request()->segment(4))
+                    //Rule::unique($this->table)->ignore(request()->segment(4))
                     ]
 
             ];
@@ -46,7 +46,7 @@ class UpdateBranch extends FormRequest
                     'required',
                     'min:2',
                     'max:100',
-                    Rule::unique($this->table)->ignore(request()->segment(4))
+                   // Rule::unique($this->table)->ignore(request()->segment(4))
                 ]
 
             ];
