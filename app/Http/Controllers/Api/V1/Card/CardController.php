@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Card;
 use App\Deposit;
 use App\Cards;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Card\SearchByCode;
 use App\Http\Requests\Card\StoreCard;
 use App\Http\Requests\Card\DepositCardRequest;
 use App\Http\Requests\Card\WithdrawRequest;
@@ -15,6 +16,9 @@ use App\Traits\ApiResponser;
 use App\Withdraw;
 use Carbon\Carbon;
 use Exception;
+use Facade\FlareClient\Http\Exceptions\NotFound;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Hashing\BcryptHasher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -23,6 +27,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use phpseclib\Crypt\Hash;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CardController extends Controller
 {
@@ -207,6 +213,27 @@ class CardController extends Controller
         $all_withdraw = Withdraw::FilterData($request)->with(['admin', 'card'])->get();
 
         return $this->showCollection(WithdrawResource::collection($all_withdraw));
+
+
+    }
+
+
+    public function getCardByCode(SearchByCode $request){
+
+
+
+
+        $encryptedCode = $request->get('code');
+
+        //dd($encryptedCode);
+
+        $card = Cards::where('code','=',$encryptedCode)->first();
+     //   dd($card);
+        if ($card){
+            return $this->showModel(new CardResource($card));
+        }else{
+            throw new ModelNotFoundException('Card Not Found');
+        }
 
 
     }

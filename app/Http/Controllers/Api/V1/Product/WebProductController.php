@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\V1\Product;
 use App\Attachment;
 use App\AttachmentType;
 use App\Branches;
+use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\StoreProduct;
 use App\Http\Requests\Product\UpdateProduct;
+use App\Http\Resources\Category\HomePageResource;
 use App\Http\Resources\product\ProductResource;
 use App\Http\Resources\product\WebProductResource;
 use App\Products;
@@ -21,6 +23,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\ValidationException;
+use function GuzzleHttp\Promise\queue;
 
 class WebProductController extends Controller
 {
@@ -59,6 +62,18 @@ class WebProductController extends Controller
            // return new WebProductResource($product);
         }
         return null;
+    }
+
+    public function homePageContent(Request $request){
+
+        $limit = $request->has('limit') ? $request->get('limit') : 5;
+
+        $rootCategory = Categories::with(['products'=> function($query) use ($limit) {
+            $query->orderBy('viewed','desc');
+        }])->whereNull('parent_id')->get();
+
+        return $this->showCollection(HomePageResource::collection($rootCategory),false);
+
     }
 
 

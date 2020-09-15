@@ -13,7 +13,7 @@ class Cards extends Model
 {
 
 
-    use SoftDeletes,Encryptable;
+    use SoftDeletes;
     protected $fillable = [
         'code',
         'pin',
@@ -21,7 +21,7 @@ class Cards extends Model
         'user_id',
     ];
 
-    protected $encryptable = ['code','pin'];
+   // protected $encryptable = ['code','pin'];
 
     public function user(){
         return $this->belongsTo(User::class);

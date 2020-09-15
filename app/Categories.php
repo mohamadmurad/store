@@ -39,6 +39,11 @@ class Categories extends Model
         return $this->hasMany(Products::class,'category_id');
     }
 
+    public function TopProducts(int $limit = 5){
+        return $this->hasMany(Products::class,'category_id')->orderBy('viewed','desc');
+    }
+
+
     public function parent(){
         return $this->belongsTo(Categories::class);
     }

@@ -59,7 +59,7 @@ return [
     'image' => 'هذا الملف يجب ان يكون صورة',
     'in' => 'The selected :attribute is invalid.',
     'in_array' => 'The :attribute field does not exist in :other.',
-    'integer' => 'The :attribute must be an integer.',
+    'integer' => 'حقل :attribute يجب ان يكون رقم صحيح',
     'ip' => 'The :attribute must be a valid IP address.',
     'ipv4' => 'The :attribute must be a valid IPv4 address.',
     'ipv6' => 'The :attribute must be a valid IPv6 address.',
@@ -154,6 +154,8 @@ return [
         'username'=>'اسم المستخدم',
         'phone' => 'رقم الهاتف',
         'name' => 'الاسم',
+        'quantity' => 'الكمية',
+        'id' =>  'الرقم',
 
 
     ],

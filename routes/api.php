@@ -49,6 +49,12 @@ Route::resource('v1/sales','Api\V1\Sale\SaleController',['only'=>['index']]);
 Route::apiResource('v1/offers','Api\V1\Offer\OfferController')->only(['index','show']);
 
 
+// home page
+Route::get('v1/homePage','Api\V1\Product\WebProductController@homePageContent');
+
+
+Route::post('v1/checkQuantityInCart','Api\V1\Order\OrderController@checkQuantity');
+
 
 Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware' => ['auth:api']],function (){
 
@@ -104,7 +110,9 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
     // Branch
     Route::resource('branches','Branch\BranchController')->only(['store','update','destroy']);
+    Route::put('updateMyBranch','Branch\BranchController@updateByEmployee');
     Route::post('syncAttributes/{branch}','Branch\BranchController@syncAttribute');
+    Route::get('receivablesToPay','Branch\BranchController@receivablesToPay');
 
     // Attributes
     Route::resource('attributes','Attribute\AttributeController')->except(['show','showAttributeBranch']);
@@ -122,6 +130,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::post('withdraw/{id}','Card\CardController@withdraw');
     Route::get('allDeposit','Card\CardController@allDeposit');
     Route::get('allWithdraw','Card\CardController@allWithdraw');
+    Route::post('getCardByCode','Card\CardController@getCardByCode');
 
 
 

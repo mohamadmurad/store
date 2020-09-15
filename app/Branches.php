@@ -58,4 +58,10 @@ class Branches extends Model
         return $this->belongsToMany(User::class,'branch_expense')->withPivot(['amount','expenseDate']);
     }
 
+    public function scopeAvailable($query){
+
+
+        return $query->where('status', '=', self::AVAILABEL_PRODUCT)->where('quantity','>',0);
+    }
+
 }

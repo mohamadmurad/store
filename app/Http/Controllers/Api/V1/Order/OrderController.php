@@ -14,6 +14,7 @@ use App\Traits\ApiResponser;
 use App\User;
 use Carbon\Carbon;
 use Cassandra\Exception;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -365,6 +366,34 @@ class OrderController extends Controller
         }
 
         return 1;
+
+
+    }
+
+
+    public function checkQuantity(Request $request){
+
+        $rules = [
+            'quantity' => 'required|integer|min:1',
+            'id' => 'required|integer|exists:products,id',
+        ];
+
+        $this->validate($request,$rules);
+
+        $quantity = $request->get('quantity');
+        $id = $request->get('id');
+
+        $product = Products::findOrFail($id)->first();
+        if ($product->quantity >= $quantity){
+
+            return $this->successResponse([
+                'state' => true
+            ],200);
+        }else{
+            return $this->successResponse([
+                'state' => false
+            ],422);
+        }
 
 
     }

@@ -46,12 +46,15 @@ trait ApiResponser{
             'data' => [$jsonResource]
         ]);
     }
-    protected function showCollection(AnonymousResourceCollection $collection){
+    protected function showCollection(AnonymousResourceCollection $collection,$paginate = true){
         //$collection = $this->filterData($collection);
 
         //$collection = $this->sortData($collection,$transformer);
 
-        $collection = $this->paginate($collection);
+        if ($paginate){
+            $collection = $this->paginate($collection);
+        }
+
 
         //$collection = $this->cacheResponse($collection);
 
