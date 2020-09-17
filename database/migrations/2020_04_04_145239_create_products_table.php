@@ -28,6 +28,7 @@ class CreateProductsTable extends Migration
             $table->enum('status',$this->product_status);
             $table->integer('price');
             $table->text('details');
+            $table->unsignedInteger('viewed')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
