@@ -60,7 +60,6 @@ class Branches extends Model
 
     public function scopeAvailable($query){
 
-
         return $query->where('status', '=', self::AVAILABEL_PRODUCT)->where('quantity','>',0);
     }
 

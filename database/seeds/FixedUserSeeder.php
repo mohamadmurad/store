@@ -46,7 +46,7 @@ class FixedUserSeeder extends Seeder
             'location' => 'Damascus',
             'password' => bcrypt('12345678'),
         ]);
-        $user1->assignRole(['super_employee']);
+        $user1->assignRole('Super Admin');
 
         $code = Cards::randomCardCode(true);
         $pin = Cards::randomCardPin();

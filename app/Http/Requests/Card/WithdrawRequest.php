@@ -27,6 +27,7 @@ class WithdrawRequest extends FormRequest
     {
         return [
             'balance'=>'required|integer|min:1',
+            'barcode' => 'required|max:13',
 
         ];
     }
@@ -35,8 +36,7 @@ class WithdrawRequest extends FormRequest
     {
         return [
             'balance'=> $this->balance,
-
-
+            'barcode'=>$this->barcode,
         ];
     }
 }

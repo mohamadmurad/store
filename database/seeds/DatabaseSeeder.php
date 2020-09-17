@@ -95,6 +95,7 @@ class DatabaseSeeder extends Seeder
 
         // users
         factory(User::class, $userQuantity)->create()->each(function ($u){
+            $u->assignRole(['customer']);
             $rand = rand(1,0);
             $u->card()->save(factory(Cards::class)->make());
 

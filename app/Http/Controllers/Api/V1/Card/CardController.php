@@ -121,19 +121,20 @@ class CardController extends Controller
     /**
      * withdraw card
      *
-     * @param DepositCardRequest $request
-     * @param Cards $card
+     * @param WithdrawRequest $request
+     * @param int $id
      * @return CardResource|JsonResponse|Response
      */
-    public function withdraw(WithdrawRequest $request, int $id)
+    public function withdraw(WithdrawRequest $request)
     {
         if (request()->expectsJson() && request()->acceptsJson()) {
 
 
             $admin = Auth::user();
+            $barcode = $request->get('barcode');
             DB::beginTransaction();
             try {
-                $card = Cards::whereId($id)->lockForUpdate()->first();
+                $card = Cards::where('code','=',$barcode)->lockForUpdate()->first();
                 $adminCard = $admin->card()->lockForUpdate()->first();
 
                 if ($adminCard->balance < $request->balance) {
@@ -150,7 +151,7 @@ class CardController extends Controller
                 $NewBranchBalance = $card->balance - $request->balance;
 
 
-                $update = Cards::whereId($id)
+                $update = Cards::where('code','=',$barcode)
                     ->where('updated_at', '=', $card->updated_at)
                     ->update(['balance' => $NewBranchBalance]);
 
@@ -197,7 +198,7 @@ class CardController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()) {
 
-            $allChargeProcess = Deposit::FilterData($request)->with(['admin', 'card'])->get();
+            $allChargeProcess = Deposit::FilterData($request)->with(['admin', 'card.user'])->get();
 
             return $this->showCollection(DepositResource::collection($allChargeProcess));
 
@@ -219,9 +220,6 @@ class CardController extends Controller
 
 
     public function getCardByCode(SearchByCode $request){
-
-
-
 
         $encryptedCode = $request->get('code');
 

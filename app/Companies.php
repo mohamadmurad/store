@@ -32,4 +32,8 @@ class Companies extends Model
     public function branches(){
         return $this->hasMany(Branches::class,'company_id');
     }
+
+    public function category(){
+        return $this->belongsTo(Categories::class,'category_id');
+    }
 }

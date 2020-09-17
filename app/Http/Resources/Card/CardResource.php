@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Card;
 
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CardResource extends JsonResource
@@ -20,7 +21,7 @@ class CardResource extends JsonResource
            'code' => $this->code,
             'pin' => (int) $this->pin,
             'balance' => (float) $this->balance,
-            'user' => (int) $this->user_id,
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

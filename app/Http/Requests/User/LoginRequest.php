@@ -26,7 +26,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'=>'required|email|max:255|exists:'. $this->table .',email',
+            'email'=>'required|email|max:255',
             'password'=>'required|min:8',
         ];
     }
