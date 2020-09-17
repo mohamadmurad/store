@@ -80,7 +80,7 @@ class toolsController extends Controller
         $employee = Auth::user();
 
         $category = $employee->branch->company->category->children;
-        //dd($category);
+
         return $this->showCollection(CategoryResource::collection($category));
 
 

@@ -127,9 +127,11 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
 
     // card
     Route::post('deposit/{id}','Card\CardController@deposit');
-    Route::post('withdraw/','Card\CardController@withdraw');
     Route::get('allDeposit','Card\CardController@allDeposit');
-    Route::get('allWithdraw','Card\CardController@allWithdraw');
+    Route::post('withdraw/','Card\CardController@withdraw');
+    Route::get('withdraw','Card\CardController@allWithdraw');
+
+
     Route::post('getCardByCode','Card\CardController@getCardByCode');
 
 

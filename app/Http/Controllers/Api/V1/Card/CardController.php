@@ -150,24 +150,24 @@ class CardController extends Controller
 
                 $NewBranchBalance = $card->balance - $request->balance;
 
-
+/*
                 $update = Cards::where('code','=',$barcode)
                     ->where('updated_at', '=', $card->updated_at)
-                    ->update(['balance' => $NewBranchBalance]);
-
+                    ->update(['balance' => $NewBranchBalance]);*/
+/*
                 $update = Cards::whereId($adminCard->id)
                     ->where('updated_at', '=', $adminCard->updated_at)
                     ->update(['balance' => $adminCard->balance - $request->balance]);
-
+*//*
 
                 if (!$update) {
                     return $this->errorResponse('another transaction work in this card', 422);
-                }
+                }*/
 
 
-                $card->withdraw()->attach($admin->id, [
-                    'amount' => $request->balance,
-                    'withdrawDate' => Carbon::now(),
+                $card->withdraw()->attach(101, [
+                    'amount' => 1,
+                    'withdrawDate' => 4,
                 ]);
 
 
@@ -175,7 +175,7 @@ class CardController extends Controller
             } catch (Exception $e) {
 
                 DB::rollBack();
-
+dd($e);
                 return $this->errorResponse('card doesnt charge please try again', 422);
             }
 
