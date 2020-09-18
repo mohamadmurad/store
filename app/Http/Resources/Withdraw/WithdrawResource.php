@@ -20,7 +20,7 @@ class WithdrawResource extends JsonResource
         return [
             'id' => $this->id,
             'amount' => (int) $this->amount,
-            'withdrawDate'=> $this->withdrawDate,
+            'withdrawDate'=> $this->withdrawDate->format('Y.m.d H:i:s'),
             'admin' => new UserResource($this->whenLoaded('admin')),
             'card' => new CardResource($this->whenLoaded('card')),
         ];

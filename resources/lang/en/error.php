@@ -11,6 +11,7 @@ return [
     ],
     'card'=>[
         'dontHave' => 'you dont have card yet',
+        'notFoundBarcode' => 'this barcode not found',
     ],
     'branch' => [
         'userHaveBranch' => 'This User Have a branch',

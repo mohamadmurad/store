@@ -25,6 +25,8 @@ class WithdrawTable extends Migration
             $table->unsignedInteger('amount');
 
             $table->dateTime('withdrawDate');
+
+            $table->timestamps();
         });
     }
 

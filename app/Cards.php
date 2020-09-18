@@ -36,7 +36,7 @@ class Cards extends Model
     public function withdraw(){
         return $this->belongsToMany(User::class,'withdraw')
             ->using(Withdraw::class)
-            ->withPivot(['amount','withdrawDate']);
+            ->withPivot(['amount','withdrawDate'])->withTimestamps();
     }
 
 

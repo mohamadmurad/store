@@ -134,7 +134,14 @@ class CardController extends Controller
             $barcode = $request->get('barcode');
             DB::beginTransaction();
             try {
+
                 $card = Cards::where('code','=',$barcode)->lockForUpdate()->first();
+
+                if (!$card){
+                    return $this->errorResponse(trans('error.card.notFoundBarcode'));
+                }
+
+
                 $adminCard = $admin->card()->lockForUpdate()->first();
 
                 if ($adminCard->balance < $request->balance) {
@@ -150,32 +157,44 @@ class CardController extends Controller
 
                 $NewBranchBalance = $card->balance - $request->balance;
 
-/*
-                $update = Cards::where('code','=',$barcode)
+
+                $update1 = Cards::where('code','=',$barcode)
                     ->where('updated_at', '=', $card->updated_at)
-                    ->update(['balance' => $NewBranchBalance]);*/
-/*
-                $update = Cards::whereId($adminCard->id)
-                    ->where('updated_at', '=', $adminCard->updated_at)
-                    ->update(['balance' => $adminCard->balance - $request->balance]);
-*//*
-
-                if (!$update) {
+                    ->update(['balance' => $NewBranchBalance]);
+                if (!$update1) {
                     return $this->errorResponse('another transaction work in this card', 422);
-                }*/
+                }
+
+                $newAdminBalance = $adminCard->balance - $request->balance;
+
+                $update2 = Cards::whereId($adminCard->id)
+                    ->where('updated_at', '=', $adminCard->updated_at)
+                    ->update(['balance' => $newAdminBalance]);
 
 
-                $card->withdraw()->attach(101, [
-                    'amount' => 1,
-                    'withdrawDate' => 4,
+                if (!$update2) {
+                    return $this->errorResponse('another transaction work in this card', 422);
+                }
+
+
+                $d = Withdraw::create([
+                    'amount' => $request->balance,
+                    'withdrawDate' => Carbon::now(),
+                    'cards_id' => $card->id,
+                    'user_id' => $admin->id,
                 ]);
+
+
+
+              /* $card->withdraw()->attach($admin->id, [
+                   'amount' => $request->balance,
+                   'withdrawDate' => Carbon::now(),
+                ]);*/
 
 
                 DB::commit();
             } catch (Exception $e) {
-
                 DB::rollBack();
-dd($e);
                 return $this->errorResponse('card doesnt charge please try again', 422);
             }
 
