@@ -297,6 +297,10 @@ class DeskTopProductController extends Controller
 
             try {
 
+                if (!isset($request->json()->get('category')['id'])){
+                   return $this->errorResponse('category id required',422);
+                }
+
                 $employee_product->fill([
                     'name' => $request->has('name') ? $request->get('name') : $employee_product->name,
                     'latinName' => $request->has('latinName') ? $request->get('latinName') : $employee_product->latinName,
@@ -306,7 +310,7 @@ class DeskTopProductController extends Controller
                     'price' => $request->has('price') ? $request->get('price') : $employee_product->price,
                     'details' => $request->has('details') ? $request->get('details') : $employee_product->details,
                     'parent_id' => $request->has('parent_id') && $request->get('parent_id') > 0 ? $request->get('parent_id') : $employee_product->parent_id,
-                    'category_id' => $request->has('category_id') ? $request->get('category_id') : $employee_product->category_id,
+                    'category_id' => $request->json()->has('category') ? $request->json()->get('category')['id'] : $employee_product->category_id,
                     'group_id' => $request->has('group_id') ? $request->get('group_id') : $employee_product->group_id,
                 ]);
 
@@ -322,11 +326,22 @@ class DeskTopProductController extends Controller
 
                 $employee_product->save();
                 if ($request->has('attributes')) {
-                    $attributes = $request->get('attributes');
+                    $attributes = $request->json()->get('attributes');
+
                     foreach ($attributes as $attribute) {
-                        $id = $attribute['attribute']['id'];
-                        $value = $attribute['value'];
-                        $employee_product->attributes()->updateExistingPivot($id, ['value' => $value]);
+                        if (isset($attribute['attribute']['id'])){
+                            $id = $attribute['attribute']['id'];
+                            if (isset($attribute['value'])){
+                                $value = $attribute['value'];
+                                $employee_product->attributes()->updateExistingPivot($id, ['value' => $value]);
+                            }else{
+                                return $this->errorResponse('attribute value required',422);
+                            }
+
+                        }else{
+                            return $this->errorResponse('attribute id required',422);
+                        }
+
 
                     }
                 }

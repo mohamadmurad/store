@@ -71,7 +71,6 @@ class toolsController extends Controller
 
         ],200);
 
-        return $allCustomer;
     }
 
 

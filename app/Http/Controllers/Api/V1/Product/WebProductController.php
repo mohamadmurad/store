@@ -52,14 +52,35 @@ class WebProductController extends Controller
      * Display the specified resource.
      *
      * @param Products $product
-     * @return WebProductResource|null
+     * @return WebProductResource|JsonResponse|null
      */
     public function show(Products $product)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $product = $product->load(['sales','attachments']);
-            return $this->showModel(new WebProductResource($product));
-           // return new WebProductResource($product);
+
+            DB::beginTransaction();
+            try {
+
+
+                $update2 = Products::whereId($product->id)
+                    ->where('updated_at', '=', $product->updated_at)
+                    ->update(['viewed' => $product->viewed + 1]);
+
+
+                if (!$update2) {
+                    return $this->errorResponse('refresh this page please', 422);
+                }
+                DB::commit();
+
+                $productNew = Products::whereId($product->id)->with(['sales','attachments'])->first();
+                return $this->showModel(new WebProductResource($productNew));
+
+            } catch (Exception $e) {
+                DB::rollBack();
+
+                return $this->errorResponse('An Error!', 422);
+            }
+
         }
         return null;
     }

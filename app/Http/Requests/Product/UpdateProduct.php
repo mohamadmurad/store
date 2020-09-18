@@ -27,6 +27,8 @@ class UpdateProduct extends FormRequest
      */
     public function rules()
     {
+
+        $data = $this->json();
         $rules = [];
 
         if($this->has(['name'])){
@@ -81,10 +83,15 @@ class UpdateProduct extends FormRequest
                     'parent_id'=>'exists:products,id'];
         }
 
-        if($this->has(['category_id'])){
-            $rules += [
-                'category_id'=>'required|exists:categories,id',
-            ];
+
+        if($this->has(['category'])){
+
+            if (isset($data->get('category')['id'])){
+                $rules += [
+                    'category.id'=>'required|exists:categories,id',
+                ];
+            }
+
         }
 
 
