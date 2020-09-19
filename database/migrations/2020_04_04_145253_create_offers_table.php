@@ -19,6 +19,11 @@ class CreateOffersTable extends Migration
             $table->float('price');
             $table->dateTime('start');
             $table->dateTime('end');
+
+            $table->foreignId('branch_id');
+            $table->foreign('branch_id')->onDelete('cascade')->onUpdate('cascade')
+                ->references('id')
+                ->on('branches');
             $table->timestamps();
             $table->softDeletes();
         });

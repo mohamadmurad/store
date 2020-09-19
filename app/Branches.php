@@ -42,6 +42,10 @@ class Branches extends Model
         return $this->hasMany(Products::class,'branch_id');
     }
 
+    public function offers(){
+        return $this->hasMany(Offers::class,'branch_id');
+    }
+
     public function orders(){
         return $this->hasMany(Orders::class,'branch_id');
     }

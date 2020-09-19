@@ -42,6 +42,10 @@ class Offers extends Model
         return $this->belongsToMany(Orders::class);
     }
 
+    public function branch(){
+        return $this->belongsTo(Branches::class);
+    }
+
     /**
      * Return the String of a SWIFT/BIC number
      *

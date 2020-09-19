@@ -125,6 +125,8 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     // offers
     Route::apiResource('offers','Offer\OfferController')->only(['store','destroy']);
 
+    Route::get('employee_offers','Offer\OfferController@employeeOffer');
+
     // card
     Route::post('deposit/{id}','Card\CardController@deposit');
     Route::get('allDeposit','Card\CardController@allDeposit');

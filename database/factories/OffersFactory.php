@@ -16,6 +16,7 @@ $factory->define(Offers::class, function (Faker $faker) {
         'price' => $faker->numberBetween(100,1000),
         'start' => $start,
         'end' => $start->addDays(3),
+        'branch_id' => 1,
 
     ];
 });

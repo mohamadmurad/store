@@ -19,6 +19,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use function foo\func;
 use function GuzzleHttp\Promise\all;
 
 class OfferController extends Controller
@@ -30,6 +31,7 @@ class OfferController extends Controller
     {
         $this->middleware(['permission:add_offer','checkIfUserHasProduct'])->only('store');
         $this->middleware(['checkIfUserHasOffer'])->only('destroy');
+        $this->middleware(['permission:add_offer'])->only('employeeOffer');
     }
 
     /**
@@ -40,7 +42,7 @@ class OfferController extends Controller
     public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $offers = Offers::with('products.attachments')->get();
+            $offers = Offers::with(['products.attachments','branch'])->get();
             return  $this->showCollection(OfferResource::collection($offers));
         }
     }
@@ -56,7 +58,7 @@ class OfferController extends Controller
         if (request()->expectsJson() && request()->acceptsJson()){
             $data = $request->json();
             $user = Auth::user();
-
+            $branch_id = $user->branch()->first()->id;
             if ($user->hasRole('Super Admin')){
                 return $this->errorResponse('Admin cant add offer :)',403);
             }
@@ -86,6 +88,7 @@ class OfferController extends Controller
                     'number' => Offers::randomOfferNumber(),
                     'start' => $startDate,
                     'end' => $endDate,
+                    'branch_id'=> $branch_id,
                 ]);
 
                 foreach ($products as $product){
@@ -137,7 +140,7 @@ class OfferController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()){
 
-            return $this->showModel(new OfferResource($offer->load('products.attachments')));
+            return $this->showModel(new OfferResource($offer->load(['products.attachments','branch'])));
         }
 
         return null;
@@ -162,5 +165,17 @@ class OfferController extends Controller
         }
 
         return null;
+    }
+
+    public function employeeOffer(Request $request){
+
+
+        $employee = Auth::user();
+        $employeeBranch = $employee->branch()->first()->offers()->with(['products.attachments','branch'])->get();
+
+        return $this->showCollection(OfferResource::collection($employeeBranch));
+
+
+
     }
 }

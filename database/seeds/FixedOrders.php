@@ -25,6 +25,7 @@ class FixedOrders extends Seeder
             'number' => Offers::randomOfferNumber(),
             'start' => Carbon::now(),
             'end' => Carbon::now()->addDays(2),
+            'branch_id' => $branch->id,
         ]);
         $product_id = $branch->products()->first();
         $newOffer->products()->attach($product_id->id,['quantity'=>rand(1,2)]);
