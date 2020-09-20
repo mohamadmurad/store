@@ -16,7 +16,14 @@ class AttachmentResource extends JsonResource
     public function toArray($request)
     {
 
-
+        if ($request->has('web')){
+            return [
+                'id'=>$this->id,
+                'big' => $request->getSchemeAndHttpHost() . '/'. config('app.PRODUCTS_FILES_PATH','files/products/') .$this->src,
+                'thumb' => $request->getSchemeAndHttpHost() . '/'. config('app.PRODUCTS_FILES_PATH','files/products/') .$this->src,
+                //'type' => $this->type->type,
+            ];
+        }
         return [
             'path' => $request->getSchemeAndHttpHost() . '/'. config('app.PRODUCTS_FILES_PATH','files/products/') .$this->src,
             'type' => $this->type->type,

@@ -290,7 +290,7 @@ class OrderController extends Controller
 
                         if (!$update) {
                             DB::rollBack();
-                            throw new \Exception('dsd');
+                          //  throw new \Exception('dsd');
 
                             return $this->errorResponse('another transaction work in product ' . $o_p->id, 22);
                         }
@@ -307,7 +307,7 @@ class OrderController extends Controller
 
                     if (!$update) {
                         DB::rollBack();
-                        throw new \Exception('ssssssdsd');
+                        //throw new \Exception('ssssssdsd');
                         $this->errorResponse('another transaction work in cards ', 422);
                     }
                 } else {
@@ -332,11 +332,11 @@ class OrderController extends Controller
             return $this->errorResponse("Does not exist any " . $modelName . " with the specific id", 404);
         } catch (\PDOException $e) {
             DB::rollBack();
-            return $e->getMessage();
+           // return $e->getMessage();
             return $this->errorResponse('your balance or quantity for a product is not enuf', 422);
         } catch (\Exception $e) {
             DB::rollBack();
-            return $e;
+          //  return $e;
             return $this->errorResponse('order not done. please try again', 422);
         }
 

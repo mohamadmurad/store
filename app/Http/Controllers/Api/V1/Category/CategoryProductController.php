@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Category;
 
+use App\AttachmentType;
 use App\Categories;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\StoreCategory;
@@ -29,7 +30,11 @@ class CategoryProductController extends Controller
     public function index(Categories $category)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $products = $category->products()->with(['branch','firstAttachments','sales'])->get();
+            $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+            $products = $category->products()->with(['branch','attachments'=> function($query) use ($imageId){
+                $query->whereIn('attachmentType_id',$imageId);
+
+            },'sales'])->get();
 
             return $this->showCollection(WebProductResource::collection($products));
         }

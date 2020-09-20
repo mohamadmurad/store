@@ -85,7 +85,7 @@ class OfferController extends Controller
                 $all_product_price = 0;
                 $newOffer = Offers::create([
                     'price' => $request->price,
-                    'number' => Offers::randomOfferNumber(),
+                    'number' => $request->has('number')? $request->get('number') : Offers::randomOfferNumber(),
                     'start' => $startDate,
                     'end' => $endDate,
                     'branch_id'=> $branch_id,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Branch;
 
+use App\AttachmentType;
 use App\Http\Controllers\Controller;
 use App\branches;
 use App\Http\Requests\Branch\StoreBranch;
@@ -31,8 +32,11 @@ class BranchProductController extends Controller
     public function index(Branches $branch)
     {
         if (request()->expectsJson() && request()->acceptsJson()){
+            $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+            $product = $branch->products()->with(['branch','attachments'=> function($query) use ($imageId){
+                $query->whereIn('attachmentType_id',$imageId);
 
-            $product = $branch->products()->with(['branch','attachments','sales'])->get();
+            },'sales'])->get();
             return $this->showCollection(WebProductResource::collection($product));
         }
 

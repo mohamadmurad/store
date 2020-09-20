@@ -72,7 +72,7 @@ class WebProductController extends Controller
                 }
                 DB::commit();
 
-                $productNew = Products::whereId($product->id)->with(['sales','attachments'])->first();
+                $productNew = Products::whereId($product->id)->with(['sales','attachments','branch.company'])->first();
                 return $this->showModel(new WebProductResource($productNew));
 
             } catch (Exception $e) {
