@@ -19,7 +19,7 @@ class CardResource extends JsonResource
         return [
             'id' => $this->id,
            'code' => $this->code,
-            'pin' => (int) $this->pin,
+          //  'pin' => (int) $this->pin,
             'balance' => (float) $this->balance,
             'user' => new UserResource($this->whenLoaded('user')),
         ];

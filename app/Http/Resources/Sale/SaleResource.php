@@ -15,6 +15,7 @@ class SaleResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'sale' => $this->saleRate,
             'price' => $this->newPrice,
             'start' => $this->start,

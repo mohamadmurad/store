@@ -21,6 +21,8 @@ class Cards extends Model
         'user_id',
     ];
 
+    protected $hidden = ['pin'];
+
    // protected $encryptable = ['code','pin'];
 
     public function user(){

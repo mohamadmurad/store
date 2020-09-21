@@ -51,7 +51,7 @@ class AuthApiController extends Controller
             ///
             ///
 
-            return new UserResource($newUser);
+            return $this->showModel(new UserResource($newUser));
 //            return $this->successResponse([
 //                'message' => 'User Saved',
 //                'code' => 201,

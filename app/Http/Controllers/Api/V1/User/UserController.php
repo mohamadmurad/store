@@ -128,7 +128,7 @@ class UserController extends Controller
     public function getMyInfo()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            return $this->showModel(new AccountInfoResource(Auth::user()));
+            return $this->showModel(new AccountInfoResource(Auth::user()->load('card')));
 
         }
         return null;
@@ -253,7 +253,7 @@ class UserController extends Controller
             }
 
             $user->save();
-            return new AccountInfoResource($user);
+            return $this->showModel(new AccountInfoResource($user->load('card')));
 
 
         }

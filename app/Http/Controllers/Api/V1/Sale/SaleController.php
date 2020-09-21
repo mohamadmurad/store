@@ -37,7 +37,7 @@ class SaleController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $products_with_sale  = Products::has('sales')
-                ->with('firstAttachments')
+                ->with('attachments')
                 ->with('sales')
                 ->orderBy('created_at','desc')
                 ->get();
@@ -118,7 +118,8 @@ class SaleController extends Controller
             }else{
                 return $this->errorResponse('this product already have sale',422);
             }
-
+           // dd($employee_product->sales());
+            return $this->showModel(new SaleResource($employee_product->sales()->first()));
             return $this->successResponse([
                 'message'=>'New Sale on Product was added successful',
                 'code' => 201],201);
