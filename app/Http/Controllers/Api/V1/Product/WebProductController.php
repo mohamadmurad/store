@@ -37,10 +37,26 @@ class WebProductController extends Controller
     {
         if (request()->expectsJson() && request()->acceptsJson()){
             $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+            if(\request()->has('sortByPrice')){
+
+                $order = \request()->get('sortByPrice');
+
+                if($order === 'desc' || $order === 'asc'){
+                    $products = Products::with(['attachments'=> function($query) use ($imageId){
+                        $query->whereIn('attachmentType_id',$imageId);
+
+                    }])->with('sales')->orderBy('price',$order)->get();
+
+                    return $this->showCollection(WebProductResource::collection($products));
+                }
+            }
+
             $products = Products::with(['attachments'=> function($query) use ($imageId){
                 $query->whereIn('attachmentType_id',$imageId);
 
             }])->with('sales')->get();
+
+
 
             return $this->showCollection(WebProductResource::collection($products));
         }
