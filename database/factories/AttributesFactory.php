@@ -9,8 +9,14 @@ use Faker\Generator as Faker;
 
 $factory->define(Attributes::class, function (Faker $faker) {
     $types = [
-        'company',
-        'brand',
+        'size',
+        'wight',
+        'height',
+        'width',
+        'camera',
+        'Ram',
+        'Rom',
+
     ];
     $rand = $faker->unique()->randomElement($types);
 

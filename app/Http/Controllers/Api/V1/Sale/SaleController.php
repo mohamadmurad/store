@@ -93,7 +93,7 @@ class SaleController extends Controller
                     }
 
                     $newPrice =  $request->get('newPrice');
-                    $saleRate = ($newPrice * 100) / $employee_product->price;
+                    $saleRate = 100 - (($newPrice * 100) / $employee_product->price);
                 }elseif ($request->has('saleRate') && !$request->has('newPrice')){
                     $newPrice = ($employee_product->price * (int) $request->get('saleRate')) / 100;
                     $saleRate = $request->get('saleRate');
@@ -156,7 +156,7 @@ class SaleController extends Controller
             }
 
             $newPrice =  $request->get('newPrice');
-            $saleRate = ($newPrice * 100) / $sale->product()->first()->price;
+            $saleRate = 100 - (($newPrice * 100) / $sale->product()->first()->price );
         }elseif ($request->has('saleRate') && !$request->has('newPrice')){
             $newPrice = ($sale->product()->first()->price * (int) $request->get('saleRate')) / 100;
             $saleRate = $request->get('saleRate');

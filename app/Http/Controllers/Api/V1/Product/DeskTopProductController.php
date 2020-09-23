@@ -238,6 +238,14 @@ class DeskTopProductController extends Controller
                         $attribute_id = $attributes['id'];
                         $attribute_value = $data['value'];
 
+                        if ($attribute_value === null){
+                            return $this->errorResponse('attribute null',422);
+                        }
+
+                        if ($attribute_value === ''){
+                            return $this->errorResponse('attribute empty',422);
+                        }
+
                         $employee_product->attributes()->attach($attribute_id, ['value' => $attribute_value]);
 
                     }

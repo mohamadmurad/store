@@ -75,7 +75,7 @@ class DatabaseSeeder extends Seeder
 
         $attach_typeQuantity = 2;
         $branchesQuantity = 25;
-        $attributesQuantity = 2;
+        $attributesQuantity = 7;
         $categoryQuantity = 10;
         $CompaniesQuantity = 5;
         $couponsQuantity = 5;
@@ -94,33 +94,33 @@ class DatabaseSeeder extends Seeder
         $this->call(FixedAttachment::class);
 
         // users
-        factory(User::class, $userQuantity)->create()->each(function ($u){
+       /* factory(User::class, $userQuantity)->create()->each(function ($u){
             $u->assignRole(['customer']);
             $rand = rand(1,0);
             $u->card()->save(factory(Cards::class)->make());
 
             $rand === 1 ? $u->assignRole(['employee']) : $u->assignRole(['super_employee']);
-        });
+        });*/
 
         // attribute
         factory(Attributes::class, $attributesQuantity)->create();
 
         // company
-        factory(Companies::class, $CompaniesQuantity)->create();
+        //factory(Companies::class, $CompaniesQuantity)->create();
 
 
         // category
-        factory(Categories::class, $categoryQuantity)->create()->each(function ($cat){
+       /* factory(Categories::class, $categoryQuantity)->create()->each(function ($cat){
             $rand = rand(1,0);
             if( Categories::first()->id  && $rand === 1){
                 $parent = Categories::all()->random();
                 $cat->parent_id = $parent->id;
                 $cat->save();
             }
-        });
+        });*/
 
         // branches
-        factory(Branches::class, $branchesQuantity)->create()->each(function ($branch){
+       /* factory(Branches::class, $branchesQuantity)->create()->each(function ($branch){
             $usersInBranchTable = Branches::all()->pluck('user_id');
             $user = User::all()->whereNotIn('id',$usersInBranchTable)->random(1);
             $branch->user_id = $user;
@@ -130,16 +130,16 @@ class DatabaseSeeder extends Seeder
                 $branch->attributes()->attach($attribute);
             }
 
-        });
+        });*/
 
         // groups
-        factory(Groups::class, $groupsQuantity)->create();
+        //factory(Groups::class, $groupsQuantity)->create();
 
         // coupons
-        factory(Coupons::class, $couponsQuantity)->create();
+        //factory(Coupons::class, $couponsQuantity)->create();
 
         // products
-        factory(Products::class, $productsQuantity)->create()->each(function ($product) {
+       /* factory(Products::class, $productsQuantity)->create()->each(function ($product) {
             $rand = rand(1,0);
             if($rand===1 && Products::first()->id){
                 $product->parent_id = Products::all()->random()->id;
@@ -175,16 +175,16 @@ class DatabaseSeeder extends Seeder
 
             $product->save();
 
-        });
+        });*/
 
         // rate
-        factory(Rate::class, $ratesQuantity)->create();
+        //factory(Rate::class, $ratesQuantity)->create();
 
         // sale
-        factory(Sales::class, $salesQuantity)->create();
+        //factory(Sales::class, $salesQuantity)->create();
 
         // offer
-        factory(Offers::class, $offersQuantity)->create()->each(function ($offer) {
+        /*factory(Offers::class, $offersQuantity)->create()->each(function ($offer) {
             $branch_id = rand(1,25);
 
             $product = products::all()->where('branch_id','=',$branch_id);
@@ -196,7 +196,7 @@ class DatabaseSeeder extends Seeder
             }
 
             $offer->products()->attach($product);
-        });
+        });*/
 
         // favorate
        /* for ($i=0;$i<$favoriteQuantity;$i++){
@@ -215,7 +215,7 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call(FixedUserSeeder::class);
-        $this->call(FixedOrders::class);
+       // $this->call(FixedOrders::class);
 
     }
 }

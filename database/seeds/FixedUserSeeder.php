@@ -56,9 +56,9 @@ class FixedUserSeeder extends Seeder
             'balance' => 0
         ]);
 
-        $rand_branch = Branches::all()->random(1)->first();
-        $rand_branch->user_id = $user1->id;
-        $rand_branch->save();
+//        $rand_branch = Branches::all()->random(1)->first();
+//        $rand_branch->user_id = $user1->id;
+//        $rand_branch->save();
 
         // employee
         $user2 = User::create([
@@ -69,10 +69,11 @@ class FixedUserSeeder extends Seeder
             'location' => 'Damascus',
             'password' => bcrypt('12345678'),
         ]);
-        $user2->assignRole(['employee']);
+        $user2->assignRole(['super_employee']);
 
         $code = Cards::randomCardCode(true);
         $pin = Cards::randomCardPin();
+
         $user2->card()->create([
             'pin' => $pin,
             'code' => $code,
@@ -80,9 +81,9 @@ class FixedUserSeeder extends Seeder
         ]);
 
 
-        $rand_branch = Branches::all()->random(1)->first();
+        /*$rand_branch = Branches::all()->random(1)->first();
         $rand_branch->user_id = $user2->id;
-        $rand_branch->save();
+        $rand_branch->save();*/
 
 
         // costumer
