@@ -194,14 +194,16 @@ class DeskTopProductController extends Controller
                 }
                 DB::rollBack();
 
+                return  $e;
 
                 return $this->errorResponse('Product doesnt added please try again', 422);
 
 
             }
 
-
-            return new ProductResource($newProduct->load('attachments'));
+            //return $this->successResponse('hello',200);
+            $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+            return new ProductResource($newProduct);
         }
 
         return null;
@@ -357,7 +359,8 @@ class DeskTopProductController extends Controller
 
 
         }
-        return null;
+
+        return 'dfdf';
 
 
     }

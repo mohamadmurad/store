@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\product;
 
+use App\AttachmentType;
 use App\Categories;
 use App\Http\Resources\Attachment\AttachmentResource;
 use App\Http\Resources\Attribute\infoAttributeResource;
@@ -25,7 +26,11 @@ class WebProductResource extends JsonResource
 
 
         if($request->product){
-            $proFromSameCat = Products::where('category_id','=',$this->category_id)->where('id','!=',$this->id)->limit(3)->get();
+            $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+            $proFromSameCat = Products::where('category_id','=',$this->category_id)->where('id','!=',$this->id)->with(['sales','attachments' => function($query) use ($imageId){
+                $query->whereIn('attachmentType_id',$imageId);
+
+            },'branch.company'])->limit(10)->get();
             return [
                 'id' => $this->id,
                 'name' => $this->name,
@@ -41,6 +46,7 @@ class WebProductResource extends JsonResource
                 'sale' => new SaleResource($this->whenLoaded('sales')),
                 'attributes' => infoAttributeResource::collection($this->attributes),
                 'ProductsFromSameCategory' =>ProductResource::collection($proFromSameCat),
+
             ];
         }
 
@@ -59,6 +65,7 @@ class WebProductResource extends JsonResource
             //'image' => new AttachmentResource ($this->whenLoaded('firstAttachments')),
             'sale' => new SaleResource($this->whenLoaded('sales')),
             'attributes' => infoAttributeResource::collection($this->attributes),
+            //'offerQuantity'=> $this->when(isset($this->pivot),$this->pivot-),
         ];
     }
 }

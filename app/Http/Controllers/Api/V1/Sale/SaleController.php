@@ -119,10 +119,11 @@ class SaleController extends Controller
                 return $this->errorResponse('this product already have sale',422);
             }
            // dd($employee_product->sales());
-            return $this->showModel(new SaleResource($employee_product->sales()->first()));
-            return $this->successResponse([
+
+            return new SaleResource($employee_product->sales()->first());
+           /* return $this->successResponse([
                 'message'=>'New Sale on Product was added successful',
-                'code' => 201],201);
+                'code' => 201],201);*/
 
         }
 

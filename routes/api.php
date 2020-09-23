@@ -56,6 +56,8 @@ Route::get('v1/homePage','Api\V1\Product\WebProductController@homePageContent');
 Route::post('v1/checkQuantityInCart','Api\V1\Order\OrderController@checkQuantity');
 
 
+Route::get('v1/categories/{category}','Api\V1\Category\CategoryController@show');
+
 Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware' => ['auth:api']],function (){
 
 
@@ -103,7 +105,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     Route::delete('sales/{sale}','Sale\SaleController@destroy');
 
     // Category
-    Route::resource('categories','Category\CategoryController')->only(['show','store','update','destroy']);
+    Route::resource('categories','Category\CategoryController')->only(['store','update','destroy']);
 
     //Company
     Route::resource('companies','Company\CompanyController')->only(['store','update','destroy']);

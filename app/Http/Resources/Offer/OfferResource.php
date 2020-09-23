@@ -25,6 +25,7 @@ class OfferResource extends JsonResource
             'end' => $this->end,
             'branch' => new BranchResource($this->whenLoaded('branch')),
             'products' => WebProductResource::collection($this->whenLoaded('products')),
+           // 'qq'=>$this->pivote,
 
         ];
     }

@@ -17,6 +17,7 @@ class Offers extends Model
         'start',
         'end',
         'number',
+        'branch_id',
     ];
 
     protected static function booted()

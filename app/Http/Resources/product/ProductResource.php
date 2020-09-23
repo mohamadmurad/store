@@ -38,6 +38,7 @@ class ProductResource extends JsonResource
             'media' => AttachmentResource::collection($this->whenLoaded('attachments')),
             'sale' => new SaleResource($this->whenLoaded('sales')),
             'attributes' => infoAttributeResource::collection($this->attributes),
+
         ];
     }
 }

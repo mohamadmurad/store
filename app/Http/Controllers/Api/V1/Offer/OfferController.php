@@ -42,7 +42,12 @@ class OfferController extends Controller
     public function index()
     {
         if (request()->expectsJson() && request()->acceptsJson()){
-            $offers = Offers::with(['products.attachments','branch'])->get();
+            $imageId = AttachmentType::where('type','like','%image%')->pluck('id');
+            $offers = Offers::with(['products.attachments'=> function($query) use ($imageId){
+                $query->whereIn('attachmentType_id',$imageId);
+
+            },'branch.company'])->get();
+            //return  $offers;
             return  $this->showCollection(OfferResource::collection($offers));
         }
     }

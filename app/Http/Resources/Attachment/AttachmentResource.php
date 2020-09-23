@@ -21,6 +21,7 @@ class AttachmentResource extends JsonResource
                 'id'=>$this->id,
                 'big' => $request->getSchemeAndHttpHost() . '/'. config('app.PRODUCTS_FILES_PATH','files/products/') .$this->src,
                 'thumb' => $request->getSchemeAndHttpHost() . '/'. config('app.PRODUCTS_FILES_PATH','files/products/') .$this->src,
+                'path' => $request->getSchemeAndHttpHost() . '/'. config('app.PRODUCTS_FILES_PATH','files/products/') .$this->src,
                 //'type' => $this->type->type,
             ];
         }

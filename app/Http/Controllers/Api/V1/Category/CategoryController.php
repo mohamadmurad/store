@@ -22,7 +22,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware(['permission:add_category'])->only(['store']);
-        $this->middleware(['permission:show_category'])->only(['show']);
+       // $this->middleware(['permission:show_category'])->only(['show']);
         $this->middleware(['permission:edit_category'])->only(['update']);
         $this->middleware(['permission:delete_category'])->only(['destroy']);
     }
