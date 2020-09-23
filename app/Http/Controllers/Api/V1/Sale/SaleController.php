@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Sale;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sale\StoreSale;
+use App\Http\Requests\Sale\UpdateSale;
 use App\Http\Resources\product\WebProductResource;
 use App\Http\Resources\Sale\SaleResource;
 use App\Products;
@@ -129,6 +130,66 @@ class SaleController extends Controller
 
         return null;
 
+    }
+
+
+    public function update(UpdateSale $request , Sales $sale){
+
+        $startDate = Carbon::make($request->get('start'));
+        $endDate = Carbon::make($request->get('end'));
+
+        if($startDate > $endDate){
+            return $this->errorResponse('End Sale Date must next the Start Date' ,422);
+        }
+
+        if ($startDate < Carbon::today()){
+            return $this->errorResponse('Start Date must be newer' ,422);
+        }
+
+        // calc new price
+        $newPrice = 0;
+        $saleRate = 0;
+        if ($request->has('newPrice') &&  !$request->has('saleRate')){
+
+            if ($request->get('newPrice') >= $sale->product()->first()->price){
+                return $this->errorResponse('New Price must be less than old' ,422);
+            }
+
+            $newPrice =  $request->get('newPrice');
+            $saleRate = ($newPrice * 100) / $sale->product()->first()->price;
+        }elseif ($request->has('saleRate') && !$request->has('newPrice')){
+            $newPrice = ($sale->product()->first()->price * (int) $request->get('saleRate')) / 100;
+            $saleRate = $request->get('saleRate');
+        }else{
+
+            $newPrice =  $request->get('newPrice');
+            $saleRate = $request->get('saleRate');
+            $temp_price = ($sale->product()->first()->price * (int) $request->get('saleRate')) / 100;
+            if ($newPrice !== $temp_price){
+                return $this->errorResponse('New Price and Sale Rate must be correct' ,422);
+            }
+        }
+
+        $sale->fill([
+            'saleRate' => $saleRate ,
+            'newPrice' => $newPrice,
+            'start'  => $startDate,
+            'end'  => $endDate,
+        ]);
+
+
+        if($sale->isClean()){
+            return $this->errorResponse([
+                'error'=> trans('error.update_specify'),
+                'code'=> 422],
+                422);
+        }
+
+        $sale->save();
+        return $this->successResponse([
+            'message' => 'sale Updated ',
+            'code' => 200,
+        ],200);
     }
 
     /**

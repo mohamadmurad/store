@@ -103,6 +103,7 @@ Route::group(['prefix' => 'v1', 'as'=>'api.','namespace'=> 'Api\V1','middleware'
     // Sale
     Route::post('sales/{employee_product}','Sale\SaleController@store');
     Route::delete('sales/{sale}','Sale\SaleController@destroy');
+    Route::put('sales/{sale}','Sale\SaleController@update');
 
     // Category
     Route::resource('categories','Category\CategoryController')->only(['store','update','destroy']);

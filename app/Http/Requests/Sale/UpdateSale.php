@@ -24,7 +24,10 @@ class UpdateSale extends FormRequest
     public function rules()
     {
         return [
-            //
+            'saleRate' => 'required_without:newPrice|max:99|min:1|numeric',
+            'newPrice' => 'required_without:saleRate|numeric',
+            'start' => 'required|date',
+            'end' => 'required|date',
         ];
     }
 }
